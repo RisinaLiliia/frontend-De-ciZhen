@@ -1,2 +1,3 @@
-@import '../home/home-content-providers-shell.css';
-@import '../home/home-content-providers-profile.css';
+@import './content-providers-shell.css';
+@import './content-providers-profile.css';
+@import './content-providers-profile-rating.css';
