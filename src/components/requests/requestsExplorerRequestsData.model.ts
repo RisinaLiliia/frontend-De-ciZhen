@@ -9,7 +9,6 @@ import { buildWorkspaceRequestOverlayHref } from '@/features/workspace/requests/
 type BuildPublicRequestsQueryStateArgs = {
   filter: PublicRequestsFilter;
   locale: Locale;
-  isProvidersView: boolean;
   preferInitialPublicRequests: boolean;
   initialPublicRequests?: PublicRequestsResponseDto;
 };
@@ -42,7 +41,6 @@ function resolveMatchingInitialPublicRequests({
 export function buildRequestsExplorerPublicRequestsQueryState({
   filter,
   locale,
-  isProvidersView,
   preferInitialPublicRequests,
   initialPublicRequests,
 }: BuildPublicRequestsQueryStateArgs) {
@@ -56,14 +54,12 @@ export function buildRequestsExplorerPublicRequestsQueryState({
       limit: filter.limit,
       locale,
     }),
-    enabled: !isProvidersView,
-    placeholderData: !isProvidersView
-      ? resolveMatchingInitialPublicRequests({
-        filter,
-        preferInitialPublicRequests,
-        initialPublicRequests,
-      })
-      : undefined,
+    enabled: true,
+    placeholderData: resolveMatchingInitialPublicRequests({
+      filter,
+      preferInitialPublicRequests,
+      initialPublicRequests,
+    }),
   };
 }
 

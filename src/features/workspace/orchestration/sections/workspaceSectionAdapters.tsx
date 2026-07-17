@@ -137,10 +137,6 @@ export function buildWorkspaceExploreSectionModel({
           t={branch.t}
           locale={branch.locale}
           onListDensityChange={explore.setExploreListDensity}
-          initialPublicRequests={explore.initialPublicRequests}
-          preferInitialPublicRequests={explore.preferInitialPublicRequests}
-          initialPublicRequestsLoading={explore.initialPublicRequestsLoading}
-          initialPublicRequestsError={explore.initialPublicRequestsError}
         />
       ) : null,
       aiRail: <WorkspaceProvidersRail t={branch.t} locale={branch.locale} />,
@@ -162,7 +158,6 @@ export function buildWorkspaceExploreSectionModel({
     section,
     content: explore ? (
       <WorkspaceExploreSection
-        activeSection={section}
         t={branch.t}
         locale={branch.locale}
         onListDensityChange={explore.setExploreListDensity}

@@ -11,8 +11,6 @@ export type RequestsExplorePanelProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   layoutVariant?: 'default' | 'workspace';
-  contentType?: 'requests' | 'providers';
-  providerLinkMode?: 'standalone' | 'workspace';
   backHref?: string;
   showBack?: boolean;
   showHeading?: boolean;
@@ -28,8 +26,6 @@ export function RequestsExplorePanel({
   t,
   locale,
   layoutVariant = 'default',
-  contentType = 'requests',
-  providerLinkMode = 'standalone',
   backHref = '/',
   showBack = true,
   showHeading = true,
@@ -53,11 +49,9 @@ export function RequestsExplorePanel({
         t={t}
         locale={locale}
         layoutVariant={layoutVariant}
-        contentType={contentType}
-        providerLinkMode={providerLinkMode}
         showBack={showBack}
         backHref={backHref}
-        emptyCtaHref={contentType === 'providers' ? '/workspace?section=providers' : '/workspace?section=requests'}
+        emptyCtaHref="/workspace?section=requests"
         onListDensityChange={onListDensityChange}
         showTopFilters={showTopFilters}
         initialPublicRequests={initialPublicRequests}

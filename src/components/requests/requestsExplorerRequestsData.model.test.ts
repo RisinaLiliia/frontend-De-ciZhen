@@ -24,7 +24,6 @@ describe('requestsExplorerRequestsData.model', () => {
     const state = buildRequestsExplorerPublicRequestsQueryState({
       filter: { sort: 'date_desc', page: 1, limit: 20 },
       locale: 'de',
-      isProvidersView: false,
       preferInitialPublicRequests: true,
       initialPublicRequests,
     });
@@ -43,33 +42,30 @@ describe('requestsExplorerRequestsData.model', () => {
     ]);
   });
 
-  it('disables public requests query in providers mode and without ready initial data', () => {
+  it('always enables the public requests query and skips absent initial data', () => {
     expect(
       buildRequestsExplorerPublicRequestsQueryState({
         filter: { sort: 'date_desc', page: 1, limit: 20 },
         locale: 'en',
-        isProvidersView: true,
         preferInitialPublicRequests: true,
         initialPublicRequests: undefined,
       }).enabled,
-    ).toBe(false);
+    ).toBe(true);
 
     expect(
       buildRequestsExplorerPublicRequestsQueryState({
         filter: { sort: 'date_desc', page: 1, limit: 20 },
         locale: 'en',
-        isProvidersView: false,
         preferInitialPublicRequests: true,
         initialPublicRequests: undefined,
-      }).enabled,
-    ).toBe(true);
+      }).placeholderData,
+    ).toBeUndefined();
   });
 
   it('does not attach mismatched initial data to a different page-size query', () => {
     const state = buildRequestsExplorerPublicRequestsQueryState({
       filter: { sort: 'date_desc', page: 1, limit: 20 },
       locale: 'en',
-      isProvidersView: false,
       preferInitialPublicRequests: true,
       initialPublicRequests: {
         items: [],

@@ -28,17 +28,14 @@ const useQueriesMock = vi.mocked(useQueries);
 const useQueryClientMock = vi.mocked(useQueryClient);
 
 function Probe({
-  isProvidersView,
   isAuthed,
 }: {
-  isProvidersView: boolean;
   isAuthed: boolean;
 }) {
   const result = useRequestsExplorerRequestsData({
     t: (key) => String(key),
     locale: 'de',
     isAuthed,
-    isProvidersView,
     filter: { sort: 'date_desc', page: 1, limit: 20 },
     page: 1,
     limit: 20,
@@ -47,8 +44,6 @@ function Probe({
     pathname: '/workspace',
     initialPublicRequests: undefined,
     preferInitialPublicRequests: false,
-    initialPublicRequestsLoading: false,
-    initialPublicRequestsError: false,
   });
 
   return (
@@ -67,7 +62,7 @@ describe('useRequestsExplorerRequestsData', () => {
     vi.clearAllMocks();
   });
 
-  it('skips auth-only private subscriptions in providers view', () => {
+  it('skips auth-only private subscriptions for guests', () => {
     useQueryClientMock.mockReturnValue({} as never);
     useQueryMock.mockReturnValue({
       data: { items: [], total: 0 },
@@ -76,7 +71,7 @@ describe('useRequestsExplorerRequestsData', () => {
     } as never);
     useQueriesMock.mockReturnValue([] as never);
 
-    render(<Probe isProvidersView isAuthed />);
+    render(<Probe isAuthed={false} />);
 
     const privateQueryArgs = useQueriesMock.mock.calls[0]?.[0] as { queries: unknown[] };
     expect(privateQueryArgs.queries).toEqual([]);
@@ -94,7 +89,7 @@ describe('useRequestsExplorerRequestsData', () => {
       { data: [{ id: 'req-1' }], isLoading: false },
     ] as never);
 
-    render(<Probe isProvidersView={false} isAuthed />);
+    render(<Probe isAuthed />);
 
     const privateQueryArgs = useQueriesMock.mock.calls[0]?.[0] as {
       queries: Array<{ queryKey: readonly unknown[] }>;

@@ -1,7 +1,6 @@
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type {
   RequestsExplorerCatalogIndex,
-  RequestsExplorerProvidersContentProps,
   RequestsExplorerRequestsContentProps,
   RequestsExplorerSharedFilters,
 } from '@/components/requests/requestsExplorer.types';
@@ -44,30 +43,6 @@ export function resolveTotalPages(totalResults: number, limit: number) {
 }
 
 type SearchParamsLike = { toString: () => string } | null | undefined;
-
-type BuildProvidersContentArgs = {
-  t: (key: I18nKey) => string;
-  locale: Locale;
-  sharedFilters: RequestsExplorerSharedFilters;
-  providersData: {
-    totalProvidersLabel: string;
-    totalProviderPages: number;
-    emptyTitle: string;
-    emptyHint: string;
-    providersListDensity: RequestsListDensity;
-    isProvidersLoading: boolean;
-    isProvidersError: boolean;
-    filteredProvidersCount: number;
-    providerCards: RequestsExplorerProvidersContentProps['providerCards'];
-    favoriteProviderIds: Set<string>;
-    pendingFavoriteProviderIds: Set<string>;
-    toggleProviderFavorite: (providerId: string) => void | Promise<void>;
-    providerProfileHrefResolver?: RequestsExplorerProvidersContentProps['providerProfileHrefResolver'];
-    providerReviewsHrefResolver?: RequestsExplorerProvidersContentProps['providerReviewsHrefResolver'];
-  };
-  onListDensityChange?: (value: RequestsListDensity) => void;
-  showFilterControls: boolean;
-};
 
 type BuildRequestsContentArgs = {
   t: (key: I18nKey) => string;
@@ -126,38 +101,6 @@ export function pickRequestsExplorerSharedFilters(
     onSortChange: filters.onSortChange,
     onReset: filters.onReset,
     setPage: filters.setPage,
-  };
-}
-
-export function buildRequestsExplorerProvidersContentProps({
-  t,
-  locale,
-  sharedFilters,
-  providersData,
-  onListDensityChange,
-  showFilterControls,
-}: BuildProvidersContentArgs): RequestsExplorerProvidersContentProps {
-  return {
-    t,
-    locale,
-    ...sharedFilters,
-    totalProvidersLabel: providersData.totalProvidersLabel,
-    totalProviderPages: providersData.totalProviderPages,
-    emptyTitle: providersData.emptyTitle,
-    emptyHint: providersData.emptyHint,
-    onSetPage: sharedFilters.setPage,
-    providersListDensity: providersData.providersListDensity,
-    onListDensityChange: onListDensityChange ?? (() => undefined),
-    isProvidersLoading: providersData.isProvidersLoading,
-    isProvidersError: providersData.isProvidersError,
-    filteredProvidersCount: providersData.filteredProvidersCount,
-    providerCards: providersData.providerCards,
-    favoriteProviderIds: providersData.favoriteProviderIds,
-    pendingFavoriteProviderIds: providersData.pendingFavoriteProviderIds,
-    onToggleProviderFavorite: providersData.toggleProviderFavorite,
-    providerProfileHrefResolver: providersData.providerProfileHrefResolver,
-    providerReviewsHrefResolver: providersData.providerReviewsHrefResolver,
-    showFilterControls,
   };
 }
 
