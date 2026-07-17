@@ -1,4 +1,8 @@
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { NextConfig } from 'next';
+
+const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 const apiBaseFromServerEnv = process.env.API_BASE_URL?.trim();
 const apiBaseFromPublicEnv = process.env.NEXT_PUBLIC_API_BASE?.trim();
@@ -11,6 +15,9 @@ const API_BASE =
   (process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : '');
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: projectRoot,
+  },
   images: {
     unoptimized: imageUnoptimized,
     qualities: [60, 62, 75],

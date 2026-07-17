@@ -1,7 +1,5 @@
 /* tailwind.config.ts */
-import type { Config } from 'tailwindcss';
-
-const config: Config = {
+const config = {
   darkMode: 'class',
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
