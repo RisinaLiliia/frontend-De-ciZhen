@@ -5,37 +5,33 @@ import { BackButton } from '@/components/layout/BackButton';
 
 type RequestsExplorerViewProps = {
   layoutVariant?: 'default' | 'workspace';
-  isProvidersView: boolean;
   showBack: boolean;
   backHref: string;
-  providersContent: React.ReactNode;
-  requestsContent: React.ReactNode;
+  content: React.ReactNode;
 };
 
 export function RequestsExplorerView({
   layoutVariant = 'default',
-  isProvidersView,
   showBack,
   backHref,
-  providersContent,
-  requestsContent,
+  content,
 }: RequestsExplorerViewProps) {
-  const content = (
+  const body = (
     <>
       {showBack ? (
         <BackButton fallbackHref={backHref} />
       ) : null}
-      {isProvidersView ? providersContent : requestsContent}
+      {content}
     </>
   );
 
   if (layoutVariant === 'workspace') {
-    return <div className="workspace-explorer-shell">{content}</div>;
+    return <div className="workspace-explorer-shell">{body}</div>;
   }
 
   return (
     <section className="stack-sm">
-      {content}
+      {body}
     </section>
   );
 }

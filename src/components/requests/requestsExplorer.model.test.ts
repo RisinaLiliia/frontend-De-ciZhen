@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import {
   buildRequestsExplorerNextPath,
-  buildRequestsExplorerProvidersContentProps,
   buildRequestsExplorerRequestsContentProps,
   buildOffersByRequestMap,
   hasDefaultPublicFilter,
@@ -56,7 +55,7 @@ describe('requestsExplorer.model', () => {
     );
   });
 
-  it('projects shared explorer filters and builds providers content props', () => {
+  it('projects shared explorer filters', () => {
     const sharedFilters = pickRequestsExplorerSharedFilters({
       categoryOptions: [{ value: 'all', label: 'All categories' }],
       serviceOptions: [{ value: 'design', label: 'Design' }],
@@ -80,31 +79,9 @@ describe('requestsExplorer.model', () => {
       setPage: () => {},
     } satisfies RequestsExplorerSharedFilters);
 
-    const providersContent = buildRequestsExplorerProvidersContentProps({
-      t: (key) => key,
-      locale: 'de',
-      sharedFilters,
-      providersData: {
-        totalProvidersLabel: '12',
-        totalProviderPages: 3,
-        emptyTitle: 'No providers',
-        emptyHint: 'Adjust filters',
-        providersListDensity: 'double',
-        isProvidersLoading: false,
-        isProvidersError: false,
-        filteredProvidersCount: 12,
-        providerCards: [],
-        favoriteProviderIds: new Set(['provider-1']),
-        pendingFavoriteProviderIds: new Set(['provider-2']),
-        toggleProviderFavorite: () => {},
-      },
-      showFilterControls: false,
-    });
-
     expect(sharedFilters.page).toBe(2);
-    expect(providersContent.onSetPage).toBe(sharedFilters.setPage);
-    expect(providersContent.providersListDensity).toBe('double');
-    expect(providersContent.showFilterControls).toBe(false);
+    expect(sharedFilters.setPage).toBeTypeOf('function');
+    expect(sharedFilters.categoryOptions).toEqual([{ value: 'all', label: 'All categories' }]);
   });
 
   it('builds requests content props from shared filter and request state', () => {

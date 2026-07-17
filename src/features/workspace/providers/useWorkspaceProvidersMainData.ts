@@ -4,26 +4,23 @@ import * as React from 'react';
 import { useQueries, useQuery } from '@tanstack/react-query';
 
 import { providerQK } from '@/features/providers/queries';
+import { workspaceQK } from '@/features/workspace/data';
+import type { WorkspaceViewerMode } from '@/features/workspace/state';
+import { getWorkspaceProviders } from '@/lib/api/workspace';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
+import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 import { getPublicProviderById } from '@/lib/api/providers';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
-import { getWorkspaceProviders } from '@/lib/api/workspace';
-import { workspaceQK } from '@/features/workspace/data';
-import { ALL_OPTION_KEY } from '@/features/workspace/shared';
-import { useAuthMe } from '@/hooks/useAuthSnapshot';
-import { resolveWorkspaceRequestsPeriod, type WorkspaceViewerMode } from '@/features/workspace/state';
-import {
-  resolveRequestsListDensityForPageSize,
-  type RequestsListDensity,
-} from '@/lib/requests/pagination';
 import {
   backfillProviderCardAvatarsFromCandidates,
   hasUsableProviderAvatarUrl,
   resolveWorkspaceProviderItemIdentity,
 } from '@/lib/providers/publicProvider';
+import { resolveRequestsListDensityForPageSize, type RequestsListDensity } from '@/lib/requests/pagination';
+import { useAuthMe } from '@/hooks/useAuthSnapshot';
+import { ALL_OPTION_KEY } from '@/features/workspace/shared';
 
-type Args = {
-  isProvidersView: boolean;
+type UseWorkspaceProvidersMainDataArgs = {
   cityId: string;
   subcategoryKey: string;
   categoryKey: string;
@@ -31,12 +28,11 @@ type Args = {
   page: number;
   limit: number;
   setPage: (page: number) => void;
-  period: string | null;
+  period: WorkspaceRequestsPeriodDto | null;
   viewerMode: WorkspaceViewerMode;
 };
 
-export function useProvidersExploreData({
-  isProvidersView,
+export function useWorkspaceProvidersMainData({
   cityId,
   subcategoryKey,
   categoryKey,
@@ -46,14 +42,15 @@ export function useProvidersExploreData({
   setPage,
   period,
   viewerMode,
-}: Args) {
+}: UseWorkspaceProvidersMainDataArgs) {
   const authMe = useAuthMe();
-  const normalizedPeriod = resolveWorkspaceRequestsPeriod(period);
   const ownProviderProfileId = authMe?.providerProfile?.id?.trim() || null;
+  const normalizedPeriod = period ?? undefined;
+
   const {
     data: contractData,
-    isLoading: isProvidersLoading,
-    isError: isProvidersError,
+    isLoading,
+    isError,
   } = useQuery({
     queryKey: workspaceQK.workspaceProvidersMain({
       cityId: cityId === ALL_OPTION_KEY ? undefined : cityId,
@@ -65,7 +62,6 @@ export function useProvidersExploreData({
       page,
       limit,
     }),
-    enabled: isProvidersView,
     queryFn: () =>
       getWorkspaceProviders({
         cityId: cityId === ALL_OPTION_KEY ? null : cityId,
@@ -81,6 +77,7 @@ export function useProvidersExploreData({
     refetchOnWindowFocus: false,
     retry: false,
   });
+
   const missingAvatarProviderIds = React.useMemo(
     () =>
       Array.from(
@@ -93,24 +90,26 @@ export function useProvidersExploreData({
       ),
     [contractData?.list.items],
   );
+
   const ownProviderDetailQuery = useQuery({
     queryKey: providerQK.publicById(ownProviderProfileId),
-    enabled: isProvidersView && Boolean(ownProviderProfileId),
+    enabled: Boolean(ownProviderProfileId),
     queryFn: () => withStatusFallback(() => getPublicProviderById(ownProviderProfileId!), null, [404]),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
     retry: false,
   });
+
   const publicProviderDetailResults = useQueries({
     queries: missingAvatarProviderIds.map((providerId) => ({
       queryKey: providerQK.publicById(providerId),
-      enabled: isProvidersView,
       queryFn: () => withStatusFallback(() => getPublicProviderById(providerId), null, [404]),
       staleTime: 60_000,
       refetchOnWindowFocus: false,
       retry: false,
     })),
   });
+
   const publicProviderDetailCandidates = React.useMemo(
     () =>
       [
@@ -119,6 +118,7 @@ export function useProvidersExploreData({
       ].filter((item): item is ProviderPublicDto => Boolean(item)),
     [ownProviderDetailQuery.data, publicProviderDetailResults],
   );
+
   const providerCards = React.useMemo(
     () => backfillProviderCardAvatarsFromCandidates(contractData?.list.items ?? [], publicProviderDetailCandidates),
     [contractData?.list.items, publicProviderDetailCandidates],
@@ -129,13 +129,10 @@ export function useProvidersExploreData({
       new Map(
         (contractData?.list.items ?? []).map((item) => {
           const identity = resolveWorkspaceProviderItemIdentity(item);
-          return [
-            identity.id,
-            identity,
-          ];
+          return [identity.id, identity];
         }),
       ),
-    [contractData],
+    [contractData?.list.items],
   );
 
   const favoriteProviderIds = React.useMemo(
@@ -146,32 +143,31 @@ export function useProvidersExploreData({
           .map((item) => resolveWorkspaceProviderItemIdentity(item).id)
           .filter(Boolean),
       ),
-    [contractData],
+    [contractData?.list.items],
   );
 
   React.useEffect(() => {
-    if (!isProvidersView) return;
     const resolvedPage = contractData?.list.page;
     if (!resolvedPage || resolvedPage === page) return;
     setPage(resolvedPage);
-  }, [contractData, isProvidersView, page, setPage]);
+  }, [contractData?.list.page, page, setPage]);
 
-  const providersListDensity = React.useMemo<RequestsListDensity>(
+  const listDensity = React.useMemo<RequestsListDensity>(
     () => resolveRequestsListDensityForPageSize(limit),
     [limit],
   );
 
   return {
-    isProvidersLoading,
+    isLoading,
+    isError,
     providerById,
     favoriteProviderIds,
-    isProvidersError,
     providerCards,
-    totalProviderPages: contractData?.list.totalPages ?? 1,
-    totalProvidersLabel: contractData?.list.totalLabel ?? '0',
-    filteredProvidersCount: contractData?.list.totalCount ?? 0,
+    totalPages: contractData?.list.totalPages ?? 1,
+    totalLabel: contractData?.list.totalLabel ?? '0',
+    totalCount: contractData?.list.totalCount ?? 0,
     emptyTitle: contractData?.list.emptyTitle ?? '',
     emptyHint: contractData?.list.emptyHint ?? '',
-    providersListDensity,
+    listDensity,
   };
 }

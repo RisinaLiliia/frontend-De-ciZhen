@@ -3,7 +3,6 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
 
-import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -24,7 +23,6 @@ const ExploreRequestsPanel = dynamic(
 );
 
 type WorkspaceExploreSectionProps = {
-  activeSection: PublicWorkspaceSection;
   t: (key: I18nKey) => string;
   locale: Locale;
   onListDensityChange: (value: 'single' | 'double') => void;
@@ -35,7 +33,6 @@ type WorkspaceExploreSectionProps = {
 };
 
 export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSection({
-  activeSection,
   t,
   locale,
   onListDensityChange,
@@ -50,7 +47,6 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
         t={t}
         locale={locale}
         layoutVariant="workspace"
-        contentType={activeSection === 'providers' ? 'providers' : 'requests'}
         showHeading={false}
         showBack={false}
         backHref="/"

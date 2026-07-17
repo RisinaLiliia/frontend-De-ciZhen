@@ -35,7 +35,6 @@ type Params = {
   t: (key: I18nKey) => string;
   locale: Locale;
   isAuthed: boolean;
-  isProvidersView: boolean;
   filter: PublicRequestsFilter;
   page: number;
   limit: number;
@@ -44,15 +43,12 @@ type Params = {
   pathname: string;
   initialPublicRequests?: PublicRequestsResponseDto;
   preferInitialPublicRequests: boolean;
-  initialPublicRequestsLoading: boolean;
-  initialPublicRequestsError: boolean;
 };
 
 export function useRequestsExplorerRequestsData({
   t,
   locale,
   isAuthed,
-  isProvidersView,
   filter,
   page,
   limit,
@@ -70,14 +66,12 @@ export function useRequestsExplorerRequestsData({
       buildRequestsExplorerPublicRequestsQueryState({
         filter,
         locale,
-        isProvidersView,
         preferInitialPublicRequests,
         initialPublicRequests,
       }),
     [
       filter,
       initialPublicRequests,
-      isProvidersView,
       locale,
       preferInitialPublicRequests,
     ],
@@ -111,7 +105,7 @@ export function useRequestsExplorerRequestsData({
 
   const privateQueryEntries = React.useMemo(
     () =>
-      !isProvidersView && isAuthed
+      isAuthed
         ? [
           {
             key: 'myOffers' as const,
@@ -129,7 +123,7 @@ export function useRequestsExplorerRequestsData({
           },
         ]
         : [],
-    [isAuthed, isProvidersView],
+    [isAuthed],
   );
 
   const privateQueryResults = useQueries({
@@ -221,11 +215,10 @@ export function useRequestsExplorerRequestsData({
   );
 
   React.useEffect(() => {
-    if (isProvidersView) return;
     if (isLoading || isError || !publicRequests) return;
     if (page <= totalPages) return;
     setPage(totalPages);
-  }, [isError, isLoading, isProvidersView, page, publicRequests, setPage, totalPages]);
+  }, [isError, isLoading, page, publicRequests, setPage, totalPages]);
 
   return {
     isLoading,

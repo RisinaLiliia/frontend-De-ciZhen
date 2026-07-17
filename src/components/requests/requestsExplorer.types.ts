@@ -1,5 +1,4 @@
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
-import type { WorkspaceProvidersResponseDto } from '@/lib/api/dto/workspace';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -11,8 +10,6 @@ export type RequestsExplorerProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   layoutVariant?: 'default' | 'workspace';
-  contentType?: 'requests' | 'providers';
-  providerLinkMode?: 'standalone' | 'workspace';
   backHref?: string;
   emptyCtaHref?: string;
   showBack?: boolean;
@@ -58,28 +55,6 @@ export type RequestsExplorerCatalogIndex = {
   categoryByKey: Map<string, { i18n: Record<string, string> }>;
   cityById: Map<string, { i18n: Record<string, string> }>;
 };
-
-export type RequestsExplorerProvidersContentProps = {
-  t: (key: I18nKey) => string;
-  locale: Locale;
-  totalProvidersLabel: string;
-  totalProviderPages: number;
-  emptyTitle: string;
-  emptyHint: string;
-  onSetPage: (page: number) => void;
-  providersListDensity: RequestsListDensity;
-  onListDensityChange: (value: RequestsListDensity) => void;
-  isProvidersLoading: boolean;
-  isProvidersError: boolean;
-  filteredProvidersCount: number;
-  providerCards: WorkspaceProvidersResponseDto['list']['items'];
-  favoriteProviderIds: Set<string>;
-  pendingFavoriteProviderIds: Set<string>;
-  onToggleProviderFavorite: (providerId: string) => void | Promise<void>;
-  showFilterControls?: boolean;
-  providerProfileHrefResolver?: (providerId: string) => string;
-  providerReviewsHrefResolver?: (providerId: string) => string;
-} & RequestsExplorerSharedFilters;
 
 export type RequestsExplorerRequestsContentProps = {
   t: (key: I18nKey) => string;

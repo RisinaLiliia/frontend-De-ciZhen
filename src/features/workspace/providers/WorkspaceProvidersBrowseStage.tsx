@@ -2,14 +2,39 @@
 
 import * as React from 'react';
 
+import { ProviderCard } from '@/components/providers/ProviderCard';
 import { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { RequestsPaginatedPanel } from '@/components/requests/RequestsPaginatedPanel';
 import { selectRequestsAppliedChipsForContentType } from '@/components/requests/requestsFilters.model';
-import { ProviderCard } from '@/components/providers/ProviderCard';
+import type { RequestsExplorerSharedFilters } from '@/components/requests/requestsExplorer.types';
 import type { WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import type { RequestsExplorerProvidersContentProps } from '@/components/requests/requestsExplorer.types';
+import type { I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
+import type { RequestsListDensity } from '@/lib/requests/pagination';
+import type { WorkspaceProvidersResponseDto } from '@/lib/api/dto/workspace';
 import { resolveWorkspaceProviderItemIdentity } from '@/lib/providers/publicProvider';
+
+type WorkspaceProvidersBrowseStageProps = {
+  t: (key: I18nKey) => string;
+  locale: Locale;
+  totalProvidersLabel: string;
+  totalProviderPages: number;
+  emptyTitle: string;
+  emptyHint: string;
+  providersListDensity: RequestsListDensity;
+  onListDensityChange: (value: RequestsListDensity) => void;
+  isProvidersLoading: boolean;
+  isProvidersError: boolean;
+  filteredProvidersCount: number;
+  providerCards: WorkspaceProvidersResponseDto['list']['items'];
+  favoriteProviderIds: Set<string>;
+  pendingFavoriteProviderIds: Set<string>;
+  onToggleProviderFavorite: (providerId: string) => void | Promise<void>;
+  showFilterControls?: boolean;
+  providerProfileHrefResolver?: (providerId: string) => string;
+  providerReviewsHrefResolver?: (providerId: string) => string;
+} & RequestsExplorerSharedFilters;
 
 function normalizeWorkspaceBadgeVariant(variant: string): WorkspaceBadgeVariant {
   if (variant === 'opportunity') return 'success';
@@ -24,10 +49,11 @@ function normalizeWorkspaceBadgeVariant(variant: string): WorkspaceBadgeVariant 
   ) {
     return variant;
   }
+
   return 'neutral';
 }
 
-export function RequestsExplorerProvidersContent({
+export function WorkspaceProvidersBrowseStage({
   t,
   locale,
   categoryOptions,
@@ -52,7 +78,7 @@ export function RequestsExplorerProvidersContent({
   onCityChange,
   onSortChange,
   onReset,
-  onSetPage,
+  setPage,
   providersListDensity,
   onListDensityChange,
   isProvidersLoading,
@@ -65,9 +91,14 @@ export function RequestsExplorerProvidersContent({
   showFilterControls = true,
   providerProfileHrefResolver,
   providerReviewsHrefResolver,
-}: RequestsExplorerProvidersContentProps) {
-  const onPrevPage = () => onSetPage(Math.max(1, page - 1));
-  const onNextPage = () => onSetPage(Math.min(totalProviderPages, page + 1));
+}: WorkspaceProvidersBrowseStageProps) {
+  const onPrevPage = React.useCallback(() => {
+    setPage(Math.max(1, page - 1));
+  }, [page, setPage]);
+
+  const onNextPage = React.useCallback(() => {
+    setPage(Math.min(totalProviderPages, page + 1));
+  }, [page, setPage, totalProviderPages]);
 
   const topSlot = showFilterControls ? (
     <RequestsFilters
