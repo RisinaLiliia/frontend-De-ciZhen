@@ -79,6 +79,22 @@ Notes:
 - Vitest + Testing Library
 - Playwright (e2e)
 
+## Project Documentation
+
+The canonical cross-repository documentation set lives in `docs/`.
+
+Start here:
+
+- `docs/README.md`
+
+Core documents:
+
+- `docs/architecture/platform-engineering-standard.md`
+- `docs/architecture/project-current-state.md`
+- `docs/architecture/project-target-state.md`
+- `docs/architecture/frontend-backend-boundary.md`
+- `docs/architecture/workspace-refactor-roadmap.md`
+
 ## Routing Model
 
 ### Canonical Routes
