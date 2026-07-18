@@ -5,6 +5,9 @@ export type { WorkspaceButtonSize, WorkspaceButtonVariant } from './WorkspaceBut
 export { WorkspaceContextRail } from '@/features/workspace/ai-rail/WorkspaceContextRail';
 export { WorkspaceFilterBar } from './WorkspaceFilterBar';
 export { WorkspaceFilterSelect } from './WorkspaceFilterSelect';
+export { WorkspaceFilterControls, WorkspaceFilters } from './WorkspaceFilters';
+export { WorkspacePaginatedPanel } from './WorkspacePaginatedPanel';
+export { WorkspaceResultsSummary } from './WorkspaceResultsSummary';
 export { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 export { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
 export { WorkspaceRightRailPanel } from './WorkspaceRightRailPanel';
@@ -44,6 +47,14 @@ export {
   workspaceSurfaceShell,
 } from './workspaceSurfaceShell';
 export type { WorkspaceSurfaceVariant } from './workspaceSurfaceShell';
+export type {
+  WorkspaceFilterChip,
+  WorkspaceFilterControlsProps,
+  WorkspaceFilterOption,
+  WorkspaceFiltersProps,
+  WorkspacePaginatedPanelProps,
+  WorkspaceResultsSummaryProps,
+} from './workspaceListPrimitives.types';
 export {
   buildLinkedWorkspaceRailModel,
   buildSummaryRecommendations,

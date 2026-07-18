@@ -3,11 +3,13 @@
 import * as React from 'react';
 
 import { ProviderCard } from '@/components/providers/ProviderCard';
-import { RequestsFilters } from '@/components/requests/RequestsFilters';
-import { RequestsPaginatedPanel } from '@/components/requests/RequestsPaginatedPanel';
 import { selectRequestsAppliedChipsForContentType } from '@/components/requests/requestsFilters.model';
 import type { RequestsExplorerSharedFilters } from '@/components/requests/requestsExplorer.types';
 import type { WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
+import {
+  WorkspaceFilters,
+  WorkspacePaginatedPanel,
+} from '@/features/workspace/shared';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -101,7 +103,7 @@ export function WorkspaceProvidersBrowseStage({
   }, [page, setPage, totalProviderPages]);
 
   const topSlot = showFilterControls ? (
-    <RequestsFilters
+    <WorkspaceFilters
       t={t}
       locale={locale}
       categoryOptions={categoryOptions}
@@ -133,7 +135,7 @@ export function WorkspaceProvidersBrowseStage({
   ) : null;
 
   return (
-    <RequestsPaginatedPanel
+    <WorkspacePaginatedPanel
       t={t}
       page={page}
       totalPages={totalProviderPages}
@@ -195,6 +197,6 @@ export function WorkspaceProvidersBrowseStage({
           </div>
         );
       })}
-    </RequestsPaginatedPanel>
+    </WorkspacePaginatedPanel>
   );
 }
