@@ -52,16 +52,21 @@ Backend must compute:
 Frontend should only:
 
 - fetch the aggregated response
-- validate and normalize it at the boundary
+- validate it at the boundary
 - format numbers, dates, currency, and render UI
 
-## Current Temporary Compatibility Layer
+## Current Frontend Integration State
 
-Until backend returns the full contract, frontend still contains a compatibility normalizer:
+The main runtime path now trusts the backend contract more directly than before.
 
-- [statisticsDecisionDashboard.contract.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/features/workspace/requests/stats/statisticsDecisionDashboard.contract.ts)
+Current reference files:
 
-This file should become removable after backend rollout.
+- [statisticsDecisionDashboard.contract.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/features/workspace/stats/statisticsDecisionDashboard.contract.ts)
+- [workspaceStatisticsDecisionDashboard.schema.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/features/workspace/stats/statisticsDecisionDashboard.schema.ts)
+- [useStatsQuery.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/features/workspace/stats/useStatsQuery.ts)
+
+The old frontend semantic compatibility normalization has been removed from the main query hot path.
+Any remaining fallback behavior should be treated as temporary non-primary compatibility, not as the core stats architecture.
 
 ## Backend Acceptance Criteria
 
@@ -81,11 +86,11 @@ This file should become removable after backend rollout.
 
 Frontend query layer validates the normalized response through:
 
-- [workspaceStatisticsDecisionDashboard.schema.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/features/workspace/requests/stats/workspaceStatisticsDecisionDashboard.schema.ts)
+- [workspaceStatisticsDecisionDashboard.schema.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/features/workspace/stats/statisticsDecisionDashboard.schema.ts)
 
 If backend adds new required fields, update:
 
 1. DTO in `src/lib/api/dto/workspace.ts`
 2. OpenAPI doc in `docs/openapi/...`
 3. runtime schema in `workspaceStatisticsDecisionDashboard.schema.ts`
-4. focused tests in `src/features/workspace/requests/stats/*.test.ts`
+4. focused tests in `src/features/workspace/stats/*.test.ts`

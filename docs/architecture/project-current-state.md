@@ -2,189 +2,177 @@
 
 ## Snapshot
 
-- Date: `2026-07-17`
-- Frontend branch: `preview/v0.4.0-workspace-platform`
+- Date: `2026-07-18`
+- Frontend baseline branch: `preview/v0.4.0-workspace-platform`
 - Backend branch: `refactor/live-market-stats-seed`
 - Scope: cross-repository platform state
 
 ## Executive Summary
 
-The platform is in an advanced but incomplete workspace-first refactor.
+The platform is no longer in the middle of broad architectural reinvention.
 
-Major progress is already real:
+On the frontend refactor line, the major workspace convergence steps are effectively complete:
 
-- the product is converging on `/workspace` as the canonical working surface
-- legacy home and legacy workspace fragments have been reduced significantly
-- backend now exposes a substantial `workspace/*` BFF layer
-- statistics, chat, profile, and requests contracts are materially stronger than before
+- `/workspace` is the canonical shell
+- providers and reviews are section-shaped workspace surfaces
+- private workspace no longer depends on `legacyPublicOverviewData`
+- statistics no longer rebuild avoidable backend semantics in the main query path
+- route and query alias support is materially smaller
+- canonical workspace list/panel/filter primitives now live under `workspace/shared`
+- final workspace visual consolidation has started from canonical surfaces instead of transitional request-owned surfaces
 
-But the refactor is not complete yet.
+The current state is therefore best described as:
 
-The current state is best described as:
+- architecture largely converged
+- compatibility surface reduced
+- merge hardening still required
 
-- one canonical direction
-- several completed foundations
-- several still-active compatibility layers
-- some public and list-heavy sections still rendered through transitional UI paths
-
-## What Is Already in Good Shape
+## What Is Already In Good Shape
 
 ### 1. Workspace-first direction is real
-
-The platform is no longer conceptually centered on unrelated pages.
 
 Current reality:
 
 - `/workspace` is the main product shell
-- several older client/provider entry routes already redirect into workspace
-- shared workspace shell and branch-model architecture are in place
+- older entry routes already converge into workspace
+- public and private behavior share one shell path
 
-### 2. Backend BFF layer is substantially stronger
+### 2. Backend BFF direction is established
 
-Backend now provides dedicated workspace contracts for:
+Backend now exposes dedicated workspace-oriented contracts for:
 
 - public overview
 - private overview
 - requests
 - providers
-- reviews rail
-- actions rail
-- chat rail
+- reviews
+- chat
 - profile
 - statistics
 
-This is the correct architectural direction.
+This is the correct final ownership model.
 
-### 3. Legacy home cleanup is well underway
+### 3. Providers and reviews are no longer split architecturally
 
-A large portion of historical home-specific panels and styles has already been removed from the frontend branch.
+Current reality:
 
-This is important because:
+- providers main content and rail are driven through the workspace providers contract
+- reviews main content and rail are driven through the workspace reviews contract
+- canonical workspace primitives own the active providers/reviews list surfaces
 
-- it reduces conflicting visual ownership
-- it reduces duplicated discovery flows
-- it makes workspace the actual product core
+### 4. Statistics compatibility reduction is materially complete
 
-### 4. Stats architecture is mature enough to stabilize around
+Current reality:
 
-The statistics/dashboard area already has:
+- the main stats query path validates backend payload directly
+- client-side semantic reconstruction has been removed from the hot path
+- old compatibility builders were deleted or reduced to thin non-runtime helpers
 
-- a dedicated contract layer
-- a normalization boundary
-- typed models
-- tests around compatibility behavior
-- backend-owned direction of travel
+### 5. Route model is now much simpler
 
-Even where temporary compatibility remains, the structure is intentional.
+Current reality:
+
+- canonical section routing is `section`-based
+- legacy section aliases have been reduced significantly
+- requests filter URLs now prefer canonical keys
+
+### 6. Visual consolidation is now happening on canonical surfaces
+
+Current reality:
+
+- workspace-owned list/panel/filter primitives exist under `workspace/shared`
+- providers and reviews no longer import request-branded primitives directly
+- workspace style ownership now has dedicated canonical surface stylesheets
 
 ## What Is Still Incomplete
 
-### 1. Legacy routing and alias handling still exists
+### 1. Merge readiness is not the same as architectural convergence
 
-Some route aliases and compatibility remapping are still active.
+The architecture is much closer to target state, but the branch is not yet merge-ready by default.
 
-This is acceptable during migration, but it means the refactor is not finished.
+Remaining work is mostly operational and cleanup-oriented:
 
-Examples of incomplete platform state:
+- manual browser QA
+- full release gate execution
+- final documentation refresh
+- explicit merge strategy
 
-- legacy route redirects still exist as active migration paths
-- query alias compatibility is still present in workspace routing/state
-- part of the navigation model still carries transition semantics
+### 2. Some compatibility paths remain intentionally active
 
-### 2. Private workspace still depends on transitional public-overview compatibility
+The remaining compatibility surface is now much smaller, but not zero.
 
-A notable remaining architectural issue is that parts of private workspace composition still use `legacyPublicOverviewData`.
+Examples still intentionally present:
 
-This means:
+- legacy workspace tab redirect support in `workspaceRequestsScope.model.ts`
+- some chat legacy param normalization
+- residual stats fallback rendering outside the removed main semantic normalization path
+- request-side wrappers that now delegate to canonical workspace primitives
 
-- the architecture is improved, but not yet fully canonical
-- some state still flows through old overview-shaped contracts
-- private and public concerns are not yet fully separated at the data composition layer
+These should be tracked explicitly rather than treated as invisible debt.
 
-### 3. Providers content is still transitional
+### 3. Manual visual proof is still missing
 
-The providers section is only partially migrated.
+The branch now has a cleaner visual system, but it still needs human verification across the required breakpoints and key route states.
 
-Current pattern:
+What still needs manual confirmation:
 
-- backend already owns a rich providers contract
-- frontend rail uses backend-owned providers contract
-- main providers content still relies on an older explore/list rendering path
+- no overflow or clipping at core breakpoints
+- no duplicated navigation or rail states
+- no degraded modal/sheet behavior on mobile
+- stable spacing and rhythm on canonical surfaces
 
-This is one of the clearest remaining mismatches between backend maturity and frontend implementation.
+### 4. Release and CI confidence still need final confirmation
 
-### 4. Reviews section is split across two architectural models
+This repository still needs final merge confidence through the agreed release gate:
 
-Current reviews state is mixed:
+- `release:check`
+- critical E2E
+- accessibility smoke
+- controlled build confidence
 
-- workspace reviews rail already uses `GET /workspace/reviews`
-- the main reviews list still depends on older reviews endpoints and normalization
+### 5. Backend/frontend merge coordination still matters
 
-This means the reviews section is not yet a single workspace-native contract.
+Frontend architecture is now closer to target state than before, but production merge still depends on:
 
-### 5. Some compatibility shaping still lives in frontend stats flow
-
-Statistics architecture is strong, but not fully pure yet.
-
-Temporary compatibility remains around:
-
-- payload normalization
-- fallback shaping for older data
-- support for legacy section semantics during transition
-
-This is acceptable for now, but it should shrink over time.
+- backend contract readiness
+- cross-repo regression confidence
+- merge sequencing discipline
 
 ## Technical Debt Categories
 
-The remaining technical debt is not random.
-It mostly falls into four buckets:
+The remaining debt is now narrower and more explicit.
 
-### 1. Migration debt
+### 1. Operational debt
 
-- route aliases
-- query aliases
-- transitional redirects
-- compatibility payload mappers
+- missing manual browser QA evidence
+- incomplete final regression package
+- merge sequencing not yet formalized
 
-### 2. UI system debt
+### 2. Residual compatibility debt
 
-- remaining list surfaces still rendered through older panel systems
-- section implementations that have not yet switched to canonical workspace primitives
+- explicit migration redirects and alias handlers that still exist for safety
+- thin wrapper layers kept for controlled compatibility
+- a small number of non-hot-path fallback adapters
 
-### 3. Boundary debt
+### 3. Documentation debt
 
-- places where frontend still compensates for non-final backend contracts
-- places where old and new contracts coexist
-
-### 4. Cleanup debt
-
-- legacy helpers still intentionally present
-- pointer docs and audit docs not yet fully organized into a single project manual
+- some older audit/handoff documents still described already-closed gaps
+- merge-readiness evidence needed to be consolidated into one canonical package
 
 ## What Must Not Be Misread
 
-The current state is not a failed refactor.
-
-It is a partially completed successful refactor with unfinished consolidation.
+The current state is not "still mid-refactor" in the old sense.
 
 Important interpretation:
 
-- the direction is correct
-- much of the hard foundation work is done
-- the remaining work is mainly convergence, cleanup, and contract completion
+- the main convergence work is largely done on the frontend refactor line
+- the branch is substantially closer to target state than the old audits describe
+- the remaining work is mostly cleanup, verification, and controlled merge preparation
 
 ## Practical Current-State Conclusion
 
-As of `2026-07-17`, De'ciZhen is:
+As of `2026-07-18`, De'ciZhen is:
 
-- already a workspace-first platform in architecture direction
-- already strongly backend-driven in several critical sections
-- not yet fully clean, final, or legacy-free
-
-The next phase is not broad reinvention.
-It is controlled completion:
-
-- finish section contract adoption
-- remove compatibility layers
-- unify remaining list surfaces
-- reduce duplicate styling and rendering paths
+- already a workspace-first platform in architecture and UI ownership
+- already much closer to backend-computes / frontend-renders discipline
+- not yet fully merge-ready until manual QA, release checks, and final cleanup gates are completed

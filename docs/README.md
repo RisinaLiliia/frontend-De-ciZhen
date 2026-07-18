@@ -37,6 +37,10 @@ It should answer five questions:
   - ordered migration path from the current mixed state to the target platform
   - practical next-step sequencing
 
+- `architecture/workspace-merge-readiness.md`
+  - final merge gate for the workspace-first refactor
+  - explicit remaining blockers, residual compatibility surface, and merge sequence
+
 ## Supporting Documents
 
 ### Decision records

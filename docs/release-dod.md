@@ -74,3 +74,11 @@ Validate in backend repository:
 - Mongo indexes + unique constraints
 - Redis cache TTL/invalidation/fallback behavior
 - `/health`, graceful shutdown, structured logs
+
+## Workspace Refactor Merge Gate
+
+When the workspace-first refactor branch is being merged into `main`, also validate:
+
+- `docs/architecture/workspace-merge-readiness.md`
+- manual viewport/browser QA evidence for canonical workspace routes
+- frontend/backend sequencing for workspace contracts

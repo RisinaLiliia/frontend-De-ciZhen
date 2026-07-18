@@ -2,29 +2,28 @@
 
 ## Purpose
 
-This roadmap translates the current project state into a practical completion plan.
+This roadmap translates the project from mixed workspace state into a controlled professional SaaS platform.
 
 It is not a vague wishlist.
-It is the ordered path from the current mixed workspace state to the target professional SaaS platform.
+It is the ordered path from transitional architecture to merge-ready workspace-first product delivery.
 
 ## Baseline
 
-As of `2026-07-17`:
+As of `2026-07-18`:
 
 - workspace-first direction is established
 - backend BFF layer is substantially expanded
-- legacy home has been reduced heavily
-- several critical sections still contain compatibility or transitional rendering paths
+- major canonical section convergence steps are complete on the frontend refactor line
+- the remaining work is mainly cleanup, verification, and merge readiness
 
 ## Completion Strategy
-
-The next phase should optimize for convergence, not reinvention.
 
 Main rule:
 
 - finish canonical section adoption
-- then remove compatibility
-- then perform final UI/system cleanup
+- remove compatibility where safe
+- perform final UI/system cleanup only on canonical surfaces
+- then prepare merge as an operational release exercise
 
 ## Phase 1. Documentation and rules
 
@@ -43,24 +42,21 @@ Deliverables:
 
 Status:
 
-- this phase is now in progress through the new documentation set
+- completed on the refactor line
 
 ## Phase 2. Providers section convergence
 
 Priority: `highest practical frontend/backend convergence win`
-
-Why this comes first:
-
-- backend providers contract is already rich
-- frontend providers rail already uses it
-- main providers content is still transitional
-- this section is one of the clearest "backend mature / frontend not yet canonical" gaps
 
 Required end state:
 
 - providers section uses the canonical workspace providers contract for main content
 - old explore-style rendering path stops being the primary providers implementation
 - providers cards, sorting, summary, and decision state come from one coherent system
+
+Status:
+
+- completed on the refactor line
 
 Exit criteria:
 
@@ -71,20 +67,15 @@ Exit criteria:
 
 Priority: `high`
 
-Current problem:
+Required end state:
 
-- reviews rail is workspace-native
-- reviews list is not yet fully workspace-native
-- architecture is split
+- backend `GET /workspace/reviews` supports section semantics needed by the main reviews surface
+- frontend reviews main content is migrated to the unified workspace reviews contract
+- the old parallel reviews-list path stops being the active workspace architecture
 
-Required backend step:
+Status:
 
-- extend `GET /workspace/reviews` from rail/composer contract into a full section contract with list semantics
-
-Required frontend step:
-
-- migrate reviews main content to the unified workspace reviews contract
-- remove the old parallel reviews-list path from workspace architecture
+- completed on the refactor line
 
 Exit criteria:
 
@@ -94,14 +85,14 @@ Exit criteria:
 
 Priority: `high`
 
-Current problem:
-
-- private workspace still relies on `legacyPublicOverviewData` in transitional composition paths
-
 Required end state:
 
-- private workspace should depend on canonical workspace requests/public-summary contracts only where appropriate
-- old overview-shaped compatibility data should be removable
+- private workspace depends on canonical workspace contracts
+- old public-overview compatibility composition is removable
+
+Status:
+
+- completed on the refactor line
 
 Exit criteria:
 
@@ -111,34 +102,33 @@ Exit criteria:
 
 Priority: `medium-high`
 
-Current problem:
-
-- stats direction is strong
-- some compatibility shaping remains in frontend
-
 Required end state:
 
-- backend becomes complete source of truth for final section semantics
+- backend becomes the complete source of truth for final section semantics
 - frontend normalization boundary becomes thinner
 - temporary compatibility builders are removed where canonical payloads exist
 
+Status:
+
+- completed on the refactor line for the main runtime query path
+
 Exit criteria:
 
-- stats no longer rely on avoidable client-side semantic reconstruction
+- stats no longer rely on avoidable client-side semantic reconstruction in production hot paths
 
 ## Phase 6. Route and alias cleanup
 
 Priority: `medium`
-
-Current problem:
-
-- several compatibility routes and query aliases remain intentionally active
 
 Required end state:
 
 - canonical routes stay
 - old route aliases redirect cleanly or are deleted
 - old query alias support shrinks to the minimum needed for safe migration
+
+Status:
+
+- completed for the main workspace route model, with a small explicit compatibility surface still tracked
 
 Exit criteria:
 
@@ -158,6 +148,10 @@ Required end state:
 - surface helpers and design tokens become the default path everywhere
 - public and private sections feel like one product family
 
+Status:
+
+- completed for canonical providers/reviews surfaces and shared workspace primitives
+
 Exit criteria:
 
 - final UI pass improves consistency instead of polishing transitional components
@@ -168,15 +162,21 @@ Priority: `final`
 
 Required end state:
 
-- dead code removed
+- dead code removed where safe
 - compatibility helpers removed where no longer needed
 - docs updated
 - release and regression checks aligned with final architecture
 - branch is ready for controlled merge strategy
 
+Status:
+
+- active
+
 Exit criteria:
 
 - the refactor branch represents a simpler system than `main`, not a larger one
+- remaining risk is operationally explicit
+- merge gate is documented and reviewable
 
 ## Sequencing Rule
 
@@ -195,22 +195,22 @@ Recommended order:
 
 Do not:
 
-- start a broad redesign before section contracts converge
+- restart a broad redesign after canonical convergence is already in place
 - reintroduce legacy home patterns into workspace surfaces
 - add new compatibility helpers without a clear exit path
-- polish transitional UI and then rewrite it again later
+- expand merge scope without documenting risk and ownership
 
 ## Practical Next Step
 
 The next best execution target is:
 
-- `providers-first convergence`
+- `final cleanup and merge readiness`
 
-Reason:
+Meaning:
 
-- it has strong backend support already
-- it closes a visible architectural gap
-- it improves both technical shape and user-facing consistency
+- consolidate evidence
+- verify the remaining operational gate
+- document the controlled merge path
 
 ## Final Roadmap Goal
 
@@ -220,3 +220,4 @@ At the end of this roadmap, De'ciZhen should be:
 - one consistent contract-driven frontend
 - one backend-owned business engine
 - one reduced and controlled legacy surface
+- one branch that is realistically ready to merge

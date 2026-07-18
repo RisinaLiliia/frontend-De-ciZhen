@@ -4,7 +4,7 @@
 
 This document records responsive QA evidence for the `/workspace` shell before route QA, visual consistency QA, and production hardening.
 
-Audit date: 2026-05-31
+Audit date: 2026-07-18
 
 Audit basis:
 
@@ -36,9 +36,9 @@ Canonical routes:
 
 Canonical route notes:
 
-- `section=reviews` is a legacy alias and normalizes to `section=stats`
-- `section=statistics` is redirected to `section=stats`
-- `section=analysis` is not a canonical route and should be removed from QA checklists
+- `section=reviews` is a canonical workspace route
+- `section=statistics` should only be treated as a narrow compatibility redirect if encountered in older links
+- `section=analysis` is not a canonical route and should not appear in QA checklists
 
 ## Target contract vs current implementation
 
@@ -121,7 +121,7 @@ That means shell-level responsive regressions will affect all major workspace se
 - Mobile/tablet overlay navigation and desktop sidebar are mutually exclusive in the shell contract
 - Guest/private requests state is normalized through route state instead of separate page shells
 - Private navigation items such as `Angebote` and `Aufträge` are visibility-gated by auth and role
-- Legacy `reviews` and `statistics` aliases normalize to `stats`
+- The canonical analysis route is `section=stats`
 
 ### Not yet proven without browser QA
 
@@ -155,8 +155,8 @@ Severity: medium
 Evidence:
 
 - Navigation config routes `Analyse` to `/workspace?section=stats`
-- Route shell tests normalize `section=reviews` and redirect `section=statistics`
 - No canonical `section=analysis` route is defined
+- `section=reviews` remains a valid canonical route and should be QA'd directly
 
 Impact:
 
@@ -192,5 +192,5 @@ Responsive QA can be considered complete only when all of the following are true
 
 1. Replace `analysis` with `stats` in the remaining QA and audit docs.
 2. Perform manual browser responsive smoke on the six canonical viewports.
-3. Record route-by-route findings for `overview`, `requests`, `providers`, `stats`, and `profile`.
+3. Record route-by-route findings for `overview`, `requests`, `providers`, `reviews`, `stats`, and `profile`.
 4. Only after that proceed to route QA and visual consistency QA.
