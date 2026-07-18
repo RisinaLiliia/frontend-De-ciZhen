@@ -108,6 +108,28 @@ export const workspaceQK = {
     args.viewerMode ?? '',
   ] as const,
   workspaceProvidersOverviewPrefix: () => ['workspace-providers-overview'] as const,
+  workspaceReviewsSection: (args: {
+    range: string | undefined;
+    sort: string | undefined;
+    page: number | undefined;
+    limit: number | undefined;
+  }) => [
+    'workspace-reviews-section',
+    args.range ?? '30d',
+    args.sort ?? 'created_desc',
+    args.page ?? 1,
+    args.limit ?? 20,
+  ] as const,
+  workspaceReviewsSectionPrefix: () => ['workspace-reviews-section'] as const,
+  workspaceReviewsOverview: (args: {
+    range: string | undefined;
+    sort: string | undefined;
+  }) => [
+    'workspace-reviews-overview',
+    args.range ?? '30d',
+    args.sort ?? 'created_desc',
+  ] as const,
+  workspaceReviewsOverviewPrefix: () => ['workspace-reviews-overview'] as const,
   managedRequest: (args: {
     requestId: string;
     locale: string;

@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 
+import { workspaceQK } from '@/features/workspace/data';
 import { getWorkspaceReviews } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -32,7 +33,10 @@ export function WorkspaceReviewsAside({
     data,
     isLoading,
   } = useQuery({
-    queryKey: ['workspace-reviews-rail', reviewRange, sort],
+    queryKey: workspaceQK.workspaceReviewsOverview({
+      range: reviewRange,
+      sort,
+    }),
     queryFn: () =>
       withStatusFallback(
         () => getWorkspaceReviews({ range: reviewRange, sort }),

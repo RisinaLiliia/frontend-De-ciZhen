@@ -128,12 +128,16 @@ export function getWorkspaceProviders(query: WorkspaceProvidersQuery = {}) {
 export type WorkspaceReviewsQuery = {
   range?: WorkspaceRequestsPeriodDto;
   sort?: 'created_desc' | 'rating_desc';
+  page?: number;
+  limit?: number;
 };
 
 export function getWorkspaceReviews(query: WorkspaceReviewsQuery = {}) {
   const qs = new URLSearchParams();
   if (query.range) qs.set('range', query.range);
   if (query.sort) qs.set('sort', query.sort);
+  if (typeof query.page === 'number') qs.set('page', String(Math.max(1, Math.trunc(query.page))));
+  if (typeof query.limit === 'number') qs.set('limit', String(Math.min(100, Math.max(1, Math.trunc(query.limit)))));
   return apiGet<WorkspaceReviewsResponseDto>(`/workspace/reviews${qs.toString() ? `?${qs.toString()}` : ''}`);
 }
 

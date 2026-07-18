@@ -31,13 +31,14 @@ export function resolveActiveWorkspaceNavigationSection({
 
   if (
     activePublicSection === 'providers'
+    || activePublicSection === 'reviews'
     || activePublicSection === 'stats'
     || activePublicSection === 'chat'
     || activePublicSection === 'profile'
     || activePublicSection === 'settings'
     || activePublicSection === 'help'
   ) {
-    return activePublicSection;
+    return activePublicSection === 'reviews' ? 'stats' : activePublicSection;
   }
 
   if (activePublicSection === 'privacy' || activePublicSection === 'cookies') {

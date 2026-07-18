@@ -259,6 +259,8 @@ export type WorkspaceReviewsResponseDto = {
   filters: {
     range?: WorkspaceRequestsPeriodDto;
     sort?: 'created_desc' | 'rating_desc';
+    page?: number;
+    limit?: number;
   };
   summary: {
     items: Array<{
@@ -296,6 +298,23 @@ export type WorkspaceReviewsResponseDto = {
       key: 'avg' | 'positive' | 'critical';
       label: string;
       value: string;
+    }>;
+  };
+  list: {
+    totalCount: number;
+    totalLabel: string;
+    sort: 'created_desc' | 'rating_desc';
+    page: number;
+    limit: number;
+    totalPages: number;
+    emptyTitle: string;
+    emptyHint: string;
+    items: Array<{
+      id: string;
+      authorName: string;
+      rating: number;
+      text: string;
+      createdAt: string;
     }>;
   };
   composer: {

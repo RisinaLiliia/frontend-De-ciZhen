@@ -75,25 +75,25 @@ describe('WorkspaceRouteShell', () => {
     cleanup();
   });
 
-  it('maps reviews alias to stats for authenticated users', () => {
+  it('keeps reviews as a canonical section for authenticated users', () => {
     mockSearchParams('section=reviews');
     mockAuth('authenticated');
 
     render(<WorkspaceRouteShell />);
 
     const node = screen.getByTestId('workspace-page-client');
-    expect(node.getAttribute('data-public-section')).toBe('stats');
+    expect(node.getAttribute('data-public-section')).toBe('reviews');
     expect(node.getAttribute('data-workspace-tab')).toBe('null');
   });
 
-  it('maps reviews alias to stats for unauthenticated users', () => {
+  it('keeps reviews as a canonical section for unauthenticated users', () => {
     mockSearchParams('section=reviews');
     mockAuth('unauthenticated');
 
     render(<WorkspaceRouteShell />);
 
     const node = screen.getByTestId('workspace-page-client');
-    expect(node.getAttribute('data-public-section')).toBe('stats');
+    expect(node.getAttribute('data-public-section')).toBe('reviews');
     expect(node.getAttribute('data-workspace-tab')).toBe('null');
   });
 

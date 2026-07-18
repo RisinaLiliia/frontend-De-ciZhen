@@ -12,6 +12,10 @@ import {
   WorkspaceProvidersSection,
 } from '@/features/workspace/providers';
 import {
+  WorkspaceReviewsAside,
+  WorkspaceReviewsSection,
+} from '@/features/workspace/reviews';
+import {
   WorkspaceProfileRail,
   WorkspaceProfileSection,
 } from '@/features/workspace/profile';
@@ -77,7 +81,7 @@ type BuildWorkspaceLegalSectionModelArgs = {
 export function resolveWorkspaceExploreSection(
   section: PublicWorkspaceSection | null,
 ): ExploreSectionKey {
-  if (section === 'providers' || section === 'stats' || section === 'profile') {
+  if (section === 'providers' || section === 'stats' || section === 'reviews' || section === 'profile') {
     return section;
   }
 
@@ -140,6 +144,14 @@ export function buildWorkspaceExploreSectionModel({
         />
       ) : null,
       aiRail: <WorkspaceProvidersRail t={branch.t} locale={branch.locale} />,
+    });
+  }
+
+  if (section === 'reviews') {
+    return buildWorkspaceSectionRenderModel({
+      section,
+      content: <WorkspaceReviewsSection t={branch.t} locale={branch.locale} />,
+      aiRail: <WorkspaceReviewsAside t={branch.t} locale={branch.locale} />,
     });
   }
 

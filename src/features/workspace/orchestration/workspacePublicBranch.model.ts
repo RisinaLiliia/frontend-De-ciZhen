@@ -184,6 +184,7 @@ export function buildWorkspacePublicIntroProps({
   const isRequestsSection = activePublicSection === 'requests';
   const isExploreSectionWithoutLegacyQuickAction =
     activePublicSection === 'providers'
+    || activePublicSection === 'reviews'
     || activePublicSection === 'profile'
     || activePublicSection === 'stats';
 

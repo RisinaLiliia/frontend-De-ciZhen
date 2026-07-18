@@ -76,6 +76,17 @@ const WORKSPACE_SECTION_CONTRACTS: Record<WorkspaceSectionKey, WorkspaceSectionC
       hideQuickActionAlways: true,
     },
   },
+  reviews: {
+    key: 'reviews',
+    defaultLayout: 'withRail',
+    railPolicy: 'none',
+    headerPolicy: 'workspace',
+    filterPolicy: 'sharedContext',
+    intro: {
+      hideDemandMapAlways: true,
+      hideQuickActionAlways: true,
+    },
+  },
   stats: {
     key: 'stats',
     defaultLayout: 'withRail',
