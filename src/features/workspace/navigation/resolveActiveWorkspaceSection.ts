@@ -1,6 +1,7 @@
 export type PublicWorkspaceSection =
   | 'requests'
   | 'providers'
+  | 'reviews'
   | 'stats'
   | 'profile'
   | 'chat'
@@ -14,6 +15,7 @@ export function resolvePublicWorkspaceSection(value: string | null): PublicWorks
   if (value === 'orders' || value === 'requests') return 'requests';
   if (
     value === 'providers'
+    || value === 'reviews'
     || value === 'stats'
     || value === 'profile'
     || value === 'chat'
@@ -24,7 +26,6 @@ export function resolvePublicWorkspaceSection(value: string | null): PublicWorks
   ) {
     return value;
   }
-  if (value === 'reviews') return 'stats';
   if (value === 'actions') return 'profile';
   return null;
 }

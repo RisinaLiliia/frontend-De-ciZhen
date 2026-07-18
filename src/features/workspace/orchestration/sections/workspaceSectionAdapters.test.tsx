@@ -97,6 +97,30 @@ describe('workspaceSectionAdapters', () => {
     expect(model.aiRail).toBeTruthy();
   });
 
+  it('builds reviews section through explicit content and rail ownership', () => {
+    const model = buildWorkspaceExploreSectionModel({
+      branch: {
+        isWorkspaceAuthed: false,
+        locale: 'de',
+        t: (key) => String(key),
+      },
+      section: 'reviews',
+      explore: {
+        exploreListDensity: 'single',
+        setExploreListDensity: () => undefined,
+        sidebarNearbyLimit: 2,
+        sidebarTopProvidersLimit: 2,
+        sidebarProofCases: [],
+        proofIndex: 0,
+      },
+    });
+
+    expect(model.section).toBe('reviews');
+    expect(model.layout).toBe('withRail');
+    expect(model.railPolicy).toBe('custom');
+    expect(model.aiRail).toBeTruthy();
+  });
+
   it('builds overview and standard sections through dedicated adapters', () => {
     const overview = buildWorkspaceOverviewSectionModel({
       content: <div>overview</div>,
@@ -149,6 +173,7 @@ describe('workspaceSectionAdapters', () => {
     expect(resolveWorkspaceExploreSection(null)).toBe('providers');
     expect(resolveWorkspaceExploreSection('requests')).toBe('providers');
     expect(resolveWorkspaceExploreSection('profile')).toBe('profile');
+    expect(resolveWorkspaceExploreSection('reviews')).toBe('reviews');
     expect(resolveWorkspaceStandardSection(null)).toBe('requests');
     expect(resolveWorkspaceStandardSection('stats')).toBe('stats');
   });

@@ -39,7 +39,8 @@ export function WorkspaceReviewsComposer({
       setDraftAuthorName('');
       toast.success(t(I18N_KEYS.requestsPage.platformReviewFormSuccess));
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['workspace-reviews-rail'] }),
+        queryClient.invalidateQueries({ queryKey: workspaceQK.workspaceReviewsOverviewPrefix() }),
+        queryClient.invalidateQueries({ queryKey: workspaceQK.workspaceReviewsSectionPrefix() }),
         queryClient.invalidateQueries({ queryKey: workspaceQK.platformReviewsOverviewPrefix() }),
       ]);
     },

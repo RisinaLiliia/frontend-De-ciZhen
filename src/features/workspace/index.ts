@@ -21,6 +21,7 @@ export { WorkspaceOverviewMain } from './overview';
 export { WorkspacePublicDemandMapPanel } from './demand-map';
 export { StatisticsExperience, useWorkspaceStatisticsModel } from './stats';
 export { WorkspaceProvidersRail, WorkspaceProvidersSection, WorkspaceTopProvidersAside } from './providers';
+export { WorkspaceReviewsAside, WorkspaceReviewsSection } from './reviews';
 export { WorkspaceProfileRail, WorkspaceProfileSection } from './profile';
 export {
   WorkspaceMobileNavigation,

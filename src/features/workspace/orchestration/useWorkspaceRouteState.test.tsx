@@ -7,7 +7,7 @@ import { useWorkspaceRouteState } from '@/features/workspace/orchestration/useWo
 
 type ProbeProps = {
   query: string;
-  forcedPublicSection?: 'requests' | 'providers' | 'stats' | 'profile' | 'chat' | 'settings' | 'help' | null;
+  forcedPublicSection?: 'requests' | 'providers' | 'reviews' | 'stats' | 'profile' | 'chat' | 'settings' | 'help' | null;
   isAuthed?: boolean;
 };
 
@@ -116,11 +116,11 @@ describe('useWorkspaceRouteState', () => {
     expect(node.getAttribute('data-is-public')).toBe('false');
   });
 
-  it('maps legacy reviews section alias to stats', () => {
+  it('keeps reviews as a dedicated workspace section', () => {
     render(<Probe query="section=reviews" />);
     const node = screen.getByTestId('state');
 
-    expect(node.getAttribute('data-public-section')).toBe('stats');
+    expect(node.getAttribute('data-public-section')).toBe('reviews');
     expect(node.getAttribute('data-is-public')).toBe('true');
   });
 

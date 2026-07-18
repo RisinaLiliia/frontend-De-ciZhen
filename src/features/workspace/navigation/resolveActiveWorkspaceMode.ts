@@ -20,6 +20,7 @@ export function resolveActiveWorkspaceMode({
 }: ResolveActiveWorkspaceModeArgs): WorkspaceModeKey {
   if (activePublicSection === 'requests') return 'requests';
   if (activePublicSection === 'providers') return 'providers';
+  if (activePublicSection === 'reviews') return 'analysis';
   if (activePublicSection === 'stats') return 'analysis';
   if (activePublicSection === 'profile') return 'profile';
   if (activePublicSection === 'chat') return 'chat';
