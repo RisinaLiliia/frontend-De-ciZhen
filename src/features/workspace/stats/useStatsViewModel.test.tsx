@@ -932,18 +932,17 @@ function NormalizedProbe({
 }
 
 describe('useWorkspaceStatsViewModel', () => {
-  it('maps and sorts demand/opportunity sections from backend dto', () => {
+  it('renders demand/opportunity sections in backend contract order', () => {
     render(<Probe data={createOverviewData()} isLoading={false} isError={false} />);
 
     const probe = screen.getByTestId('probe');
-    expect(probe.getAttribute('data-demand-order')).toBe('cleaning,plumbing');
-    expect(probe.getAttribute('data-opportunity-order')).toBe('1,2,3');
-    expect(probe.getAttribute('data-opportunity-cities')).toBe('Berlin|Karlsruhe|Mannheim');
+    expect(probe.getAttribute('data-demand-order')).toBe('plumbing,cleaning');
+    expect(probe.getAttribute('data-opportunity-order')).toBe('3,1,2');
+    expect(probe.getAttribute('data-opportunity-cities')).toBe('Mannheim|Berlin|Karlsruhe');
     expect(probe.getAttribute('data-opportunity-categories')).toBe(
-      'Cleaning & Housekeeping|Cleaning & Housekeeping|Cleaning & Housekeeping',
+      'Generalistisch|Cleaning & Housekeeping|Plumbing & Heating',
     );
-    expect(probe.getAttribute('data-first-opportunity-href')).toContain('cityId=berlin-id');
-    expect(probe.getAttribute('data-first-opportunity-href')).toContain('categoryKey=cleaning');
+    expect(probe.getAttribute('data-first-opportunity-href')).toContain('cityId=mannheim-id');
     expect(probe.getAttribute('data-price-context')).toBe('Cleaning & Housekeeping · Berlin');
     expect(probe.getAttribute('data-price-range')).toContain('65');
     expect(probe.getAttribute('data-price-range')).toContain('90');
@@ -1171,10 +1170,10 @@ describe('useWorkspaceStatsViewModel', () => {
     const probe = screen.getByTestId('probe');
     expect(probe.getAttribute('data-error')).toBe('false');
     expect(probe.getAttribute('data-background-error')).toBe('true');
-    expect(probe.getAttribute('data-demand-order')).toBe('cleaning,plumbing');
+    expect(probe.getAttribute('data-demand-order')).toBe('plumbing,cleaning');
   });
 
-  it('derives price context from opportunity data when legacy price intelligence is missing', () => {
+  it('does not backfill price context when backend omitted price intelligence', () => {
     const data = createOverviewData();
     const firstOpportunity = data.opportunityRadar?.[0];
     if (!firstOpportunity) throw new Error('fixture should contain at least one opportunity');
@@ -1210,13 +1209,13 @@ describe('useWorkspaceStatsViewModel', () => {
     render(<Probe data={dataWithoutPrice} isLoading={false} isError={false} />);
 
     const probe = screen.getByTestId('probe');
-    expect(probe.getAttribute('data-price-context')).toBe('Cleaning & Housekeeping · Berlin');
-    expect(probe.getAttribute('data-price-range')).not.toBe('');
-    expect(probe.getAttribute('data-price-average')).not.toBe('');
-    expect(probe.getAttribute('data-opportunity-categories')).toBe('Cleaning & Housekeeping|Cleaning & Housekeeping');
+    expect(probe.getAttribute('data-price-context')).toBe('');
+    expect(probe.getAttribute('data-price-range')).toBe('');
+    expect(probe.getAttribute('data-price-average')).toBe('');
+    expect(probe.getAttribute('data-opportunity-categories')).toBe('Generalistisch');
   });
 
-  it('filters context-sensitive sections by selected city and category', () => {
+  it('does not client-scope opportunity sections when backend contract is unscoped', () => {
     render(
       <Probe
         data={createOverviewData()}
@@ -1231,15 +1230,14 @@ describe('useWorkspaceStatsViewModel', () => {
     );
 
     const probe = screen.getByTestId('probe');
-    expect(probe.getAttribute('data-opportunity-order')).toBe('1,2,3');
-    expect(probe.getAttribute('data-opportunity-cities')).toBe('Berlin|Mannheim|Karlsruhe');
+    expect(probe.getAttribute('data-opportunity-order')).toBe('3,1,2');
+    expect(probe.getAttribute('data-opportunity-cities')).toBe('Mannheim|Berlin|Karlsruhe');
     expect(probe.getAttribute('data-price-context')).toBe('Cleaning & Housekeeping · Berlin');
     expect(probe.getAttribute('data-context-mode')).toBe('focus');
-    expect(probe.getAttribute('data-context-sticky')).toContain('Berlin');
     expect(probe.getAttribute('data-context-low-data')).toBe('false');
   });
 
-  it('surfaces low-data context when selected scope has no direct price or opportunity match', () => {
+  it('does not fabricate low-data context when backend contract did not mark it', () => {
     render(
       <Probe
         data={createOverviewData()}
@@ -1254,10 +1252,9 @@ describe('useWorkspaceStatsViewModel', () => {
     );
 
     const probe = screen.getByTestId('probe');
-    expect(probe.getAttribute('data-opportunity-order')).toBe('');
-    expect(probe.getAttribute('data-price-range')).toBe('');
-    expect(probe.getAttribute('data-context-low-data')).toBe('true');
-    expect(probe.getAttribute('data-decision-insight')).toContain('Erweitern');
+    expect(probe.getAttribute('data-opportunity-order')).toBe('3,1,2');
+    expect(probe.getAttribute('data-price-range')).not.toBe('');
+    expect(probe.getAttribute('data-context-low-data')).toBe('false');
   });
 
   it('keeps selected city and category available in options when backend returns sparse filter lists', () => {
@@ -1274,7 +1271,13 @@ describe('useWorkspaceStatsViewModel', () => {
         categories: [{ value: 'plumbing', label: 'Plumbing & Heating' }],
       },
       decisionContext: {
-        ...normalized.decisionContext,
+        ...(normalized.decisionContext ?? {
+          mode: 'focus',
+          period: '30d',
+          city: { value: null, label: '' },
+          category: { value: null, label: '' },
+          health: [],
+        }),
         city: {
           value: 'mannheim-id',
           label: 'Mannheim',

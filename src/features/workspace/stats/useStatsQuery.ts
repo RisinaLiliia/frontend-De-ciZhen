@@ -10,10 +10,7 @@ import type {
   StatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
 import { getWorkspaceStatistics } from '@/lib/api/workspace';
-import {
-  normalizeWorkspaceDecisionDashboardResponse,
-  type WorkspaceStatisticsDecisionDashboardDto,
-} from './statisticsDecisionDashboard.contract';
+import { type WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import { hydrateAuthenticatedStatisticsPayload } from './statisticsAuthenticatedPayload.utils';
 import { parsePageParam } from './statisticsPagination.utils';
 import { workspaceStatisticsDecisionDashboardSchema } from './statisticsDecisionDashboard.schema';
@@ -181,16 +178,16 @@ export function useWorkspaceStatsQuery({
         payload,
         privateOverview,
       });
-      const normalized = normalizeWorkspaceDecisionDashboardResponse({
+      const contractPayload = {
         ...hydratedPayload,
         __source: 'bff',
-      }, filters);
-      const parsed = workspaceStatisticsDecisionDashboardSchema.safeParse(normalized);
+      } satisfies WorkspaceStatisticsDecisionDashboardDto;
+      const parsed = workspaceStatisticsDecisionDashboardSchema.safeParse(contractPayload);
       if (!parsed.success) {
         if (process.env.NODE_ENV !== 'production') {
           console.error('Workspace statistics schema mismatch', parsed.error.flatten());
         }
-        return normalized as WorkspaceStatisticsDecisionDashboardDto;
+        return contractPayload;
       }
       return parsed.data as WorkspaceStatisticsDecisionDashboardDto;
     },

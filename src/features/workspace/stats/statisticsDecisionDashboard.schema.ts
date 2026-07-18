@@ -352,7 +352,7 @@ const funnelComparisonStageSchema = z.object({
 });
 
 export const workspaceStatisticsDecisionDashboardSchema = z.object({
-  __source: z.enum(['bff', 'fallback']),
+  __source: z.enum(['bff']),
   updatedAt: z.string(),
   mode: z.enum(['platform', 'personalized']),
   range: rangeSchema,
@@ -374,12 +374,12 @@ export const workspaceStatisticsDecisionDashboardSchema = z.object({
       title: z.string().nullable().optional(),
       body: z.string().nullable().optional(),
     }).optional(),
-  }),
+  }).optional(),
   filterOptions: z.object({
     cities: z.array(filterOptionSchema),
     categories: z.array(filterOptionSchema),
-    services: z.array(filterOptionSchema),
-  }),
+    services: z.array(filterOptionSchema).optional(),
+  }).optional(),
   sectionMeta: z.object({
     decisionSubtitle: z.string().nullable().optional(),
     demandSubtitle: z.string().nullable().optional(),
@@ -388,10 +388,10 @@ export const workspaceStatisticsDecisionDashboardSchema = z.object({
     priceTitle: z.string().nullable().optional(),
     insightsSubtitle: z.string().nullable().optional(),
     growthSubtitle: z.string().nullable().optional(),
-  }),
+  }).optional(),
   exportMeta: z.object({
     filename: z.string().nullable().optional(),
-  }),
+  }).optional(),
   summary: z.object({
     totalPublishedRequests: z.number(),
     totalActiveProviders: z.number(),

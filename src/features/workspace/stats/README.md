@@ -9,15 +9,11 @@ This feature is the frontend shell for the workspace decision dashboard at `/wor
   - combines query state with UI mapping
 - `useWorkspaceStatsQuery.ts`
   - fetches one aggregated dashboard payload
-  - normalizes legacy payloads into the decision-dashboard contract
+  - validates the backend dashboard payload
 - `statisticsDecisionDashboard.contract.ts`
-  - compatibility normalizer
-  - target shape for backend-driven `decisionContext`, `filterOptions`, `sectionMeta`, `exportMeta`, and personalized section payloads
-- `statisticsOpportunityContract.model.ts`
-  - compatibility layer for opportunity cluster and pricing context
-  - derives `focus city + nearby competitors + per-item priceIntelligence` until backend owns it natively
+  - shared stats contract type for the validated dashboard payload
 - `workspaceStatisticsDecisionDashboard.schema.ts`
-  - runtime validation for the normalized dashboard contract
+  - runtime validation for the backend dashboard contract
 - `useWorkspaceStatsViewModel.ts`
   - mapping layer only
   - formats labels, currency, dates, and view props
@@ -78,11 +74,8 @@ This feature is the frontend shell for the workspace decision dashboard at `/wor
 - each opportunity item should carry its own `priceIntelligence` so price panels and KI can switch by selection without recomputing analytics in UI
 - personalized mode is now `Market × User = Decision Engine`
 - authenticated stats should answer: market, user, gap, action
-- client-side derivation exists only as temporary compatibility support for older payloads
-- production stats normalization must not client-build `decisionLayer`, `personalizedPricing`, `categoryFit`, `cityComparison`, `funnelComparison`, or `userIntelligence`
-- any client-side derivation for `userIntelligence` is temporary compatibility only and should stay outside the canonical dashboard path
-- the third activity line for authenticated stats is currently a temporary context-aligned compatibility overlay
-- it is derived from personalized totals under the current market timeline until backend ships `activity.userSeries`
+- production stats query path must not client-build `decisionContext`, `filterOptions`, `sectionMeta`, `exportMeta`, `opportunityRadar`, `priceIntelligence`, `decisionLayer`, `personalizedPricing`, `categoryFit`, `cityComparison`, `funnelComparison`, or `userIntelligence`
+- any UI fallback that still exists belongs in render/view-model code, not in the fetch/contract layer
 
 ## Do Not Reintroduce
 

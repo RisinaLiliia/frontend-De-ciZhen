@@ -262,21 +262,21 @@ export function useWorkspaceStatsViewModel({
   const cityOptions = React.useMemo(
     () =>
       ensureSelectedFilterOption({
-        options: data?.filterOptions.cities ?? [],
+        options: data?.filterOptions?.cities ?? [],
         selectedValue: selectedCityId,
-        selectedLabel: data?.decisionContext.city.label,
+        selectedLabel: data?.decisionContext?.city.label,
       }),
-    [data?.decisionContext, data?.filterOptions.cities, selectedCityId],
+    [data?.decisionContext, data?.filterOptions, selectedCityId],
   );
 
   const categoryOptions = React.useMemo(
     () =>
       ensureSelectedFilterOption({
-        options: data?.filterOptions.categories ?? [],
+        options: data?.filterOptions?.categories ?? [],
         selectedValue: selectedCategoryKey,
-        selectedLabel: data?.decisionContext.category.label,
+        selectedLabel: data?.decisionContext?.category.label,
       }),
-    [data?.decisionContext, data?.filterOptions.categories, selectedCategoryKey],
+    [data?.decisionContext, data?.filterOptions, selectedCategoryKey],
   );
 
   const selectedCityOption = React.useMemo(
@@ -330,8 +330,8 @@ export function useWorkspaceStatsViewModel({
   }, [copy, data?.opportunityRadar, formatCurrency, localeTag]);
 
   const priceIntelligence = React.useMemo<WorkspaceStatisticsPriceIntelligenceView>(() => {
-    const contextCityFallback = data?.decisionContext.city.label ?? selectedCityOption?.label ?? null;
-    const contextCategoryFallback = data?.decisionContext.category.label ?? selectedCategoryOption?.label ?? null;
+    const contextCityFallback = data?.decisionContext?.city.label ?? selectedCityOption?.label ?? null;
+    const contextCategoryFallback = data?.decisionContext?.category.label ?? selectedCategoryOption?.label ?? null;
     return buildPriceIntelligence({
       copy,
       source: data?.priceIntelligence,
@@ -343,8 +343,8 @@ export function useWorkspaceStatsViewModel({
   }, [
     copy,
     data?.priceIntelligence,
-    data?.decisionContext.category.label,
-    data?.decisionContext.city.label,
+    data?.decisionContext?.category.label,
+    data?.decisionContext?.city.label,
     formatCurrency,
     localeTag,
     selectedCategoryOption,
@@ -435,26 +435,26 @@ export function useWorkspaceStatsViewModel({
   const contextPeriodLabel = React.useMemo(() => {
     return resolveContextPeriodLabel({
       copy,
-      decisionContextPeriod: data?.decisionContext.period,
+      decisionContextPeriod: data?.decisionContext?.period,
       range,
     });
-  }, [copy, data?.decisionContext.period, range]);
+  }, [copy, data?.decisionContext?.period, range]);
 
-  const contextCityLabel = data?.decisionContext.city.label ?? selectedCityOption?.label ?? copy.contextAllCitiesLabel;
-  const contextCategoryLabel = data?.decisionContext.category.label ?? selectedCategoryOption?.label ?? copy.contextAllCategoriesLabel;
-  const contextScopeLabel = (data?.decisionContext.mode ?? (isFocusMode ? 'focus' : 'global')) === 'focus'
+  const contextCityLabel = data?.decisionContext?.city.label ?? selectedCityOption?.label ?? copy.contextAllCitiesLabel;
+  const contextCategoryLabel = data?.decisionContext?.category.label ?? selectedCategoryOption?.label ?? copy.contextAllCategoriesLabel;
+  const contextScopeLabel = (data?.decisionContext?.mode ?? (isFocusMode ? 'focus' : 'global')) === 'focus'
     ? copy.contextScopeFocusLabel
     : copy.contextScopeGlobalLabel;
-  const isLowDataContext = Boolean(data?.decisionContext.lowData?.isLowData);
+  const isLowDataContext = Boolean(data?.decisionContext?.lowData?.isLowData);
 
   const contextHealthMetrics = React.useMemo<WorkspaceStatisticsContextMetricView[]>(() => {
     return buildContextHealthMetrics({
       copy,
-      source: data?.decisionContext.health,
+      source: data?.decisionContext?.health,
     });
   }, [
     copy,
-    data?.decisionContext.health,
+    data?.decisionContext?.health,
   ]);
 
   const insights = React.useMemo<WorkspaceStatisticsInsightView[]>(
