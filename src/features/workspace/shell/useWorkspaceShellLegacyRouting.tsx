@@ -29,24 +29,11 @@ export function useWorkspaceShellLegacyRouting({
   const searchParams = useSearchParams();
 
   const sectionParam = searchParams.get('section');
-  const isLegacyStatisticsRoute = sectionParam === 'statistics';
   const tabParam = searchParams.get('tab');
   const isOverviewRoute = sectionParam === 'overview';
   const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
-  const resolvedSection = isLegacyStatisticsRoute
-    ? 'stats'
-    : resolvePublicWorkspaceSection(sectionParam);
+  const resolvedSection = resolvePublicWorkspaceSection(sectionParam);
   const isGuestChatSection = authStatus === 'unauthenticated' && resolvedSection === 'chat';
-
-  React.useEffect(() => {
-    if (!isLegacyStatisticsRoute) return;
-
-    const nextParams = new URLSearchParams(searchParams.toString());
-    nextParams.set('section', 'stats');
-    const nextQuery = nextParams.toString();
-
-    router.replace(nextQuery ? `/workspace?${nextQuery}` : '/workspace', { scroll: false });
-  }, [isLegacyStatisticsRoute, router, searchParams]);
 
   React.useEffect(() => {
     if (!hasExplicitWorkspaceTab) return;

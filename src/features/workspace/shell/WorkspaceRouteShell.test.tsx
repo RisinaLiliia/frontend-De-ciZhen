@@ -97,22 +97,6 @@ describe('WorkspaceRouteShell', () => {
     expect(node.getAttribute('data-workspace-tab')).toBe('null');
   });
 
-  it('redirects legacy statistics section to canonical stats route', () => {
-    const replace = vi.fn();
-    useRouterMock.mockReturnValue({ replace });
-    mockSearchParams('section=statistics&period=90d');
-    mockAuth('unauthenticated');
-
-    render(<WorkspaceRouteShell />);
-
-    const node = screen.getByTestId('workspace-page-client');
-    expect(node.getAttribute('data-public-section')).toBe('stats');
-    expect(replace).toHaveBeenCalledWith(
-      '/workspace?section=stats&period=90d',
-      { scroll: false },
-    );
-  });
-
   it('keeps chat as a canonical workspace section', () => {
     mockSearchParams('section=chat&conversation=custom-thread-1');
     mockAuth('authenticated');

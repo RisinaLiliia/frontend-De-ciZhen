@@ -81,7 +81,7 @@ export function WorkspaceReviewsAside({
       emptyText: data.decisionPanel.emptyText,
       overview: data.decisionPanel.overview,
     } : null,
-    queueFooterHref: '/workspace?section=profile&tab=reviews',
+    queueFooterHref: '/workspace?section=reviews',
   });
 
   return (
