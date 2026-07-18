@@ -27,7 +27,7 @@ describe('workspaceData.queries', () => {
     vi.clearAllMocks();
   });
 
-  it('keeps legacy public overview disabled for unified market requests while still building market contract queries', () => {
+  it('builds market contract queries without a legacy public overview dependency', () => {
     const loadPlan = resolveWorkspaceDataPlan({
       isAuthed: false,
       isWorkspaceAuthed: false,
@@ -59,20 +59,6 @@ describe('workspaceData.queries', () => {
       activeRequestsSort: null,
     });
 
-    expect(queries.publicOverview.enabled).toBe(false);
-    expect(queries.publicOverview.queryKey).toEqual([
-      'workspace-public-overview',
-      'berlin',
-      'design',
-      'logo',
-      'price_desc',
-      'attention',
-      '30d',
-      3,
-      24,
-      undefined,
-      undefined,
-    ]);
     expect(queries.publicSummary.queryKey).toEqual([
       'workspace-public-summary',
       WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,

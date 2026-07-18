@@ -2,11 +2,12 @@
 
 import type { ComponentProps } from 'react';
 
-import { buildRequestsListProps } from '@/components/requests/requestsListProps';
 import type { WorkspacePublicIntro } from '@/features/workspace/intro';
 import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import type { useWorkspacePrivateDataFlow } from '@/features/workspace/orchestration/useWorkspacePrivateDataFlow';
 import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
+import type { WorkspaceRequestsViewCard } from '@/features/workspace/requests/workspaceRequestsView.model';
+import type { WorkspaceRequestsViewModel } from '@/features/workspace/requests/workspaceRequestsView.model';
 import type { useWorkspacePresentation } from '@/features/workspace';
 import type { useWorkspacePrivateState } from '@/features/workspace/state/useWorkspacePrivateState';
 import type { WorkspacePrivateOverviewState } from '@/features/workspace/state/workspacePrivateState.model';
@@ -61,8 +62,6 @@ type ResolveWorkspaceEffectiveRequestsRoleArgs = {
 type ResolveWorkspacePrivateRequestsLoadingArgs = {
   workspaceRequests: WorkspacePrivateDataFlowResult['workspaceRequests'];
   isWorkspaceRequestsLoading: WorkspacePrivateDataFlowResult['isWorkspaceRequestsLoading'];
-  activeRequestsRole: WorkspacePrivateDataFlowResult['activeRequestsRole'];
-  isWorkspacePrivateRequestsFallbackLoading: WorkspacePrivateDataFlowResult['isWorkspacePrivateRequestsFallbackLoading'];
 };
 
 type ResolveWorkspacePrivateRenderModesArgs = {
@@ -74,25 +73,14 @@ type ResolveWorkspacePrivateRenderModesArgs = {
   requestsScope: WorkspacePrivateDataFlowResult['requestsScope'];
 };
 
-type BuildWorkspacePrivateOverviewListPropsArgs = {
-  branch: WorkspaceBranchProps;
-  data: Pick<
-    WorkspacePrivateDataFlowResult,
-    | 'overviewRequestsListState'
-    | 'serviceByKey'
-    | 'categoryByKey'
-    | 'cityById'
-    | 'formatDate'
-    | 'formatPrice'
-    | 'offersByRequest'
-    | 'favoriteRequestIds'
-    | 'onToggleRequestFavorite'
-    | 'onOpenOfferSheet'
-    | 'onWithdrawOffer'
-    | 'onOpenChatThread'
-    | 'pendingOfferRequestId'
-    | 'pendingFavoriteRequestIds'
-  >;
+type BuildWorkspaceOverviewMarketCardsStateArgs = {
+  data: Pick<WorkspacePrivateDataFlowResult, 'favoriteRequestIds' | 'onToggleRequestFavorite' | 'pendingFavoriteRequestIds'> & {
+    overviewMarketRequestsState: {
+      model: WorkspaceRequestsViewModel;
+      isLoading: boolean;
+      isError: boolean;
+    };
+  };
   isOverviewMode: boolean;
 };
 
@@ -121,49 +109,35 @@ export function resolveWorkspacePrivateRenderModes({
   };
 }
 
-export function buildWorkspacePrivateOverviewListPropsArgs({
-  branch,
+export function buildWorkspaceOverviewMarketCardsState({
   data,
   isOverviewMode,
-}: BuildWorkspacePrivateOverviewListPropsArgs): Parameters<typeof buildRequestsListProps>[0] {
+}: BuildWorkspaceOverviewMarketCardsStateArgs): {
+  cards: WorkspaceRequestsViewCard[];
+  isLoading: boolean;
+  isError: boolean;
+  favoriteRequestIds: ReadonlySet<string>;
+  pendingFavoriteRequestIds: ReadonlySet<string>;
+  onToggleFavorite: (requestId: string) => void;
+} {
   if (!isOverviewMode) {
     return {
-      t: branch.t,
-      locale: branch.locale,
-      requests: [],
+      cards: [],
       isLoading: false,
       isError: false,
-      serviceByKey: data.serviceByKey,
-      categoryByKey: data.categoryByKey,
-      cityById: data.cityById,
-      formatDate: data.formatDate,
-      formatPrice: data.formatPrice,
+      favoriteRequestIds: data.favoriteRequestIds,
+      pendingFavoriteRequestIds: data.pendingFavoriteRequestIds,
+      onToggleFavorite: data.onToggleRequestFavorite,
     };
   }
 
   return {
-    t: branch.t,
-    locale: branch.locale,
-    requests: data.overviewRequestsListState.requests,
-    isLoading: data.overviewRequestsListState.isLoading,
-    isError: data.overviewRequestsListState.isError,
-    serviceByKey: data.serviceByKey,
-    categoryByKey: data.categoryByKey,
-    cityById: data.cityById,
-    formatDate: data.formatDate,
-    formatPrice: data.formatPrice,
-    enableOfferActions: true,
-    hideRecurringBadge: branch.isPersonalized,
-    showFavoriteButton: true,
-    offersByRequest: data.offersByRequest,
+    cards: data.overviewMarketRequestsState.model.cards,
+    isLoading: data.overviewMarketRequestsState.isLoading,
+    isError: data.overviewMarketRequestsState.isError,
     favoriteRequestIds: data.favoriteRequestIds,
-    onToggleFavorite: data.onToggleRequestFavorite,
-    onSendOffer: data.onOpenOfferSheet,
-    onEditOffer: data.onOpenOfferSheet,
-    onWithdrawOffer: data.onWithdrawOffer,
-    onOpenChatThread: data.onOpenChatThread,
-    pendingOfferRequestId: data.pendingOfferRequestId,
     pendingFavoriteRequestIds: data.pendingFavoriteRequestIds,
+    onToggleFavorite: data.onToggleRequestFavorite,
   };
 }
 
@@ -268,15 +242,6 @@ export function resolveWorkspaceEffectiveRequestsRole({
 export function resolveWorkspacePrivateRequestsLoading({
   workspaceRequests,
   isWorkspaceRequestsLoading,
-  activeRequestsRole,
-  isWorkspacePrivateRequestsFallbackLoading,
 }: ResolveWorkspacePrivateRequestsLoadingArgs) {
-  if (workspaceRequests) {
-    return isWorkspaceRequestsLoading;
-  }
-
-  return isWorkspaceRequestsLoading || (
-    activeRequestsRole === 'all' &&
-    isWorkspacePrivateRequestsFallbackLoading
-  );
+  return Boolean(workspaceRequests) && isWorkspaceRequestsLoading;
 }

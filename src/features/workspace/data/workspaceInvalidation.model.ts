@@ -8,7 +8,7 @@ export function buildWorkspacePublicRequestLifecycleQueryKeys(): QueryKey[] {
   return [
     workspaceQK.requestsExplorerPublicPrefix(),
     workspaceQK.requestsPublicPrefix(),
-    workspaceQK.workspacePublicOverviewPrefix(),
+    workspaceQK.workspacePublicSnapshotPrefix(),
     workspaceQK.workspacePublicSummaryPrefix(),
     workspaceQK.requestsPublicSummaryTotalPrefix(),
     workspaceQK.requestsPublicCityActivityPrefix(),

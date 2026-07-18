@@ -5,7 +5,6 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 import { trackUXEvent } from '@/lib/analytics';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import { buildRequestsListProps } from '@/components/requests/requestsListProps';
 import { WorkspacePrivateIntro, WorkspacePublicIntro } from '@/features/workspace/intro';
 import { WorkspaceOverviewMain, useWorkspaceOverviewRail } from '@/features/workspace/overview';
 import { WorkspaceRequestsSectionRail } from '@/features/workspace/ai-rail';
@@ -17,7 +16,10 @@ import {
   buildMyRequestsViewModelFromResponse,
 } from '@/features/workspace/requests/myRequestsView.model';
 import { useWorkspacePrivateState } from '@/features/workspace/state/useWorkspacePrivateState';
-import { buildWorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
+import {
+  buildWorkspaceRequestsSurfaceModel,
+  buildWorkspaceRequestsViewModelFromResponse,
+} from '@/features/workspace/requests/workspaceRequestsView.model';
 import { useDecisionMode } from '@/features/workspace/requests/useDecisionMode';
 import {
   useWorkspacePresentation,
@@ -45,7 +47,7 @@ import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/wo
 import { useWorkspacePrivateDataFlow } from '@/features/workspace/orchestration/useWorkspacePrivateDataFlow';
 import { isWorkspaceTab } from '@/features/workspace/state';
 import {
-  buildWorkspacePrivateOverviewListPropsArgs,
+  buildWorkspaceOverviewMarketCardsState,
   buildWorkspacePublicSummaryView,
   resolveWorkspacePrivateRequestsLoading,
   resolveWorkspacePrivateRenderModes,
@@ -72,7 +74,7 @@ export function useWorkspacePrivatePresentationFlow({
     activeWorkspaceTab,
     pendingFavoriteProviderIds,
     onToggleProviderFavorite,
-    overviewRequestsListState,
+    overviewMarketRequestsState,
     overviewRequestsCount,
   } = data;
   const { isOverviewMode, isUnifiedPrivateRequests } =
@@ -149,14 +151,23 @@ export function useWorkspacePrivatePresentationFlow({
     [activeWorkspaceTab],
   );
 
-  const activeOffersListProps = React.useMemo(
+  const overviewMarketRequestsStateModel = React.useMemo(
+    () => buildWorkspaceRequestsViewModelFromResponse(overviewMarketRequestsState.response),
+    [overviewMarketRequestsState.response],
+  );
+  const activeOffersState = React.useMemo(
     () =>
-      buildRequestsListProps(buildWorkspacePrivateOverviewListPropsArgs({
-        branch,
-        data,
+      buildWorkspaceOverviewMarketCardsState({
+        data: {
+          ...data,
+          overviewMarketRequestsState: {
+            ...overviewMarketRequestsState,
+            model: overviewMarketRequestsStateModel,
+          },
+        },
         isOverviewMode,
-      })),
-    [branch, data, isOverviewMode],
+      }),
+    [data, isOverviewMode, overviewMarketRequestsState, overviewMarketRequestsStateModel],
   );
 
   const preferredRequestsRole = privateState.preferredRequestsRole;
@@ -174,8 +185,6 @@ export function useWorkspacePrivatePresentationFlow({
   const privateRequestsLoading = resolveWorkspacePrivateRequestsLoading({
     workspaceRequests: data.workspaceRequests,
     isWorkspaceRequestsLoading: data.isWorkspaceRequestsLoading,
-    activeRequestsRole: data.activeRequestsRole,
-    isWorkspacePrivateRequestsFallbackLoading: data.isWorkspacePrivateRequestsFallbackLoading,
   });
   const privateRequestsModel = React.useMemo(
     () => buildMyRequestsViewModelFromResponse(data.workspaceRequests),
@@ -235,7 +244,7 @@ const privatePagination = React.useMemo(() => {
       mapPanel={overviewMapPanel}
       primaryAction={primaryAction}
       onPrimaryActionClick={onPrimaryActionClick}
-      activeOffersListProps={activeOffersListProps}
+      activeOffersState={activeOffersState}
       topProviders={workspaceAsideBaseProps.providers}
       topProvidersTitle={workspaceAsideBaseProps.title}
       topProvidersSubtitle={workspaceAsideBaseProps.subtitle}
@@ -362,7 +371,7 @@ const privatePagination = React.useMemo(() => {
     overviewDecisionPanelRef: undefined,
     sectionModel,
     primaryAction,
-    isLoading: overviewRequestsListState.isLoading,
+    isLoading: overviewMarketRequestsState.isLoading,
     overviewRequestsCount,
   };
 }

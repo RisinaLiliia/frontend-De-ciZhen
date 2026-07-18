@@ -84,13 +84,8 @@ export function buildWorkspacePublicReviewsQuery() {
 
 export function buildWorkspacePublicSnapshotQuery() {
   return queryOptions({
-    queryKey: workspaceQK.workspacePublicOverview({
-      cityId: undefined,
-      categoryKey: undefined,
-      subcategoryKey: undefined,
+    queryKey: workspaceQK.workspacePublicSnapshot({
       sort: 'date_desc',
-      state: undefined,
-      period: undefined,
       page: 1,
       limit: PUBLIC_REQUESTS_SEED_LIMIT,
       activityRange: '30d',

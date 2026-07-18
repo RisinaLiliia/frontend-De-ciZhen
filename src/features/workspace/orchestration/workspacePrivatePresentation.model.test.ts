@@ -122,13 +122,11 @@ describe('workspacePrivatePresentation.model', () => {
     ).toBe('customer');
   });
 
-  it('keeps private requests loading scoped to the fallback overview path', () => {
+  it('keeps private requests loading tied to the canonical workspace requests contract', () => {
     expect(
       resolveWorkspacePrivateRequestsLoading({
-        workspaceRequests: { requests: [] } as never,
+        workspaceRequests: { list: { items: [] } } as never,
         isWorkspaceRequestsLoading: true,
-        activeRequestsRole: 'all',
-        isWorkspacePrivateRequestsFallbackLoading: false,
       }),
     ).toBe(true);
 
@@ -136,10 +134,8 @@ describe('workspacePrivatePresentation.model', () => {
       resolveWorkspacePrivateRequestsLoading({
         workspaceRequests: null,
         isWorkspaceRequestsLoading: false,
-        activeRequestsRole: 'all',
-        isWorkspacePrivateRequestsFallbackLoading: true,
       }),
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it('builds public summary view from canonical summary payloads', () => {

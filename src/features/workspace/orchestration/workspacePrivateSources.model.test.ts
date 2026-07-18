@@ -3,15 +3,12 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   buildWorkspacePrivateCatalogIndexArgs,
   buildWorkspacePrivateSourcesCollectionsArgs,
-  buildWorkspacePrivateSourcesIdleRequestsStateArgs,
-  shouldLoadWorkspacePrivatePublicRequestsState,
   shouldLoadWorkspacePrivateCatalog,
   shouldBuildWorkspacePrivateFavoriteProviderBackfill,
   shouldBuildWorkspacePrivateFavoriteProviderPresentation,
   shouldBuildWorkspacePrivateRequestCollections,
   resolveWorkspacePrivatePublicSummaryCityActivityLimit,
   buildWorkspacePrivateSourcesDataArgs,
-  buildWorkspacePrivateSourcesRequestsStateArgs,
   resolveWorkspacePrivateSourcesResult,
 } from './workspacePrivateSources.model';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
@@ -41,28 +38,7 @@ describe('workspacePrivateSources.model', () => {
     ).toBe(true);
   });
 
-  it('loads private public-requests state only for overview my-requests mode', () => {
-    expect(
-      shouldLoadWorkspacePrivatePublicRequestsState({
-        activePublicSection: null,
-        activeWorkspaceTab: 'my-requests',
-      }),
-    ).toBe(true);
-
-    expect(
-      shouldLoadWorkspacePrivatePublicRequestsState({
-        activePublicSection: 'profile',
-        activeWorkspaceTab: 'my-requests',
-      }),
-    ).toBe(false);
-
-    expect(
-      shouldLoadWorkspacePrivatePublicRequestsState({
-        activePublicSection: 'requests',
-        activeWorkspaceTab: 'my-requests',
-      }),
-    ).toBe(false);
-
+  it('builds request collections only for the private overview branch', () => {
     expect(
       shouldBuildWorkspacePrivateRequestCollections({
         activePublicSection: 'profile',
@@ -180,29 +156,7 @@ describe('workspacePrivateSources.model', () => {
     ).toBe(1);
   });
 
-  it('builds requests-state and collections args from filters/data/index', () => {
-    const requestsStateArgs = buildWorkspacePrivateSourcesRequestsStateArgs({
-      filters: {
-        limit: 20,
-        page: 2,
-        setPage: vi.fn(),
-        hasActivePublicFilter: true,
-        cityId: 'all',
-        categoryKey: 'cat-1',
-        subcategoryKey: 'all',
-        sortBy: 'date_desc',
-      },
-      contractData: {
-        allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
-      } as never,
-      legacyPublicOverviewData: {
-        overviewRequests: { items: [{ id: 'req-1' }], total: 1 },
-        isLoading: false,
-        isError: false,
-      } as never,
-      activePublicSection: 'requests',
-    });
-
+  it('builds collections args from filters/data/index', () => {
     const collectionsArgs = buildWorkspacePrivateSourcesCollectionsArgs({
       activePublicSection: null,
       activeWorkspaceTab: 'my-requests',
@@ -223,8 +177,6 @@ describe('workspacePrivateSources.model', () => {
       locale: 'de',
     });
 
-    expect(requestsStateArgs.isWorkspacePublicSection).toBe(false);
-    expect(requestsStateArgs.categoryKey).toBe('cat-1');
     expect(collectionsArgs.includeRequestCollections).toBe(true);
     expect(collectionsArgs.includeFavoriteProviderBackfill).toBe(true);
     expect(collectionsArgs.includeFavoriteProviderPresentation).toBe(false);
@@ -246,21 +198,6 @@ describe('workspacePrivateSources.model', () => {
       categories: [{ key: 'cat-1' }],
       cities: [{ id: 'city-1' }],
     });
-  });
-
-  it('builds idle requests-state args for private tabs without overview market state', () => {
-    const args = buildWorkspacePrivateSourcesIdleRequestsStateArgs({
-      allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
-      limit: 20,
-      page: 2,
-      setPage: vi.fn(),
-      activePublicSection: null,
-    });
-
-    expect(args.publicRequests).toBeUndefined();
-    expect(args.allRequestsSummary?.totalPublishedRequests).toBe(12);
-    expect(args.hasActivePublicFilter).toBe(false);
-    expect(args.cityId).toBe('all');
   });
 
   it('passes idle request-side collections for private tabs that do not render request data', () => {
@@ -323,6 +260,9 @@ describe('workspacePrivateSources.model', () => {
 
   it('resolves final private sources payload from hook results', () => {
     const result = resolveWorkspacePrivateSourcesResult({
+      activePublicSection: null,
+      activeWorkspaceTab: 'my-requests',
+      requestsScope: 'market',
       contractData: {
         allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
         publicCityActivity: { totalActiveCities: 0, totalActiveRequests: 0, items: [] },
@@ -338,15 +278,13 @@ describe('workspacePrivateSources.model', () => {
           completedJobsCount: 0,
           favoriteRequestCount: 0,
         },
-        workspaceRequests: null,
-        isWorkspaceRequestsLoading: false,
+        workspaceRequests: {
+          list: {
+            items: [{ requestId: 'req-1' }, { requestId: 'req-2' }],
+          },
+        },
+        isWorkspaceRequestsLoading: true,
         isWorkspaceRequestsError: false,
-        isWorkspacePrivateRequestsFallbackLoading: false,
-      } as never,
-      legacyPublicOverviewData: {
-        overviewRequests: { items: [{ id: 'req-1' }], total: 1 },
-        isLoading: true,
-        isError: false,
       } as never,
       requestUserStateData: {
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
@@ -379,10 +317,6 @@ describe('workspacePrivateSources.model', () => {
         favoriteProviderRoleLabelById: new Map([['provider-1', 'Painter']]),
         favoriteProviderCityLabelById: new Map([['provider-1', 'Berlin']]),
       } as never,
-      publicRequestsState: {
-        platformRequestsTotal: 12,
-        requests: [{ id: 'req-1' }, { id: 'req-2' }],
-      } as never,
       filters: {
         page: 3,
         limit: 10,
@@ -391,8 +325,12 @@ describe('workspacePrivateSources.model', () => {
     });
 
     expect(result.platformRequestsTotal).toBe(12);
-    expect(result.overviewRequestsListState).toEqual({
-      requests: [{ id: 'req-1' }, { id: 'req-2' }],
+    expect(result.overviewMarketRequestsState).toEqual({
+      response: {
+        list: {
+          items: [{ requestId: 'req-1' }, { requestId: 'req-2' }],
+        },
+      },
       isLoading: true,
       isError: false,
     });
