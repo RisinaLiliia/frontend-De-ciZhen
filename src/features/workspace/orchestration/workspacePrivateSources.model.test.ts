@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  buildWorkspacePrivateCollectionRequests,
   buildWorkspacePrivateCatalogIndexArgs,
   buildWorkspacePrivateSourcesCollectionsArgs,
   shouldLoadWorkspacePrivateCatalog,
@@ -131,6 +132,121 @@ describe('workspacePrivateSources.model', () => {
     expect(args.filter).toEqual({ page: 3, limit: 24 });
     expect(args.requestsScope).toBe('my');
     expect(args.activePublicSection).toBe('requests');
+  });
+
+  it('builds private overview request snapshots from the canonical workspace requests response', () => {
+    const requests = buildWorkspacePrivateCollectionRequests({
+      section: 'requests',
+      scope: 'market',
+      header: {
+        title: 'Requests',
+      },
+      filters: {},
+      summary: {
+        items: [],
+      },
+      list: {
+        total: 2,
+        sort: 'date_desc',
+        page: 1,
+        limit: 20,
+        hasMore: false,
+        items: [
+          {
+            id: 'card-1',
+            requestId: 'req-1',
+            role: 'customer',
+            title: 'Kitchen refresh',
+            category: 'Renovation',
+            subcategory: 'painting',
+            city: 'berlin',
+            createdAtIso: '2026-07-10T10:00:00.000Z',
+            lifecycleState: 'published',
+            requestPreview: {
+              href: '/workspace?requestId=req-1',
+              categoryLabel: 'Renovation',
+              title: 'Kitchen refresh',
+              cityLabel: 'Berlin',
+              priceLabel: 'EUR 250',
+              tags: [],
+            },
+            progress: { currentStep: 'request', steps: [] },
+            quickActions: [],
+            state: 'open',
+            stateLabel: 'Open',
+            status: { actions: [] },
+          },
+          {
+            id: 'card-2',
+            requestId: 'req-2',
+            role: 'customer',
+            title: 'Bathroom repair',
+            category: 'Repairs',
+            subcategory: 'plumbing',
+            city: 'munich',
+            createdAtIso: '2026-07-11T10:00:00.000Z',
+            lifecycleState: 'cancelled',
+            visibility: {
+              inPublicFeed: false,
+              retainedForParticipants: true,
+              isInactive: true,
+            },
+            requestPreview: {
+              href: '/workspace?requestId=req-2',
+              categoryLabel: 'Repairs',
+              title: 'Bathroom repair',
+              cityLabel: 'Munich',
+              priceLabel: 'EUR 400',
+              tags: [],
+            },
+            progress: { currentStep: 'request', steps: [] },
+            quickActions: [],
+            state: 'open',
+            stateLabel: 'Open',
+            status: { actions: [] },
+          },
+        ],
+      },
+      decisionPanel: {
+        summary: {
+          totalNeedsAction: 0,
+          highPriorityCount: 0,
+          newOffersCount: 0,
+          replyRequiredCount: 0,
+          confirmCompletionCount: 0,
+          overdueCount: 0,
+        },
+        primaryAction: {
+          label: '',
+          mode: 'decision',
+          targetFilter: 'needs_action',
+        },
+        queue: [],
+        overview: {
+          highUrgency: 0,
+          inProgress: 0,
+          completedThisPeriod: 0,
+        },
+      },
+      sidePanel: null,
+    } as never);
+
+    expect(requests).toEqual([
+      expect.objectContaining({
+        id: 'req-1',
+        title: 'Kitchen refresh',
+        serviceKey: 'painting',
+        cityId: 'berlin',
+        status: 'published',
+      }),
+      expect.objectContaining({
+        id: 'req-2',
+        title: 'Bathroom repair',
+        serviceKey: 'plumbing',
+        cityId: 'munich',
+        status: 'cancelled',
+      }),
+    ]);
   });
 
   it('uses minimal public summary city-activity payload outside private overview my-requests mode', () => {

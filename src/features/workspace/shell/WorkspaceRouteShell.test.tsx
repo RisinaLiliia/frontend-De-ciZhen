@@ -86,6 +86,44 @@ describe('WorkspaceRouteShell', () => {
     expect(node.getAttribute('data-workspace-tab')).toBe('null');
   });
 
+  it('normalizes legacy statistics alias to the canonical stats section', () => {
+    const replace = vi.fn();
+    useRouterMock.mockReturnValue({ replace });
+    mockSearchParams('section=statistics&period=90d');
+    mockAuth('authenticated');
+
+    render(<WorkspaceRouteShell />);
+
+    expect(replace).toHaveBeenCalledWith(
+      '/workspace?section=stats&period=90d',
+      { scroll: false },
+    );
+  });
+
+  it('normalizes legacy orders and actions aliases to canonical sections', () => {
+    const replace = vi.fn();
+    useRouterMock.mockReturnValue({ replace });
+    mockSearchParams('section=orders');
+    mockAuth('unauthenticated');
+
+    const { rerender } = render(<WorkspaceRouteShell />);
+
+    expect(replace).toHaveBeenCalledWith(
+      '/workspace?section=requests',
+      { scroll: false },
+    );
+
+    replace.mockClear();
+    mockSearchParams('section=actions&viewerMode=provider');
+    mockAuth('authenticated');
+    rerender(<WorkspaceRouteShell />);
+
+    expect(replace).toHaveBeenCalledWith(
+      '/workspace?section=profile&viewerMode=provider',
+      { scroll: false },
+    );
+  });
+
   it('keeps reviews as a canonical section for unauthenticated users', () => {
     mockSearchParams('section=reviews');
     mockAuth('unauthenticated');

@@ -90,13 +90,57 @@ describe('useWorkspacePrivateSources', () => {
     const offer = { id: 'offer-1', requestId: 'req-1' } as OfferDto;
     const provider = { id: 'provider-1' } as ProviderPublicDto;
     const contract = { id: 'contract-1' } as ContractDto;
+    const overviewCards = [
+      {
+        id: 'card-1',
+        requestId: 'req-1',
+        title: 'Kitchen refresh',
+        category: 'Renovation',
+        subcategory: 'painting',
+        city: 'berlin',
+        createdAtIso: '2026-07-10T10:00:00.000Z',
+        requestPreview: {
+          title: 'Kitchen refresh',
+          categoryLabel: 'Renovation',
+          cityLabel: 'Berlin',
+          priceLabel: 'EUR 250',
+          tags: [],
+        },
+        progress: { currentStep: 'request', steps: [] },
+        quickActions: [],
+        state: 'open',
+        stateLabel: 'Open',
+        status: { actions: [] },
+      },
+      {
+        id: 'card-2',
+        requestId: 'req-2',
+        title: 'Bathroom repair',
+        category: 'Repairs',
+        subcategory: 'plumbing',
+        city: 'munich',
+        createdAtIso: '2026-07-11T10:00:00.000Z',
+        requestPreview: {
+          title: 'Bathroom repair',
+          categoryLabel: 'Repairs',
+          cityLabel: 'Munich',
+          priceLabel: 'EUR 400',
+          tags: [],
+        },
+        progress: { currentStep: 'request', steps: [] },
+        quickActions: [],
+        state: 'open',
+        stateLabel: 'Open',
+        status: { actions: [] },
+      },
+    ];
 
     useWorkspaceDataMock.mockReturnValue({
       contractData: {
         allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
         workspaceRequests: {
           list: {
-            items: [{ requestId: 'req-1' }, { requestId: 'req-2' }],
+            items: overviewCards,
           },
         },
         isWorkspaceRequestsLoading: false,
@@ -191,7 +235,10 @@ describe('useWorkspacePrivateSources', () => {
     expect(useWorkspaceCollectionsMock).toHaveBeenCalledWith(
       expect.objectContaining({
         locale: 'de',
-        requests: [],
+        requests: expect.arrayContaining([
+          expect.objectContaining({ id: 'req-1', title: 'Kitchen refresh' }),
+          expect.objectContaining({ id: 'req-2', title: 'Bathroom repair' }),
+        ]),
       }),
     );
   });

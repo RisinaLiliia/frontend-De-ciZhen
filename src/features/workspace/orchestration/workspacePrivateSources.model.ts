@@ -3,6 +3,8 @@
 import type { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import type { useWorkspaceData } from '@/features/workspace/data/useWorkspaceData';
 import type { useWorkspaceProviderSupportData } from '@/features/workspace/providers/useWorkspaceProviderSupportData';
+import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import type { WorkspaceMyRequestCardDto, WorkspaceRequestsResponseDto } from '@/lib/api/dto/workspace';
 import type {
   useWorkspaceCollections,
   useWorkspacePublicFilters,
@@ -180,6 +182,54 @@ export function buildWorkspacePrivateCatalogIndexArgs({
     categories,
     cities,
   };
+}
+
+function resolveWorkspacePrivateRequestStatus(
+  card: WorkspaceMyRequestCardDto,
+): RequestResponseDto['status'] {
+  if (card.visibility?.isInactive || card.lifecycleState === 'cancelled') return 'cancelled';
+  if (card.lifecycleState === 'draft' || card.ownerLifecycleStage === 'draft') return 'draft';
+  if (
+    card.lifecycleState === 'contract_pending'
+    || card.lifecycleState === 'in_progress'
+    || card.lifecycleState === 'completion_pending'
+  ) {
+    return 'matched';
+  }
+  if (
+    card.lifecycleState === 'completed'
+    || card.lifecycleState === 'reviewed'
+    || card.ownerLifecycleStage === 'completed'
+    || card.ownerLifecycleStage === 'reviewed'
+  ) {
+    return 'closed';
+  }
+  return 'published';
+}
+
+export function buildWorkspacePrivateCollectionRequests(
+  response: WorkspaceRequestsResponseDto | null | undefined,
+): RequestResponseDto[] {
+  const cards = response?.list.items ?? [];
+
+  return cards.map((card) => ({
+    id: card.requestId,
+    serviceKey: card.subcategory?.trim() || card.requestPreview.imageCategoryKey?.trim() || '',
+    cityId: card.city?.trim() || '',
+    cityName: card.requestPreview.cityLabel ?? card.city ?? null,
+    categoryName: card.requestPreview.categoryLabel || card.category || null,
+    subcategoryName: card.subcategory ?? null,
+    propertyType: 'apartment',
+    area: 0,
+    preferredDate: card.nextEventAtIso ?? card.createdAtIso ?? '',
+    isRecurring: false,
+    title: card.requestPreview.title || card.title || null,
+    description: card.requestPreview.excerpt ?? null,
+    imageUrl: card.requestPreview.imageUrl ?? null,
+    priceTrend: card.requestPreview.priceTrend ?? null,
+    status: resolveWorkspacePrivateRequestStatus(card),
+    createdAt: card.createdAtIso ?? '',
+  }));
 }
 
 export function buildWorkspacePrivateSourcesCollectionsArgs({

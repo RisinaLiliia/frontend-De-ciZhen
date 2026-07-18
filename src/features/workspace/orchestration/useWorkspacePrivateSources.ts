@@ -9,6 +9,7 @@ import {
 } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import {
+  buildWorkspacePrivateCollectionRequests,
   buildWorkspacePrivateCatalogIndexArgs,
   buildWorkspacePrivateSourcesCollectionsArgs,
   buildWorkspacePrivateSourcesDataArgs,
@@ -50,15 +51,10 @@ export function useWorkspacePrivateSources({
     cities,
     categories,
     services,
-    categoryKey,
-    subcategoryKey,
-    cityId,
-    sortBy,
     page,
     limit,
     filter,
     setPage,
-    hasActivePublicFilter,
   } = useWorkspacePublicFilters({
     t,
     locale,
@@ -109,7 +105,7 @@ export function useWorkspacePrivateSources({
       activePublicSection,
       activeWorkspaceTab,
       requestsScope,
-      requests: [],
+      requests: buildWorkspacePrivateCollectionRequests(contractData.workspaceRequests),
       requestUserStateData,
       providerSupportData,
       catalogIndex,

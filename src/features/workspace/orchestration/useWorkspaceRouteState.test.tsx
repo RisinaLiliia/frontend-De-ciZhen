@@ -115,6 +115,26 @@ describe('useWorkspaceRouteState', () => {
     expect(node.getAttribute('data-is-public')).toBe('true');
   });
 
+  it('supports legacy workspace section aliases', () => {
+    const { rerender } = render(<Probe query="section=statistics" isAuthed />);
+    let node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('stats');
+    expect(node.getAttribute('data-is-public')).toBe('false');
+
+    rerender(<Probe query="section=orders" />);
+    node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('requests');
+    expect(node.getAttribute('data-is-public')).toBe('true');
+
+    rerender(<Probe query="section=actions" isAuthed />);
+    node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('profile');
+    expect(node.getAttribute('data-is-public')).toBe('false');
+  });
+
   it('keeps chat as a workspace section but routes it through the private shell', () => {
     render(<Probe query="section=chat&conversation=thread-1" isAuthed />);
     const node = screen.getByTestId('state');

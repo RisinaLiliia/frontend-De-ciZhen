@@ -10,7 +10,19 @@ export type PublicWorkspaceSection =
   | 'privacy'
   | 'cookies';
 
-export function resolvePublicWorkspaceSection(value: string | null): PublicWorkspaceSection | null {
+const WORKSPACE_SECTION_ALIASES = {
+  statistics: 'stats',
+  orders: 'requests',
+  actions: 'profile',
+} as const satisfies Record<string, PublicWorkspaceSection>;
+
+export function resolveCanonicalWorkspaceSection(value: string | null): PublicWorkspaceSection | null {
+  if (!value) return null;
+
+  if (value in WORKSPACE_SECTION_ALIASES) {
+    return WORKSPACE_SECTION_ALIASES[value as keyof typeof WORKSPACE_SECTION_ALIASES];
+  }
+
   if (value === 'requests') return 'requests';
   if (
     value === 'providers'
@@ -25,5 +37,10 @@ export function resolvePublicWorkspaceSection(value: string | null): PublicWorks
   ) {
     return value;
   }
+
   return null;
+}
+
+export function resolvePublicWorkspaceSection(value: string | null): PublicWorkspaceSection | null {
+  return resolveCanonicalWorkspaceSection(value);
 }

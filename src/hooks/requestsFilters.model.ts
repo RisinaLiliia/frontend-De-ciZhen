@@ -6,8 +6,11 @@ import {
 } from '@/lib/requests/pagination';
 
 export const REQUESTS_FILTER_QUERY_KEYS = new Set([
+  'city',
   'cityId',
+  'category',
   'categoryKey',
+  'service',
   'subcategoryKey',
   'serviceKey',
   'tab',
@@ -42,6 +45,22 @@ type RequestsService = {
   categoryKey: string;
 };
 
+function readCanonicalOrLegacyParam(
+  searchParams: SearchParamsLike,
+  canonicalKey: string,
+  ...legacyKeys: string[]
+) {
+  const canonicalValue = searchParams.get(canonicalKey);
+  if (canonicalValue !== null) return canonicalValue;
+
+  for (const legacyKey of legacyKeys) {
+    const legacyValue = searchParams.get(legacyKey);
+    if (legacyValue !== null) return legacyValue;
+  }
+
+  return null;
+}
+
 export function readPositiveInt(value: string | null, fallback: number, max = Number.MAX_SAFE_INTEGER) {
   const parsed = Number(value ?? '');
   if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
@@ -56,9 +75,9 @@ export function resolveRequestsFilterQueryParams(
   const limit = requestedLimit <= REQUESTS_PAGE_SIZE_SINGLE ? REQUESTS_PAGE_SIZE_SINGLE : REQUESTS_PAGE_SIZE;
 
   return {
-    categoryParam: searchParams.get('categoryKey') ?? ALL_OPTION_KEY,
-    subcategoryParam: searchParams.get('subcategoryKey') ?? ALL_OPTION_KEY,
-    cityId: searchParams.get('cityId') ?? ALL_OPTION_KEY,
+    categoryParam: readCanonicalOrLegacyParam(searchParams, 'categoryKey', 'category') ?? ALL_OPTION_KEY,
+    subcategoryParam: readCanonicalOrLegacyParam(searchParams, 'subcategoryKey', 'service', 'serviceKey') ?? ALL_OPTION_KEY,
+    cityId: readCanonicalOrLegacyParam(searchParams, 'cityId', 'city') ?? ALL_OPTION_KEY,
     sortBy: (searchParams.get('sort') as PublicRequestsSort | null) ?? defaultSort,
     page: readPositiveInt(searchParams.get('page'), 1),
     limit,

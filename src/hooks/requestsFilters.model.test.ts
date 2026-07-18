@@ -17,7 +17,7 @@ describe('requestsFilters.model', () => {
     expect(readPositiveInt('2.8', 1)).toBe(2);
   });
 
-  it('reads only canonical requests filter query params', () => {
+  it('reads canonical requests filter query params', () => {
     const params = resolveRequestsFilterQueryParams(
       new URLSearchParams('subcategoryKey=logo&cityId=berlin&sort=price_desc&page=3&limit=40'),
       'date_desc',
@@ -29,6 +29,46 @@ describe('requestsFilters.model', () => {
       cityId: 'berlin',
       sortBy: 'price_desc',
       page: 3,
+      limit: 20,
+    });
+  });
+
+  it('supports legacy requests filter query params', () => {
+    const params = resolveRequestsFilterQueryParams(
+      new URLSearchParams('service=logo&city=berlin&category=design&sort=price_desc&page=3&limit=40'),
+      'date_desc',
+    );
+
+    expect(params).toEqual({
+      categoryParam: 'design',
+      subcategoryParam: 'logo',
+      cityId: 'berlin',
+      sortBy: 'price_desc',
+      page: 3,
+      limit: 20,
+    });
+  });
+
+  it('prefers canonical requests filter params over legacy aliases', () => {
+    const params = resolveRequestsFilterQueryParams(
+      new URLSearchParams([
+        ['city', 'legacy-city'],
+        ['cityId', 'canonical-city'],
+        ['category', 'legacy-category'],
+        ['categoryKey', 'canonical-category'],
+        ['service', 'legacy-service'],
+        ['serviceKey', 'legacy-service-key'],
+        ['subcategoryKey', 'canonical-subcategory'],
+      ]),
+      'date_desc',
+    );
+
+    expect(params).toEqual({
+      categoryParam: 'canonical-category',
+      subcategoryParam: 'canonical-subcategory',
+      cityId: 'canonical-city',
+      sortBy: 'date_desc',
+      page: 1,
       limit: 20,
     });
   });
@@ -108,7 +148,7 @@ describe('requestsFilters.model', () => {
     expect(
       buildRequestsFiltersHref({
         pathname: '/workspace',
-        searchParams: new URLSearchParams('section=requests&tab=requests&serviceKey=legacy&cityId=munich&page=7'),
+        searchParams: new URLSearchParams('section=requests&tab=requests&service=legacy-service&serviceKey=legacy-service-key&category=legacy-category&city=legacy-city&cityId=munich&page=7'),
         current: {
           cityId: 'munich',
           categoryKey: 'all',

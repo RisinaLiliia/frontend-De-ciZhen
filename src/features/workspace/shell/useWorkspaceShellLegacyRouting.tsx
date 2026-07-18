@@ -10,6 +10,7 @@ import {
   type WorkspaceTab,
 } from '@/features/workspace/state';
 import {
+  resolveCanonicalWorkspaceSection,
   resolvePublicWorkspaceSection,
   type PublicWorkspaceSection,
 } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
@@ -32,8 +33,21 @@ export function useWorkspaceShellLegacyRouting({
   const tabParam = searchParams.get('tab');
   const isOverviewRoute = sectionParam === 'overview';
   const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
+  const canonicalSection = resolveCanonicalWorkspaceSection(sectionParam);
   const resolvedSection = resolvePublicWorkspaceSection(sectionParam);
   const isGuestChatSection = authStatus === 'unauthenticated' && resolvedSection === 'chat';
+
+  React.useEffect(() => {
+    if (!sectionParam) return;
+    if (!canonicalSection) return;
+    if (sectionParam === canonicalSection) return;
+
+    const nextParams = new URLSearchParams(searchParams.toString());
+    nextParams.set('section', canonicalSection);
+    const nextQuery = nextParams.toString();
+
+    router.replace(nextQuery ? `/workspace?${nextQuery}` : '/workspace', { scroll: false });
+  }, [canonicalSection, router, searchParams, sectionParam]);
 
   React.useEffect(() => {
     if (!hasExplicitWorkspaceTab) return;
