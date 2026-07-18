@@ -28,10 +28,13 @@ export function WorkspacePaginatedPanel({
   emptyCtaLabel,
   emptyCtaHref,
   children,
+  classNamespace = 'workspace',
 }: WorkspacePaginatedPanelProps) {
   const densityClassName = listDensity === 'double' ? 'is-double' : 'is-single';
-  const resolvedPanelClassName = `${surface === 'panel' ? 'panel ' : ''}requests-panel ${panelClassName ?? ''}`.trim();
-  const resolvedListClassName = `requests-list requests-list--stable ${densityClassName} ${listClassName ?? ''}`.trim();
+  const basePanelClassName = classNamespace === 'workspace' ? 'workspace-list-panel' : 'requests-panel';
+  const baseListClassName = classNamespace === 'workspace' ? 'workspace-list workspace-list--stable' : 'requests-list requests-list--stable';
+  const resolvedPanelClassName = `${surface === 'panel' ? 'panel ' : ''}${basePanelClassName} ${panelClassName ?? ''}`.trim();
+  const resolvedListClassName = `${baseListClassName} ${densityClassName} ${listClassName ?? ''}`.trim();
 
   return (
     <section className={resolvedPanelClassName}>

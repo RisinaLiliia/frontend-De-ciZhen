@@ -15,6 +15,7 @@ type Props = {
   onOpenSort: () => void;
   onPrevPage?: () => void;
   onNextPage?: () => void;
+  classNamespace?: 'workspace' | 'requests';
 };
 
 export function RequestsMobileFilterToolbar({
@@ -28,14 +29,19 @@ export function RequestsMobileFilterToolbar({
   onOpenSort,
   onPrevPage,
   onNextPage,
+  classNamespace = 'requests',
 }: Props) {
+  const toolbarClassName = classNamespace === 'workspace'
+    ? 'workspace-mobile-filter-toolbar'
+    : 'requests-mobile-toolbar';
+
   return (
-    <div className="requests-mobile-toolbar" role="group" aria-label={t(I18N_KEYS.requestsPage.mobileControlsLabel)}>
+    <div className={toolbarClassName} role="group" aria-label={t(I18N_KEYS.requestsPage.mobileControlsLabel)}>
       <IconButton
         label={t(I18N_KEYS.requestsPage.mobileFilterLabel)}
         title={t(I18N_KEYS.requestsPage.mobileFilterLabel)}
         data-tooltip={t(I18N_KEYS.requestsPage.mobileFilterLabel)}
-        className={`requests-mobile-toolbar__btn icon-button--hint ${isOpen ? 'is-active' : ''}`.trim()}
+        className={`${toolbarClassName}__btn icon-button--hint ${isOpen ? 'is-active' : ''}`.trim()}
         onClick={onToggleFilters}
         aria-expanded={isOpen}
         aria-controls="requests-filter-controls"
@@ -63,7 +69,7 @@ export function RequestsMobileFilterToolbar({
         label={t(I18N_KEYS.requestsPage.mobileSortLabel)}
         title={t(I18N_KEYS.requestsPage.mobileSortLabel)}
         data-tooltip={t(I18N_KEYS.requestsPage.mobileSortLabel)}
-        className="requests-mobile-toolbar__btn icon-button--hint"
+        className={`${toolbarClassName}__btn icon-button--hint`}
         onClick={onOpenSort}
         aria-controls="requests-filter-controls"
         disabled={disabled}

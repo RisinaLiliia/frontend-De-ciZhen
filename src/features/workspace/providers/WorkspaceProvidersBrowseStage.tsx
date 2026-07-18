@@ -143,9 +143,11 @@ export function WorkspaceProvidersBrowseStage({
       onNextPage={onNextPage}
       surface="bare"
       topSlot={topSlot}
+      panelClassName="workspace-providers-list-panel"
       listId="providers-list"
       listAriaLabel={t(I18N_KEYS.requestsPage.providersResultsLabel)}
       listDensity={providersListDensity}
+      listClassName="workspace-providers-list"
       isLoading={isProvidersLoading}
       isError={isProvidersError}
       isEmpty={!isProvidersError && filteredProvidersCount === 0}

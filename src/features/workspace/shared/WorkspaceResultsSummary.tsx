@@ -19,6 +19,7 @@ export function WorkspaceResultsSummary({
   onNextPage,
   onListDensityChange,
   controls,
+  classNamespace = 'workspace',
 }: WorkspaceResultsSummaryProps) {
   const hasPagination = (controls?.pagination ?? true) && hasRequestsPagination({ onPrevPage, onNextPage });
   const hasDensityToggle = (controls?.densityToggle ?? true) && typeof onListDensityChange === 'function';
@@ -30,9 +31,18 @@ export function WorkspaceResultsSummary({
   }
 
   return (
-    <div className="requests-filter-summary">
+    <div
+      className={
+        classNamespace === 'workspace'
+          ? 'workspace-results-summary'
+          : 'requests-filter-summary'
+      }
+    >
       {hasVisibleResultsCount ? (
-        <div className="requests-results" aria-live="polite">
+        <div
+          className={classNamespace === 'workspace' ? 'workspace-results' : 'requests-results'}
+          aria-live="polite"
+        >
           <span className="typo-small">{resultsLabel ?? t(I18N_KEYS.requestsPage.countLabel)}</span>
           <CountBadge as="strong" value={totalResults} />
           {isPending ? <span className="sr-only">{t(I18N_KEYS.requestsPage.updatingLabel)}</span> : null}
@@ -41,7 +51,13 @@ export function WorkspaceResultsSummary({
         <div aria-hidden="true" />
       )}
       {(hasDensityToggle || hasPagination) ? (
-        <div className="requests-filter-summary__controls">
+        <div
+          className={
+            classNamespace === 'workspace'
+              ? 'workspace-results-summary__controls'
+              : 'requests-filter-summary__controls'
+          }
+        >
           {hasDensityToggle ? (
             <WorkspaceViewToggle
               t={t}
@@ -59,6 +75,7 @@ export function WorkspaceResultsSummary({
               ariaLabel={t(I18N_KEYS.requestsPage.paginationLabel)}
               prevAriaLabel={t(I18N_KEYS.requestsPage.paginationPrev)}
               nextAriaLabel={t(I18N_KEYS.requestsPage.paginationNext)}
+              className={classNamespace === 'workspace' ? 'workspace-results-summary__nav' : undefined}
             />
           ) : null}
         </div>

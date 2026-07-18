@@ -6,5 +6,5 @@ import type { RequestsResultsSummaryProps } from './requestsFilters.types';
 export function RequestsResultsSummary({
   ...props
 }: RequestsResultsSummaryProps) {
-  return <WorkspaceResultsSummary {...props} />;
+  return <WorkspaceResultsSummary {...props} classNamespace="requests" />;
 }

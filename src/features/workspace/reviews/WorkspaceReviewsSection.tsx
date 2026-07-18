@@ -120,10 +120,10 @@ export function WorkspaceReviewsSection({
       onPrevPage={() => setReviewPage((prev) => Math.max(1, prev - 1))}
       onNextPage={() => setReviewPage((prev) => Math.min(totalPages, prev + 1))}
       topSlot={topSlot}
-      panelClassName="workspace-platform-reviews"
+      panelClassName="workspace-platform-reviews workspace-list-panel--reviews"
       listAriaLabel={t(I18N_KEYS.homePublic.reviews)}
       listDensity={listDensity}
-      listClassName="workspace-reviews-list"
+      listClassName="workspace-reviews-list workspace-list--reviews"
       isLoading={isLoading}
       isEmpty={isEmpty}
       emptyTitle={emptyTitle}

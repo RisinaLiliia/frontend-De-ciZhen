@@ -31,6 +31,7 @@ type RequestsFilterControlsContentProps = {
   onSubcategoryChange: (value: string) => void;
   onSortChange: (value: string) => void;
   onReset: () => void;
+  classNamespace?: 'workspace' | 'requests';
 };
 
 export function RequestsFilterControlsContent({
@@ -54,7 +55,21 @@ export function RequestsFilterControlsContent({
   onSubcategoryChange,
   onSortChange,
   onReset,
+  classNamespace = 'requests',
 }: RequestsFilterControlsContentProps) {
+  const filterGridClassName = classNamespace === 'workspace' ? 'workspace-filter-grid' : 'requests-filter-grid';
+  const filterClassName = classNamespace === 'workspace' ? 'workspace-filter' : 'requests-filter';
+  const selectWrapClassName = classNamespace === 'workspace' ? 'workspace-select-wrap' : 'requests-select-wrap';
+  const selectClassName = classNamespace === 'workspace' ? 'workspace-select' : 'requests-select';
+  const chipsClassName = classNamespace === 'workspace' ? 'workspace-filters__chips' : 'requests-filters__chips';
+  const clearButtonClassName = classNamespace === 'workspace'
+    ? (variant === 'shell'
+      ? 'panel-action icon-button--hint workspace-control-shell__action workspace-filters__clear workspace-filters__clear--icon'
+      : 'btn-ghost is-primary workspace-filters__clear')
+    : (variant === 'shell'
+      ? 'panel-action icon-button--hint workspace-control-shell__action requests-clear requests-clear--icon'
+      : 'btn-ghost is-primary requests-clear');
+
   const allCityOption = React.useMemo(
     () => cityOptions.find((option) => option.value === 'all'),
     [cityOptions],
@@ -62,9 +77,9 @@ export function RequestsFilterControlsContent({
 
   return (
     <>
-      <div className="requests-filter-grid requests-filter-grid--primary">
-        <div className="requests-filter">
-          <div className="requests-select-wrap">
+      <div className={`${filterGridClassName} ${filterGridClassName}--primary`.trim()}>
+        <div className={filterClassName}>
+          <div className={selectWrapClassName}>
             <span className="dc-leading-icon dc-leading-icon--city" aria-hidden="true">
               <IconPin />
             </span>
@@ -72,7 +87,7 @@ export function RequestsFilterControlsContent({
               locale={locale}
               value={cityId}
               onChange={onCityChange}
-              className="requests-select is-city"
+              className={`${selectClassName} is-city`.trim()}
               ariaLabel={t(I18N_KEYS.requestsPage.cityLabel)}
               disabled={controlsDisabled}
               placeholder={allCityOption?.label ?? t(I18N_KEYS.requestsPage.cityLabel)}
@@ -84,41 +99,41 @@ export function RequestsFilterControlsContent({
             />
           </div>
         </div>
-        <div className="requests-filter">
+        <div className={filterClassName}>
           <RequestsFilterSelect
             options={categoryOptions}
             value={categoryKey}
             onChange={onCategoryChange}
-            className="requests-select"
+            className={selectClassName}
             ariaLabel={t(I18N_KEYS.requestsPage.categoryLabel)}
             disabled={controlsDisabled}
           />
         </div>
-        <div className="requests-filter">
+        <div className={filterClassName}>
           <RequestsFilterSelect
             options={serviceOptions}
             value={subcategoryKey}
             onChange={onSubcategoryChange}
-            className="requests-select"
+            className={selectClassName}
             ariaLabel={t(I18N_KEYS.requestsPage.serviceLabel)}
             disabled={controlsDisabled || categoryKey === 'all'}
           />
         </div>
       </div>
-      <div className="requests-filter-grid requests-filter-grid--secondary">
-        <div className="requests-filter" ref={sortControlRef}>
+      <div className={`${filterGridClassName} ${filterGridClassName}--secondary`.trim()}>
+        <div className={filterClassName} ref={sortControlRef}>
           <RequestsFilterSelect
             options={sortOptions}
             value={sortBy}
             onChange={onSortChange}
-            className="requests-select"
+            className={selectClassName}
             ariaLabel={t(I18N_KEYS.requestsPage.sortLabel)}
             disabled={controlsDisabled}
           />
         </div>
         <button
           type="button"
-          className={`${variant === 'shell' ? 'panel-action icon-button--hint workspace-control-shell__action requests-clear requests-clear--icon' : 'btn-ghost is-primary requests-clear'}`.trim()}
+          className={clearButtonClassName}
           onClick={onReset}
           disabled={controlsDisabled || !hasActiveFilters}
           aria-label={t(I18N_KEYS.requestsPage.clearFilters)}
@@ -130,7 +145,7 @@ export function RequestsFilterControlsContent({
       </div>
       {appliedChips.length > 0 ? (
         <div
-          className={`chip-row requests-filters__chips requests-filters__chips--${variant}`.trim()}
+          className={`chip-row ${chipsClassName} ${chipsClassName}--${variant}`.trim()}
           role="list"
           aria-label={t(I18N_KEYS.requestsPage.activeFiltersLabel)}
         >
