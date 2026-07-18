@@ -9,10 +9,9 @@ export type PublicWorkspaceSection =
   | 'help'
   | 'privacy'
   | 'cookies';
-export type PublicWorkspaceSectionParam = PublicWorkspaceSection | 'orders' | 'actions';
 
 export function resolvePublicWorkspaceSection(value: string | null): PublicWorkspaceSection | null {
-  if (value === 'orders' || value === 'requests') return 'requests';
+  if (value === 'requests') return 'requests';
   if (
     value === 'providers'
     || value === 'reviews'
@@ -26,6 +25,5 @@ export function resolvePublicWorkspaceSection(value: string | null): PublicWorks
   ) {
     return value;
   }
-  if (value === 'actions') return 'profile';
   return null;
 }

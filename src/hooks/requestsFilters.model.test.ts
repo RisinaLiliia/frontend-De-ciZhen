@@ -17,9 +17,9 @@ describe('requestsFilters.model', () => {
     expect(readPositiveInt('2.8', 1)).toBe(2);
   });
 
-  it('resolves query params with legacy serviceKey support', () => {
+  it('reads only canonical requests filter query params', () => {
     const params = resolveRequestsFilterQueryParams(
-      new URLSearchParams('serviceKey=logo&cityId=berlin&sort=price_desc&page=3&limit=40'),
+      new URLSearchParams('subcategoryKey=logo&cityId=berlin&sort=price_desc&page=3&limit=40'),
       'date_desc',
     );
 
@@ -108,7 +108,7 @@ describe('requestsFilters.model', () => {
     expect(
       buildRequestsFiltersHref({
         pathname: '/workspace',
-        searchParams: new URLSearchParams('tab=requests&serviceKey=legacy&cityId=munich&page=7'),
+        searchParams: new URLSearchParams('section=requests&tab=requests&serviceKey=legacy&cityId=munich&page=7'),
         current: {
           cityId: 'munich',
           categoryKey: 'all',
@@ -126,6 +126,6 @@ describe('requestsFilters.model', () => {
         },
         defaultSort: 'date_desc',
       }),
-    ).toBe('/workspace?tab=requests&cityId=berlin&categoryKey=design&subcategoryKey=logo&limit=10');
+    ).toBe('/workspace?section=requests&cityId=berlin&categoryKey=design&subcategoryKey=logo&limit=10');
   });
 });
