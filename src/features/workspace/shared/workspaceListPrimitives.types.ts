@@ -41,6 +41,7 @@ export type WorkspaceFiltersProps = {
   onPrevPage?: () => void;
   onNextPage?: () => void;
   onListDensityChange?: (value: RequestsListDensity) => void;
+  classNamespace?: 'workspace' | 'requests';
 };
 
 export type WorkspaceFilterControlsProps = Pick<
@@ -73,6 +74,7 @@ export type WorkspaceFilterControlsProps = Pick<
   surface?: 'card' | 'embedded';
   showMobileToolbar?: boolean;
   mobileMode?: 'inline' | 'sheet';
+  classNamespace?: 'workspace' | 'requests';
 };
 
 export type WorkspaceResultsSummaryProps = Pick<
@@ -93,6 +95,7 @@ export type WorkspaceResultsSummaryProps = Pick<
     densityToggle?: boolean;
     pagination?: boolean;
   };
+  classNamespace?: 'workspace' | 'requests';
 };
 
 export type WorkspacePaginatedPanelProps = {
@@ -119,4 +122,5 @@ export type WorkspacePaginatedPanelProps = {
   emptyCtaLabel?: string;
   emptyCtaHref?: string;
   children: React.ReactNode;
+  classNamespace?: 'workspace' | 'requests';
 };

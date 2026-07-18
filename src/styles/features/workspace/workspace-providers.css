@@ -5,9 +5,37 @@
     min-width: 0;
   }
 
+  .workspace-providers-list-panel {
+    gap: clamp(16px, 1.6vw, 20px);
+  }
+
+  .workspace-providers-list.workspace-list--stable {
+    --workspace-list-row-height: 220px;
+    --workspace-list-visible-rows: 8;
+  }
+
+  .workspace-providers-list.workspace-list--stable.is-double {
+    --workspace-list-row-height: 228px;
+    --workspace-list-visible-rows: 4;
+  }
+
+  .workspace-providers-list .workspace-list-card-shell {
+    height: 100%;
+  }
+
   .workspace-provider-card {
     width: 100%;
     max-width: none;
     min-width: 0;
+    height: 100%;
+    border-radius: calc(var(--radius-xl) + 2px);
+    border-color: color-mix(in oklab, var(--color-border-soft) 76%, var(--color-surface) 24%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--color-surface) 97%, white 3%) 0%,
+        color-mix(in oklab, var(--color-surface) 92%, var(--color-surface-muted) 8%) 100%
+      );
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.05);
   }
 }

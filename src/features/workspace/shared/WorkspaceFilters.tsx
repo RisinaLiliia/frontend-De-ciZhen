@@ -40,6 +40,7 @@ export function WorkspaceFilterControls({
   surface = 'card',
   showMobileToolbar = true,
   mobileMode = 'inline',
+  classNamespace = 'workspace',
 }: WorkspaceFilterControlsProps) {
   const cityQuery = '';
   const {
@@ -93,11 +94,14 @@ export function WorkspaceFilterControls({
     onSubcategoryChange,
     onSortChange,
     onReset,
+    classNamespace,
   };
+  const rootBaseClassName = classNamespace === 'workspace' ? 'workspace-filters' : 'requests-filters';
+  const controlsBaseClassName = classNamespace === 'workspace' ? 'workspace-filters__controls' : 'requests-filters__controls';
   const rootClassName =
-    `requests-filters requests-filters--sticky requests-filters--${variant} requests-filters--surface-${surface}${isPending ? ' is-pending' : ''}`.trim();
+    `${rootBaseClassName} ${rootBaseClassName}--sticky ${rootBaseClassName}--${variant} ${rootBaseClassName}--surface-${surface}${isPending ? ' is-pending' : ''}`.trim();
   const desktopControlsClassName =
-    `requests-filters__controls requests-filters__controls--${variant} ${isMobileControlsOpen ? 'is-open' : ''}${mobileMode === 'sheet' ? ' requests-filters__controls--desktop-shell' : ''}`.trim();
+    `${controlsBaseClassName} ${controlsBaseClassName}--${variant} ${isMobileControlsOpen ? 'is-open' : ''}${mobileMode === 'sheet' ? ` ${controlsBaseClassName}--desktop-shell` : ''}`.trim();
   const mobileSheetSummary = (
     <>
       <span className="workspace-mobile-filters__summary-chip">{cityLabel}</span>
@@ -124,6 +128,7 @@ export function WorkspaceFilterControls({
           onOpenSort={openSortControl}
           onPrevPage={onPrevPage}
           onNextPage={onNextPage}
+          classNamespace={classNamespace}
         />
       ) : null}
 
@@ -132,11 +137,11 @@ export function WorkspaceFilterControls({
           title={t(I18N_KEYS.requestsPage.filterRegionLabel)}
           triggerLabel={t(I18N_KEYS.requestsPage.mobileFilterLabel)}
           summary={mobileSheetSummary}
-          className="requests-filters__mobile-sheet"
+          className={classNamespace === 'workspace' ? 'workspace-filters__mobile-sheet' : 'requests-filters__mobile-sheet'}
         >
-          <div className="requests-filters requests-filters--surface-embedded requests-filters--shell requests-filters--mobile-sheet-body">
+          <div className={rootClassName.replace(`${rootBaseClassName}--sticky`, '').trim() + ` ${rootBaseClassName}--mobile-sheet-body`}>
             <RequestsFilterControlsBody
-              className="requests-filters__controls"
+              className={controlsBaseClassName}
               {...controlsContentProps}
             />
           </div>
@@ -149,7 +154,7 @@ export function WorkspaceFilterControls({
         {...controlsContentProps}
       />
       {isCategoriesLoading || isServicesLoading ? (
-        <div className="requests-filters__skeleton" aria-hidden="true">
+        <div className={classNamespace === 'workspace' ? 'workspace-filters__skeleton' : 'requests-filters__skeleton'} aria-hidden="true">
           <div className="skeleton is-wide h-10 w-full rounded-md" />
           <div className="skeleton is-wide h-10 w-full rounded-md" />
           <div className="skeleton is-wide h-10 w-full rounded-md" />
@@ -187,6 +192,7 @@ export function WorkspaceFilters({
   onPrevPage,
   onNextPage,
   onListDensityChange,
+  classNamespace = 'workspace',
 }: WorkspaceFiltersProps) {
   return (
     <>
@@ -214,6 +220,7 @@ export function WorkspaceFilters({
         onReset={onReset}
         onPrevPage={onPrevPage}
         onNextPage={onNextPage}
+        classNamespace={classNamespace}
       />
       <WorkspaceResultsSummary
         t={t}
@@ -226,6 +233,7 @@ export function WorkspaceFilters({
         onPrevPage={onPrevPage}
         onNextPage={onNextPage}
         onListDensityChange={onListDensityChange}
+        classNamespace={classNamespace}
       />
     </>
   );

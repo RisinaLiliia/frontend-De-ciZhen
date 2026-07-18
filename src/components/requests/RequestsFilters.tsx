@@ -17,11 +17,11 @@ export { WorkspaceResultsSummary as RequestsResultsSummary } from '@/features/wo
 export function RequestsFilterControls({
   ...props
 }: RequestsFilterControlsProps) {
-  return <WorkspaceFilterControls {...props} />;
+  return <WorkspaceFilterControls {...props} classNamespace="requests" />;
 }
 
 export function RequestsFilters({
   ...props
 }: RequestsFiltersProps) {
-  return <WorkspaceFilters {...props} />;
+  return <WorkspaceFilters {...props} classNamespace="requests" />;
 }

@@ -19,6 +19,8 @@
 @import './workspace-controls-tabs.css';
 @import './workspace-controls-responsive.css';
 @import './workspace-controls-filters.css';
+@import './workspace-surface-primitives.css';
+@import './workspace-reviews.css';
 @import './workspace-overlay-responsive.css';
 @import './workspace-request-card.css';
 @import './workspace-request-card-responsive.css';

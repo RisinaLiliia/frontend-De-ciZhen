@@ -8,5 +8,5 @@ import {
 export function RequestsPaginatedPanel({
   ...props
 }: RequestsPaginatedPanelProps) {
-  return <WorkspacePaginatedPanel {...props} />;
+  return <WorkspacePaginatedPanel {...props} classNamespace="requests" />;
 }
