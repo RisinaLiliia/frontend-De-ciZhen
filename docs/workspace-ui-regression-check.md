@@ -19,5 +19,5 @@
 
 ## Known risks / follow-up
 - No browser-based visual regression or screenshot diff was executed.
-- Route-level UI behavior for `/workspace?section=overview`, `/workspace?section=requests`, `/workspace?section=requests&scope=my`, `/workspace?section=providers`, and `/workspace?section=analysis` should be reviewed in a real browser session.
+- Route-level UI behavior for `/workspace?section=overview`, `/workspace?section=requests`, `/workspace?section=requests&scope=my`, `/workspace?section=providers`, `/workspace?section=reviews`, and `/workspace?section=stats` should be reviewed in a real browser session.
 - Modal open/close and responsive layout styling should be spot-checked across 375px, 768px, 1024px, and 1440px viewports to confirm visual polish.
