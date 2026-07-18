@@ -3,12 +3,14 @@
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-import { RequestsPaginatedPanel } from '@/components/requests/RequestsPaginatedPanel';
-import { RequestsResultsSummary } from '@/components/requests/RequestsFilters';
 import { workspaceQK } from '@/features/workspace/data';
 import { WorkspaceReviewsShellControls } from '@/features/workspace/reviews/WorkspaceReviewsShellControls';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/reviews/useWorkspaceReviewControlsState';
-import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
+import {
+  WorkspacePaginatedPanel,
+  WorkspaceResultsSummary,
+  workspaceCardShell,
+} from '@/features/workspace/shared';
 import { getWorkspaceReviews } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
@@ -95,7 +97,7 @@ export function WorkspaceReviewsSection({
     <>
       <WorkspaceReviewsShellControls t={t} />
 
-      <RequestsResultsSummary
+      <WorkspaceResultsSummary
         t={t}
         totalResults={totalResultsLabel}
         resultsLabel={t(I18N_KEYS.homePublic.reviews)}
@@ -111,7 +113,7 @@ export function WorkspaceReviewsSection({
   );
 
   return (
-    <RequestsPaginatedPanel
+    <WorkspacePaginatedPanel
       t={t}
       page={reviewPage}
       totalPages={totalPages}
@@ -147,6 +149,6 @@ export function WorkspaceReviewsSection({
           </article>
         );
       })}
-    </RequestsPaginatedPanel>
+    </WorkspacePaginatedPanel>
   );
 }
