@@ -14,7 +14,6 @@ describe('workspaceData.model', () => {
     });
 
     expect(plan).toMatchObject({
-      shouldLoadLegacyPublicOverview: true,
       shouldLoadPrivateOverview: false,
       shouldLoadWorkspaceRequests: false,
       shouldLoadMyOffers: false,
@@ -33,7 +32,7 @@ describe('workspaceData.model', () => {
       hasAccessToken: true,
     });
 
-    expect(overviewPlan.shouldLoadLegacyPublicOverview).toBe(true);
+    expect(overviewPlan.shouldLoadWorkspaceRequests).toBe(true);
     expect(overviewPlan.shouldLoadPrivateOverview).toBe(true);
     expect(overviewPlan.shouldLoadMyOffers).toBe(true);
     expect(overviewPlan.shouldLoadFavoriteRequests).toBe(true);
@@ -82,7 +81,6 @@ describe('workspaceData.model', () => {
     expect(providersSectionPlan.shouldLoadWorkspaceRequests).toBe(false);
     expect(providersSectionPlan.shouldLoadMyOffers).toBe(false);
     expect(providersSectionPlan.shouldLoadFavoriteRequests).toBe(false);
-    expect(providersSectionPlan.shouldLoadLegacyPublicOverview).toBe(false);
   });
 
   it('loads unified market requests in the public requests section', () => {
@@ -98,7 +96,6 @@ describe('workspaceData.model', () => {
     });
 
     expect(marketPlan.shouldLoadWorkspaceRequests).toBe(true);
-    expect(marketPlan.shouldLoadLegacyPublicOverview).toBe(false);
     expect(marketPlan.shouldLoadMyOffers).toBe(false);
     expect(marketPlan.shouldLoadFavoriteRequests).toBe(false);
   });

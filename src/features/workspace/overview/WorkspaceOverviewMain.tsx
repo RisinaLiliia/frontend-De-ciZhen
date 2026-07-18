@@ -4,20 +4,18 @@ import * as React from 'react';
 import Link from 'next/link';
 
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
-import { RequestsList } from '@/components/requests/RequestsList';
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { WorkspaceGuestRequestCard } from '@/components/requests/WorkspaceGuestRequestCard';
-import { buildPublicRequestCardPresentation } from '@/components/requests/publicRequestCard.model';
-import type { RequestsListProps } from '@/components/requests/requestsList.types';
 import { ProviderList } from '@/components/providers/ProviderList';
 import type { TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
-import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
 import { buildWorkspaceRequestDetailHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
+import { CardSkeletonList } from '@/features/workspace/requests/RequestsViewStates';
+import type { WorkspaceRequestsViewCard } from '@/features/workspace/requests/workspaceRequestsView.model';
 import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from '@/features/workspace/stats';
 import { StatisticsDemandPanelSection } from '@/features/workspace/stats/StatisticsSections';
@@ -33,7 +31,14 @@ type WorkspaceOverviewMainProps = {
     label: string;
   };
   onPrimaryActionClick: () => void;
-  activeOffersListProps: RequestsListProps;
+  activeOffersState: {
+    cards: WorkspaceRequestsViewCard[];
+    isLoading: boolean;
+    isError: boolean;
+    favoriteRequestIds: ReadonlySet<string>;
+    pendingFavoriteRequestIds: ReadonlySet<string>;
+    onToggleFavorite: (requestId: string) => void;
+  };
   topProviders: ReadonlyArray<TopProviderItem>;
   topProvidersTitle: string;
   topProvidersSubtitle: string;
@@ -66,30 +71,27 @@ function getOverviewCopy(t: WorkspaceOverviewMainProps['t']) {
   };
 }
 
-function getRequestCreatedAtTs(request: Pick<RequestResponseDto, 'createdAt'>) {
-  const timestamp = new Date(request.createdAt).getTime();
+function getRequestCreatedAtTs(card: Pick<WorkspaceRequestsViewCard, 'createdAtIso'>) {
+  const timestamp = new Date(card.createdAtIso ?? '').getTime();
   return Number.isFinite(timestamp) ? timestamp : 0;
 }
 
-function sortRequestsByCreatedAtDesc(requests: RequestResponseDto[]) {
-  return requests
+function sortRequestsByCreatedAtDesc(cards: WorkspaceRequestsViewCard[]) {
+  return cards
     .slice()
     .sort((left, right) => getRequestCreatedAtTs(right) - getRequestCreatedAtTs(left));
 }
 
-function resolveRequestCategoryKey(request: RequestResponseDto, listProps: RequestsListProps) {
-  return request.categoryKey ?? listProps.serviceByKey.get(request.serviceKey)?.categoryKey ?? null;
-}
-
 function resolveOpportunityMatch(params: {
-  request: RequestResponseDto;
+  card: WorkspaceRequestsViewCard;
   categoryKey: string | null;
   opportunityRadar: WorkspaceStatisticsModel['opportunityRadar'];
 }) {
-  const { request, categoryKey, opportunityRadar } = params;
+  const { card, categoryKey, opportunityRadar } = params;
+  const cityLabel = card.requestPreview.cityLabel ?? null;
 
-  return opportunityRadar.find((item) => item.cityId === request.cityId && item.categoryKey === categoryKey)
-    ?? opportunityRadar.find((item) => item.cityId === request.cityId)
+  return opportunityRadar.find((item) => item.city === cityLabel && item.categoryKey === categoryKey)
+    ?? opportunityRadar.find((item) => item.city === cityLabel)
     ?? opportunityRadar.find((item) => item.categoryKey === categoryKey)
     ?? opportunityRadar[0]
     ?? null;
@@ -121,100 +123,85 @@ function WorkspaceOpportunityCards({
   locale,
   currentSearch,
   copy,
-  requestsListProps,
+  requestsState,
   statisticsModel,
 }: {
   locale: Locale;
   currentSearch: string;
   copy: ReturnType<typeof getOverviewCopy>;
-  requestsListProps: RequestsListProps;
+  requestsState: WorkspaceOverviewMainProps['activeOffersState'];
   statisticsModel: WorkspaceStatisticsModel;
 }) {
-  const recentRequests = React.useMemo(
-    () => sortRequestsByCreatedAtDesc(requestsListProps.requests).slice(0, 2),
-    [requestsListProps.requests],
+  const recentCards = React.useMemo(
+    () => sortRequestsByCreatedAtDesc(requestsState.cards).slice(0, 2),
+    [requestsState.cards],
   );
 
-  const cards = React.useMemo(
+  const opportunityCards = React.useMemo(
     () =>
-      recentRequests.map((request, index) => {
-        const categoryKey = resolveRequestCategoryKey(request, requestsListProps);
-        const presentation = buildPublicRequestCardPresentation({
-          item: request,
-          t: requestsListProps.t,
-          locale,
-          serviceByKey: requestsListProps.serviceByKey,
-          categoryByKey: requestsListProps.categoryByKey,
-          cityById: requestsListProps.cityById,
-          formatPrice: requestsListProps.formatPrice,
-          formatDate: requestsListProps.formatDate,
-          enableOfferActions: false,
-          favoriteRequestIds: requestsListProps.favoriteRequestIds,
-          pendingOfferRequestId: null,
-          pendingFavoriteRequestIds: requestsListProps.pendingFavoriteRequestIds,
-        });
+      recentCards.map((card, index) => {
+        const preview = card.requestPreview;
+        const categoryKey = card.category ?? null;
         const opportunity = resolveOpportunityMatch({
-          request,
+          card,
           categoryKey,
           opportunityRadar: statisticsModel.opportunityRadar,
         });
 
         return {
-          key: request.id,
+          key: card.requestId,
           prefetch: index < 2,
-          href: buildWorkspaceRequestDetailHref({ currentSearch, requestId: request.id }),
-          preferredDate: request.preferredDate,
-          presentation,
+          href: buildWorkspaceRequestDetailHref({ currentSearch, requestId: card.requestId }),
+          preview,
           demandLabel: resolveDemandLabel({ copy, opportunity }),
           competitionLabel: resolveCompetitionLabel({ copy, opportunity }),
         };
       }),
-    [copy, currentSearch, locale, recentRequests, requestsListProps, statisticsModel.opportunityRadar],
+    [copy, currentSearch, recentCards, statisticsModel.opportunityRadar],
   );
 
-  if (requestsListProps.isLoading || requestsListProps.isError || recentRequests.length === 0) {
+  if (requestsState.isLoading && recentCards.length === 0) {
     return (
-      <div className="requests-list is-single workspace-overview__list">
-        <RequestsList
-          {...requestsListProps}
-          requests={recentRequests}
-        />
+      <div className="workspace-overview__list">
+        <CardSkeletonList />
       </div>
     );
   }
 
+  if (requestsState.isError || recentCards.length === 0) {
+    return null;
+  }
+
   return (
     <div className="workspace-overview__opportunities">
-      {cards.map((card) => (
+      {opportunityCards.map((card) => (
         <WorkspaceGuestRequestCard
           key={card.key}
           href={card.href}
-          ariaLabel={card.presentation.card.title}
+          ariaLabel={card.preview.title}
           className="workspace-guest-request-card workspace-guest-request-card--overview"
           prefetch={card.prefetch}
-          imageSrc={card.presentation.card.imageSrc}
+          imageSrc={card.preview.imageUrl ?? ''}
           imageAlt=""
-          categoryLabel={card.presentation.card.categoryLabel}
-          title={card.presentation.card.title}
-          excerpt={card.presentation.card.excerpt}
-          cityLabel={card.presentation.card.cityLabel}
-          dateLabel={card.presentation.card.dateLabel}
+          categoryLabel={card.preview.categoryLabel}
+          title={card.preview.title}
+          excerpt={card.preview.excerpt}
+          cityLabel={card.preview.cityLabel}
+          dateLabel={card.preview.dateLabel}
           bottomMeta={[card.demandLabel, card.competitionLabel]}
-          priceLabel={card.presentation.card.priceLabel}
-          priceTrend={card.presentation.card.priceTrend}
-          priceTrendLabel={card.presentation.card.priceTrendLabel}
+          priceLabel={card.preview.priceLabel}
+          priceTrend={card.preview.priceTrend ?? null}
+          priceTrendLabel={card.preview.priceTrendLabel ?? null}
           badgeLabel={copy.opportunityBadge}
-          overlaySlot={
-            requestsListProps.showFavoriteButton ? (
-              <FavoriteButton
-                variant="icon"
-                isFavorite={card.presentation.favorite.isFavorite}
-                isPending={card.presentation.favorite.isFavoritePending}
-                onToggle={() => requestsListProps.onToggleFavorite?.(card.key)}
-                ariaLabel={requestsListProps.t(I18N_KEYS.requestDetails.ctaSave)}
-              />
-            ) : null
-          }
+          overlaySlot={(
+            <FavoriteButton
+              variant="icon"
+              isFavorite={requestsState.favoriteRequestIds.has(card.key)}
+              isPending={requestsState.pendingFavoriteRequestIds.has(card.key)}
+              onToggle={() => requestsState.onToggleFavorite(card.key)}
+              ariaLabel={copy.offersCta}
+            />
+          )}
         />
       ))}
     </div>
@@ -229,7 +216,7 @@ export function WorkspaceOverviewMain({
   mapPanel,
   primaryAction,
   onPrimaryActionClick,
-  activeOffersListProps,
+  activeOffersState,
   topProviders,
   topProvidersTitle,
   topProvidersSubtitle,
@@ -310,7 +297,7 @@ export function WorkspaceOverviewMain({
             locale={locale}
             currentSearch={currentSearch}
             copy={copy}
-            requestsListProps={activeOffersListProps}
+            requestsState={activeOffersState}
             statisticsModel={statisticsModel}
           />
         </section>

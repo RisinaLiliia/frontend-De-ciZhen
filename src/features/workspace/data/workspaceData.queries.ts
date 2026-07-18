@@ -78,32 +78,6 @@ function buildWorkspaceContractQueries({
   activeRequestsSort,
 }: BuildWorkspaceContractQueriesArgs) {
   return {
-    publicOverview: buildStableWorkspaceQuery({
-      queryKey: workspaceQK.workspacePublicOverview({
-        cityId: filter.cityId,
-        categoryKey: filter.categoryKey,
-        subcategoryKey: filter.subcategoryKey,
-        sort: filter.sort,
-        state: filter.state,
-        period: filter.period,
-        page: filter.page,
-        limit: filter.limit,
-        activityRange: undefined,
-        cityActivityLimit: undefined,
-      }),
-      enabled: loadPlan.shouldLoadLegacyPublicOverview,
-      queryFn: () =>
-        getWorkspacePublicOverview({
-          cityId: filter.cityId,
-          categoryKey: filter.categoryKey,
-          subcategoryKey: filter.subcategoryKey,
-          sort: filter.sort,
-          state: filter.state,
-          period: filter.period,
-          page: filter.page,
-          limit: filter.limit,
-        }),
-    }),
     publicSummary: buildStableWorkspaceQuery({
       queryKey: workspaceQK.workspacePublicSummary(publicSummaryCityActivityLimit),
       enabled: enabled && includePublicSummary,

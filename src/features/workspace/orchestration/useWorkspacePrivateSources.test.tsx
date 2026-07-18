@@ -5,7 +5,6 @@ import { cleanup, render, screen } from '@testing-library/react';
 import {
   useWorkspaceCollections,
   useWorkspacePublicFilters,
-  useWorkspacePublicRequestsState,
 } from '@/features/workspace';
 import { useWorkspacePrivateSources } from '@/features/workspace/orchestration/useWorkspacePrivateSources';
 import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
@@ -33,14 +32,12 @@ vi.mock('@/features/workspace/providers/useWorkspaceProviderSupportData', () => 
 vi.mock('@/features/workspace', () => ({
   useWorkspaceCollections: vi.fn(),
   useWorkspacePublicFilters: vi.fn(),
-  useWorkspacePublicRequestsState: vi.fn(),
 }));
 
 const useWorkspacePublicFiltersMock = vi.mocked(useWorkspacePublicFilters);
 const useCatalogIndexMock = vi.mocked(useCatalogIndex);
 const useWorkspaceDataMock = vi.mocked(useWorkspaceData);
 const useWorkspaceProviderSupportDataMock = vi.mocked(useWorkspaceProviderSupportData);
-const useWorkspacePublicRequestsStateMock = vi.mocked(useWorkspacePublicRequestsState);
 const useWorkspaceCollectionsMock = vi.mocked(useWorkspaceCollections);
 
 type SourcesArgs = Parameters<typeof useWorkspacePrivateSources>[0];
@@ -97,7 +94,11 @@ describe('useWorkspacePrivateSources', () => {
     useWorkspaceDataMock.mockReturnValue({
       contractData: {
         allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
-        workspaceRequests: null,
+        workspaceRequests: {
+          list: {
+            items: [{ requestId: 'req-1' }, { requestId: 'req-2' }],
+          },
+        },
         isWorkspaceRequestsLoading: false,
         isWorkspaceRequestsError: false,
         privateOverviewState: {
@@ -110,15 +111,9 @@ describe('useWorkspacePrivateSources', () => {
           completedJobsCount: 0,
           favoriteRequestCount: 0,
         },
-        isWorkspacePrivateRequestsFallbackLoading: false,
         publicCityActivity: null,
         isPublicSummaryLoading: false,
         isPublicSummaryError: false,
-      },
-      legacyPublicOverviewData: {
-        overviewRequests: { items: [request], total: 1 },
-        isLoading: false,
-        isError: false,
       },
       requestUserStateData: {
         myOffers: [offer],
@@ -136,11 +131,6 @@ describe('useWorkspacePrivateSources', () => {
       providers: [provider],
       isProvidersLoading: false,
       isProvidersError: false,
-    } as never);
-
-    useWorkspacePublicRequestsStateMock.mockReturnValue({
-      requests: [request, { id: 'req-2' } as RequestResponseDto],
-      platformRequestsTotal: 12,
     } as never);
 
     useWorkspaceCollectionsMock.mockReturnValue({
@@ -198,19 +188,10 @@ describe('useWorkspacePrivateSources', () => {
       }),
     );
 
-    expect(useWorkspacePublicRequestsStateMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        activePublicSection: null,
-        enablePageClamp: true,
-        enableEmptyStateTracking: true,
-        isWorkspacePublicSection: false,
-        categoryKey: 'cat-1',
-      }),
-    );
-
     expect(useWorkspaceCollectionsMock).toHaveBeenCalledWith(
       expect.objectContaining({
         locale: 'de',
+        requests: [],
       }),
     );
   });
@@ -245,14 +226,6 @@ describe('useWorkspacePrivateSources', () => {
       expect.objectContaining({
         activeWorkspaceTab: 'my-requests',
         publicSummaryCityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
-      }),
-    );
-
-    expect(useWorkspacePublicRequestsStateMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        enablePageClamp: true,
-        enableEmptyStateTracking: true,
-        hasActivePublicFilter: true,
       }),
     );
   });

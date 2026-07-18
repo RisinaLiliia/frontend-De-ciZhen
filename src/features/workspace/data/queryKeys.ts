@@ -18,33 +18,23 @@ export const workspaceQK = {
     args.locale,
   ] as const,
   requestsExplorerPublicPrefix: () => ['requests-explorer-public'] as const,
-  workspacePublicOverview: (args: {
-    cityId: string | undefined;
-    categoryKey: string | undefined;
-    subcategoryKey: string | undefined;
+  workspacePublicSummary: (cityActivityLimit: number) => ['workspace-public-summary', cityActivityLimit] as const,
+  workspacePublicSummaryPrefix: () => ['workspace-public-summary'] as const,
+  workspacePublicSnapshot: (args: {
     sort: string | undefined;
-    state: string | undefined;
-    period: string | undefined;
     page: number | undefined;
     limit: number | undefined;
     activityRange: string | undefined;
     cityActivityLimit: number | undefined;
   }) => [
-    'workspace-public-overview',
-    args.cityId,
-    args.categoryKey,
-    args.subcategoryKey,
-    args.sort,
-    args.state,
-    args.period,
-    args.page,
-    args.limit,
-    args.activityRange,
-    args.cityActivityLimit,
+    'workspace-public-snapshot',
+    args.sort ?? 'date_desc',
+    args.page ?? 1,
+    args.limit ?? 20,
+    args.activityRange ?? '30d',
+    args.cityActivityLimit ?? 1,
   ] as const,
-  workspacePublicOverviewPrefix: () => ['workspace-public-overview'] as const,
-  workspacePublicSummary: (cityActivityLimit: number) => ['workspace-public-summary', cityActivityLimit] as const,
-  workspacePublicSummaryPrefix: () => ['workspace-public-summary'] as const,
+  workspacePublicSnapshotPrefix: () => ['workspace-public-snapshot'] as const,
   workspacePrivateOverview: (period?: string | null) => ['workspace-private-overview', period ?? 'default'] as const,
   workspacePrivateOverviewPrefix: () => ['workspace-private-overview'] as const,
   workspaceRequests: (args: {

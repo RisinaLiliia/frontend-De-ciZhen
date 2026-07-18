@@ -6,7 +6,6 @@ import type { useWorkspaceProviderSupportData } from '@/features/workspace/provi
 import type {
   useWorkspaceCollections,
   useWorkspacePublicFilters,
-  useWorkspacePublicRequestsState,
 } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
@@ -16,20 +15,21 @@ type CatalogIndexResult = ReturnType<typeof useCatalogIndex>;
 type WorkspaceDataResult = ReturnType<typeof useWorkspaceData>;
 type WorkspaceProviderSupportDataResult = ReturnType<typeof useWorkspaceProviderSupportData>;
 type WorkspaceContractDataResult = WorkspaceDataResult['contractData'];
-type WorkspaceLegacyPublicOverviewDataResult = WorkspaceDataResult['legacyPublicOverviewData'];
 type WorkspaceRequestUserStateDataResult = WorkspaceDataResult['requestUserStateData'];
-type WorkspacePublicRequestsStateResult = ReturnType<typeof useWorkspacePublicRequestsState>;
 type WorkspaceCollectionsResult = ReturnType<typeof useWorkspaceCollections>;
+type WorkspaceActiveSection = WorkspaceBranchProps['routeState']['activePublicSection'];
+type WorkspaceActiveTab = WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+type WorkspaceRequestsScope = WorkspaceBranchProps['routeState']['requestsScope'];
 
 type BuildWorkspacePrivateCatalogLoadArgs = {
-  activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
-  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
-  requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
+  activePublicSection?: WorkspaceActiveSection;
+  activeWorkspaceTab: WorkspaceActiveTab;
+  requestsScope?: WorkspaceRequestsScope;
 };
 
 type BuildWorkspacePrivatePublicRequestsStateLoadArgs = {
-  activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
-  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+  activePublicSection?: WorkspaceActiveSection;
+  activeWorkspaceTab: WorkspaceActiveTab;
 };
 
 type BuildWorkspacePrivateSourcesDataArgsParams = Pick<
@@ -41,37 +41,20 @@ type BuildWorkspacePrivateSourcesDataArgsParams = Pick<
   page: WorkspacePublicFiltersResult['page'];
   limit: WorkspacePublicFiltersResult['limit'];
   shouldLoadCatalog?: boolean;
-  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
-  activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
-  requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
+  activeWorkspaceTab: WorkspaceActiveTab;
+  activePublicSection?: WorkspaceActiveSection;
+  requestsScope?: WorkspaceRequestsScope;
   activeRequestsRole?: WorkspaceBranchProps['routeState']['activeRequestsRole'];
   activeRequestsState?: WorkspaceBranchProps['routeState']['activeRequestsState'];
   activeRequestsPeriod?: WorkspaceBranchProps['routeState']['activeRequestsPeriod'];
   activeRequestsSort?: WorkspaceBranchProps['routeState']['activeRequestsSort'];
 };
 
-type BuildWorkspacePrivateSourcesRequestsStateArgsParams = {
-  filters: Pick<
-    WorkspacePublicFiltersResult,
-    | 'limit'
-    | 'page'
-    | 'setPage'
-    | 'hasActivePublicFilter'
-    | 'cityId'
-    | 'categoryKey'
-    | 'subcategoryKey'
-    | 'sortBy'
-  >;
-  contractData: Pick<WorkspaceContractDataResult, 'allRequestsSummary'>;
-  legacyPublicOverviewData: Pick<WorkspaceLegacyPublicOverviewDataResult, 'overviewRequests' | 'isLoading' | 'isError'>;
-  activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
-};
-
 type BuildWorkspacePrivateSourcesCollectionsArgsParams = {
-  activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
-  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
-  requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
-  requests: WorkspacePublicRequestsStateResult['requests'];
+  activePublicSection: WorkspaceActiveSection;
+  activeWorkspaceTab: WorkspaceActiveTab;
+  requestsScope?: WorkspaceRequestsScope;
+  requests: WorkspaceCollectionsResult extends never ? never : Parameters<typeof useWorkspaceCollections>[0]['requests'];
   requestUserStateData: Pick<
     WorkspaceRequestUserStateDataResult,
     | 'favoriteRequests'
@@ -94,13 +77,14 @@ type BuildWorkspacePrivateCatalogIndexArgsParams = Pick<
 };
 
 type ResolveWorkspacePrivateSourcesResultParams = {
+  activePublicSection: WorkspaceActiveSection;
+  activeWorkspaceTab: WorkspaceActiveTab;
+  requestsScope?: WorkspaceRequestsScope;
   contractData: WorkspaceContractDataResult;
-  legacyPublicOverviewData: WorkspaceLegacyPublicOverviewDataResult;
   requestUserStateData: WorkspaceRequestUserStateDataResult;
   providerSupportData: WorkspaceProviderSupportDataResult;
   catalogIndex: CatalogIndexResult;
   collections: WorkspaceCollectionsResult;
-  publicRequestsState: WorkspacePublicRequestsStateResult;
   filters: Pick<
     WorkspacePublicFiltersResult,
     | 'page'
@@ -116,13 +100,6 @@ export function shouldLoadWorkspacePrivateCatalog({
   if (activePublicSection === 'requests' && requestsScope === 'my') return false;
   if (activePublicSection === 'profile') return false;
   return true;
-}
-
-export function shouldLoadWorkspacePrivatePublicRequestsState({
-  activePublicSection = null,
-  activeWorkspaceTab,
-}: BuildWorkspacePrivatePublicRequestsStateLoadArgs) {
-  return activePublicSection === null && activeWorkspaceTab === 'my-requests';
 }
 
 export function shouldBuildWorkspacePrivateRequestCollections({
@@ -191,32 +168,6 @@ export function buildWorkspacePrivateSourcesDataArgs({
   };
 }
 
-export function buildWorkspacePrivateSourcesRequestsStateArgs({
-  filters,
-  contractData,
-  legacyPublicOverviewData,
-  activePublicSection,
-}: BuildWorkspacePrivateSourcesRequestsStateArgsParams): Parameters<typeof useWorkspacePublicRequestsState>[0] {
-  return {
-    publicRequests: legacyPublicOverviewData.overviewRequests,
-    allRequestsSummary: contractData.allRequestsSummary,
-    limit: filters.limit,
-    page: filters.page,
-    setPage: filters.setPage,
-    enablePageClamp: true,
-    enableEmptyStateTracking: true,
-    isWorkspacePublicSection: false,
-    activePublicSection,
-    isLoading: legacyPublicOverviewData.isLoading,
-    isError: legacyPublicOverviewData.isError,
-    hasActivePublicFilter: filters.hasActivePublicFilter,
-    cityId: filters.cityId,
-    categoryKey: filters.categoryKey,
-    subcategoryKey: filters.subcategoryKey,
-    sortBy: filters.sortBy,
-  };
-}
-
 export function buildWorkspacePrivateCatalogIndexArgs({
   enabled,
   services,
@@ -228,33 +179,6 @@ export function buildWorkspacePrivateCatalogIndexArgs({
     services,
     categories,
     cities,
-  };
-}
-
-export function buildWorkspacePrivateSourcesIdleRequestsStateArgs(params: {
-  allRequestsSummary: BuildWorkspacePrivateSourcesRequestsStateArgsParams['contractData']['allRequestsSummary'];
-  limit: number;
-  page: number;
-  setPage: (page: number) => void;
-  activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
-}) : Parameters<typeof useWorkspacePublicRequestsState>[0] {
-  return {
-    publicRequests: undefined,
-    allRequestsSummary: params.allRequestsSummary,
-    limit: params.limit,
-    page: params.page,
-    setPage: params.setPage,
-    enablePageClamp: false,
-    enableEmptyStateTracking: false,
-    isWorkspacePublicSection: false,
-    activePublicSection: params.activePublicSection,
-    isLoading: false,
-    isError: false,
-    hasActivePublicFilter: false,
-    cityId: 'all',
-    categoryKey: 'all',
-    subcategoryKey: 'all',
-    sortBy: 'date_desc',
   };
 }
 
@@ -292,21 +216,41 @@ export function buildWorkspacePrivateSourcesCollectionsArgs({
 }
 
 export function resolveWorkspacePrivateSourcesResult({
+  activePublicSection,
+  activeWorkspaceTab,
+  requestsScope = 'market',
   contractData,
-  legacyPublicOverviewData,
   requestUserStateData,
   providerSupportData,
   catalogIndex,
   collections,
-  publicRequestsState,
   filters,
 }: ResolveWorkspacePrivateSourcesResultParams) {
+  const isOverviewMarketRequestsContext =
+    activePublicSection === null &&
+    activeWorkspaceTab === 'my-requests';
+  const isUnifiedPrivateRequestsContext =
+    activePublicSection === 'requests' &&
+    requestsScope === 'my';
+  const overviewMarketRequests = isOverviewMarketRequestsContext
+    ? contractData.workspaceRequests
+    : null;
+  const workspaceRequests = isUnifiedPrivateRequestsContext
+    ? contractData.workspaceRequests
+    : null;
+  const isOverviewMarketRequestsLoading = isOverviewMarketRequestsContext
+    ? contractData.isWorkspaceRequestsLoading
+    : false;
+  const isOverviewMarketRequestsError = isOverviewMarketRequestsContext
+    ? contractData.isWorkspaceRequestsError
+    : false;
+
   return {
     allRequestsSummary: contractData.allRequestsSummary,
-    overviewRequestsListState: {
-      requests: publicRequestsState.requests,
-      isLoading: legacyPublicOverviewData.isLoading,
-      isError: legacyPublicOverviewData.isError,
+    overviewMarketRequestsState: {
+      response: overviewMarketRequests,
+      isLoading: isOverviewMarketRequestsLoading,
+      isError: isOverviewMarketRequestsError,
     },
     publicCityActivity: contractData.publicCityActivity,
     isPublicSummaryLoading: contractData.isPublicSummaryLoading,
@@ -318,10 +262,6 @@ export function resolveWorkspacePrivateSourcesResult({
       byId: collections.providerById,
     },
     privateOverviewState: contractData.privateOverviewState,
-    isWorkspacePrivateRequestsFallbackLoading: contractData.isWorkspacePrivateRequestsFallbackLoading,
-    workspaceRequests: contractData.workspaceRequests,
-    isWorkspaceRequestsLoading: contractData.isWorkspaceRequestsLoading,
-    isWorkspaceRequestsError: contractData.isWorkspaceRequestsError,
     myOffers: requestUserStateData.myOffers,
     myOfferRequestsById: requestUserStateData.myOfferRequestsById,
     isMyOfferRequestsLoading: requestUserStateData.isMyOfferRequestsLoading,
@@ -343,9 +283,16 @@ export function resolveWorkspacePrivateSourcesResult({
     cityById: catalogIndex.cityById,
     isMyOffersLoading: requestUserStateData.isMyOffersLoading,
     platformRequestsTotal: contractData.allRequestsSummary?.totalPublishedRequests ?? 0,
-    overviewRequestsCount: publicRequestsState.requests.length,
+    overviewRequestsCount: overviewMarketRequests?.list.items.length ?? 0,
     requestsPage: filters.page,
     requestsLimit: filters.limit,
     setRequestsPage: filters.setPage,
+    workspaceRequests,
+    isWorkspaceRequestsLoading: isUnifiedPrivateRequestsContext
+      ? contractData.isWorkspaceRequestsLoading
+      : false,
+    isWorkspaceRequestsError: isUnifiedPrivateRequestsContext
+      ? contractData.isWorkspaceRequestsError
+      : false,
   };
 }
