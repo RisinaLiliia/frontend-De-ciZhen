@@ -61,9 +61,9 @@ The main runtime path now trusts the backend contract more directly than before.
 
 Current reference files:
 
-- [statisticsDecisionDashboard.contract.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/features/workspace/stats/statisticsDecisionDashboard.contract.ts)
-- [workspaceStatisticsDecisionDashboard.schema.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/features/workspace/stats/statisticsDecisionDashboard.schema.ts)
-- [useStatsQuery.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/features/workspace/stats/useStatsQuery.ts)
+- `src/features/workspace/stats/statisticsDecisionDashboard.contract.ts`
+- `src/features/workspace/stats/workspaceStatisticsDecisionDashboard.schema.ts`
+- `src/features/workspace/stats/useStatsQuery.ts`
 
 The old frontend semantic compatibility normalization has been removed from the main query hot path.
 Any remaining fallback behavior should be treated as temporary non-primary compatibility, not as the core stats architecture.
@@ -79,14 +79,14 @@ Any remaining fallback behavior should be treated as temporary non-primary compa
 7. `insights` and `growthCards` are already scoped to the chosen context.
 8. No frontend scoring or ranking is required to render primary dashboard sections.
 9. Response is compatible with:
-   - [workspace-statistics-decision-dashboard.openapi.yaml](/Users/liliya/Desktop/frontend-de-cizhen/docs/openapi/workspace-statistics-decision-dashboard.openapi.yaml)
-   - [workspace.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/lib/api/dto/workspace.ts)
+   - `docs/openapi/workspace-statistics-decision-dashboard.openapi.yaml`
+   - `src/lib/api/dto/workspace.ts`
 
 ## Frontend Integration Check
 
 Frontend query layer validates the normalized response through:
 
-- [workspaceStatisticsDecisionDashboard.schema.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/features/workspace/stats/statisticsDecisionDashboard.schema.ts)
+- `src/features/workspace/stats/workspaceStatisticsDecisionDashboard.schema.ts`
 
 If backend adds new required fields, update:
 

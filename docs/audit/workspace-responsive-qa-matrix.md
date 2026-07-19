@@ -39,7 +39,7 @@ Canonical route notes:
 - `section=reviews` is a canonical workspace route
 - `section=statistics` should only be treated as a narrow compatibility redirect if encountered in older links
 - `section=orders` should normalize to `section=requests` if encountered in older links
-- `section=actions` should normalize to `section=profile` if encountered in older links
+- `section=actions` is a canonical workspace route and must not be normalized to `profile`
 - `section=analysis` is not a canonical route and should not appear in QA checklists
 
 ## Target contract vs current implementation
