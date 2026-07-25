@@ -178,4 +178,14 @@ describe('useWorkspaceRouteState', () => {
 
     expect(node.getAttribute('data-next-path')).toBe('/workspace?section=requests&scope=market&period=90d&range=90d');
   });
+
+  it('builds nextPath from canonicalized params after legacy route normalization', () => {
+    render(
+      <Probe query="section=stats&tab=profile&viewerMode=customer&requestId=req-1&requestPanel=offer" isAuthed />,
+    );
+    const node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('null');
+    expect(node.getAttribute('data-next-path')).toBe('/workspace?section=profile&viewerMode=customer');
+  });
 });

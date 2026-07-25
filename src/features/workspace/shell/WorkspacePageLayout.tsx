@@ -35,7 +35,7 @@ import { WorkspaceTopBar } from '@/features/workspace/shell/WorkspaceTopBar';
 import { ConsentManageFooter } from '@/components/legal/ConsentManageFooter';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 import { isWorkspaceOverviewMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
-import { isWorkspaceTab } from '@/features/workspace/state';
+import { resolveWorkspaceRouteCompatibility } from '@/features/workspace/navigation/workspaceRouteCompatibility';
 
 type Translator = (key: I18nKey) => string;
 
@@ -134,14 +134,21 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   const isWideShell = useWorkspaceWideShell();
   const hasCompactSidebar = useMediaMatch('(min-width: 768px)');
   const isMobile = useMediaMatch('(max-width: 767px)');
+  const routeCompatibility = React.useMemo(
+    () => resolveWorkspaceRouteCompatibility({
+      searchParams,
+      authStatus: isWorkspaceAuthed ? 'authenticated' : 'unauthenticated',
+    }),
+    [isWorkspaceAuthed, searchParams],
+  );
   const isOverviewPrivateMode =
     !isWorkspacePublicSection &&
     isWorkspaceOverviewMode({
       activePublicSection,
       activeWorkspaceTab,
       pathname,
-      sectionParam: searchParams.get('section'),
-      hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
+      routeSection: routeCompatibility.routeSection,
+      hasExplicitWorkspaceTab: routeCompatibility.hasExplicitWorkspaceTab,
     });
   const publicShellIntro = React.useMemo(
     () =>

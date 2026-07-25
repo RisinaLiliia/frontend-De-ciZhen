@@ -1,14 +1,12 @@
 'use client';
 
-import {
-  buildLegacyWorkspaceTabRedirectHref,
-} from '@/features/workspace/state';
 import type {
   FavoritesView,
   WorkspaceStatusFilter,
   WorkspaceTab,
 } from '@/features/workspace/state';
 import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
+import { buildWorkspaceLegacyTabCanonicalHref } from '@/features/workspace/navigation/workspaceRouteCompatibility';
 
 type BuildWorkspaceNavigationHrefArgs = {
   search: string;
@@ -45,8 +43,9 @@ export function buildWorkspaceTabHref({
   next.set('status', 'all');
   if (tab !== 'favorites') next.delete('fav');
   next.delete('reviewRole');
-  const redirectedHref = buildLegacyWorkspaceTabRedirectHref({
+  const redirectedHref = buildWorkspaceLegacyTabCanonicalHref({
     currentSearch: next,
+    isAuthed: true,
   });
   return redirectedHref.startsWith('/workspace')
     ? redirectedHref.replace('/workspace', workspacePath)
@@ -63,8 +62,9 @@ export function buildWorkspaceStatusFilterHref({
   next.set('tab', activeWorkspaceTab);
   next.set('status', status);
   next.delete('reviewRole');
-  const redirectedHref = buildLegacyWorkspaceTabRedirectHref({
+  const redirectedHref = buildWorkspaceLegacyTabCanonicalHref({
     currentSearch: next,
+    isAuthed: true,
   });
   return redirectedHref.startsWith('/workspace')
     ? redirectedHref.replace('/workspace', workspacePath)

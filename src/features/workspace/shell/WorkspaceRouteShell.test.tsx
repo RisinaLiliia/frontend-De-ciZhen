@@ -128,6 +128,20 @@ describe('WorkspaceRouteShell', () => {
     expect(node.getAttribute('data-workspace-tab')).toBe('null');
   });
 
+  it('gives legacy tab redirects precedence over conflicting canonical section params', () => {
+    const replace = vi.fn();
+    useRouterMock.mockReturnValue({ replace });
+    mockSearchParams('section=stats&tab=profile&viewerMode=customer');
+    mockAuth('authenticated');
+
+    render(<WorkspaceRouteShell />);
+
+    expect(replace).toHaveBeenCalledWith(
+      '/workspace?section=profile&viewerMode=customer',
+      { scroll: false },
+    );
+  });
+
   it('keeps reviews as a canonical section for unauthenticated users', () => {
     mockSearchParams('section=reviews');
     mockAuth('unauthenticated');
@@ -203,6 +217,20 @@ describe('WorkspaceRouteShell', () => {
     const replace = vi.fn();
     useRouterMock.mockReturnValue({ replace });
     mockSearchParams('section=requests&scope=my&role=provider&state=attention');
+    mockAuth('unauthenticated');
+
+    render(<WorkspaceRouteShell />);
+
+    expect(replace).toHaveBeenCalledWith(
+      '/workspace?section=requests&scope=market',
+      { scroll: false },
+    );
+  });
+
+  it('collapses guest alias and scope compatibility into a single canonical redirect', () => {
+    const replace = vi.fn();
+    useRouterMock.mockReturnValue({ replace });
+    mockSearchParams('section=orders&scope=my&role=provider&state=execution');
     mockAuth('unauthenticated');
 
     render(<WorkspaceRouteShell />);

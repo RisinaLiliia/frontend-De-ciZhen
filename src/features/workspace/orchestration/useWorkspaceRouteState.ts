@@ -5,11 +5,9 @@ import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
 import {
-  isWorkspaceTab,
   resolveFavoritesView,
   resolveStatusFilter,
   type WorkspaceTab,
-  resolveWorkspaceTab,
   resolveWorkspaceRequestsPeriod,
   resolveWorkspaceRequestsRole,
   resolveWorkspaceRequestsScope,
@@ -17,8 +15,8 @@ import {
 } from '@/features/workspace/state';
 import {
   type PublicWorkspaceSection,
-  resolvePublicWorkspaceSection,
 } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
+import { resolveWorkspaceRouteCompatibility } from '@/features/workspace/navigation/workspaceRouteCompatibility';
 import {
   WORKSPACE_REQUEST_CREATE_QUERY_KEY,
   WORKSPACE_REQUEST_ID_QUERY_KEY,
@@ -56,12 +54,18 @@ export function useWorkspaceRouteState({
   workspacePath,
   t,
 }: Args) {
-  const tabParam = searchParams.get('tab');
-  const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
-  const sectionParam = searchParams.get('section');
-  const resolvedPublicSection = forcedPublicSection ?? resolvePublicWorkspaceSection(sectionParam);
+  const routeCompatibility = React.useMemo(
+    () => resolveWorkspaceRouteCompatibility({
+      searchParams,
+      authStatus: isAuthed ? 'authenticated' : 'unauthenticated',
+    }),
+    [isAuthed, searchParams],
+  );
+  const canonicalSearchParams = routeCompatibility.canonicalSearchParams;
+  const hasExplicitWorkspaceTab = routeCompatibility.hasExplicitWorkspaceTab;
+  const resolvedPublicSection = forcedPublicSection ?? routeCompatibility.publicSection;
   const normalizedPublicSection = resolvedPublicSection === 'overview' ? null : resolvedPublicSection;
-  const requestsScope = resolveWorkspaceRequestsScope(searchParams.get('scope'), isAuthed);
+  const requestsScope = resolveWorkspaceRequestsScope(canonicalSearchParams.get('scope'), isAuthed);
   const isRequestsSection =
     !forcedWorkspaceTab && !hasExplicitWorkspaceTab && normalizedPublicSection === 'requests';
   const isPrivateRequestsScope = isRequestsSection && requestsScope === 'my';
@@ -88,8 +92,8 @@ export function useWorkspaceRouteState({
     !isAuthedShellSection;
 
   const activeWorkspaceTab = React.useMemo(
-    () => forcedWorkspaceTab ?? resolveWorkspaceTab(tabParam),
-    [forcedWorkspaceTab, tabParam],
+    () => forcedWorkspaceTab ?? routeCompatibility.activeWorkspaceTab,
+    [forcedWorkspaceTab, routeCompatibility.activeWorkspaceTab],
   );
   const activeStatusFilter = React.useMemo(
     () => resolveStatusFilter(searchParams.get('status')),
@@ -100,25 +104,28 @@ export function useWorkspaceRouteState({
     [searchParams],
   );
   const activeRequestsRole = React.useMemo(
-    () => resolveWorkspaceRequestsRole(searchParams.get('role')),
-    [searchParams],
+    () => resolveWorkspaceRequestsRole(canonicalSearchParams.get('role')),
+    [canonicalSearchParams],
   );
   const activeRequestsState = React.useMemo(
-    () => resolveWorkspaceRequestsState(searchParams.get('state')),
-    [searchParams],
+    () => resolveWorkspaceRequestsState(canonicalSearchParams.get('state')),
+    [canonicalSearchParams],
   );
   const activeRequestsPeriod = React.useMemo(
-    () => resolveWorkspaceRequestsPeriod(searchParams.get('period') ?? searchParams.get('range')),
-    [searchParams],
+    () => resolveWorkspaceRequestsPeriod(canonicalSearchParams.get('period') ?? canonicalSearchParams.get('range')),
+    [canonicalSearchParams],
   );
-  const activeRequestsSort = React.useMemo(() => searchParams.get('sort'), [searchParams]);
+  const activeRequestsSort = React.useMemo(
+    () => canonicalSearchParams.get('sort'),
+    [canonicalSearchParams],
+  );
 
   const nextPath = React.useMemo(() => {
-    const nextParams = new URLSearchParams(searchParams?.toString());
+    const nextParams = new URLSearchParams(canonicalSearchParams.toString());
     WORKSPACE_OVERLAY_QUERY_KEYS.forEach((key) => nextParams.delete(key));
     const qs = nextParams.toString();
     return `${workspacePath}${qs ? `?${qs}` : ''}`;
-  }, [searchParams, workspacePath]);
+  }, [canonicalSearchParams, workspacePath]);
 
   const guestLoginHref = React.useMemo(
     () => `/auth/login?next=${encodeURIComponent(nextPath)}`,

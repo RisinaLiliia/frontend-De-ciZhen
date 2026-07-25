@@ -1,11 +1,14 @@
 'use client';
 
 import type { WorkspaceNavigationSection } from '@/features/workspace/navigation/workspaceNavigation.config';
-import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
+import type {
+  PublicWorkspaceSection,
+  WorkspaceSection,
+} from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceTab } from '@/features/workspace/state';
 
 type ResolveActiveWorkspaceNavigationSectionArgs = {
-  sectionParam: string | null;
+  routeSection: WorkspaceSection | null;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
   requestsScope: string | null;
@@ -14,7 +17,7 @@ type ResolveActiveWorkspaceNavigationSectionArgs = {
 };
 
 export function resolveActiveWorkspaceNavigationSection({
-  sectionParam,
+  routeSection,
   activePublicSection,
   activeWorkspaceTab,
   requestsScope,
@@ -22,7 +25,7 @@ export function resolveActiveWorkspaceNavigationSection({
   requestsState,
 }: ResolveActiveWorkspaceNavigationSectionArgs): WorkspaceNavigationSection {
   if (activePublicSection === 'overview') return 'overview';
-  if (sectionParam === 'overview') return 'overview';
+  if (routeSection === 'overview') return 'overview';
 
   if (activePublicSection === 'requests') {
     if (requestsScope === 'my' && requestsRole === 'provider') return 'offers';
