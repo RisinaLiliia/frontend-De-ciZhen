@@ -47,7 +47,7 @@ export type WorkspaceSectionHeaderPolicy = 'workspace' | 'custom';
 export type WorkspaceSectionFilterPolicy = 'sharedContext' | 'none';
 
 export type WorkspaceSectionRenderModel = {
-  section: PublicWorkspaceSection | 'overview';
+  section: PublicWorkspaceSection;
   title?: string;
   subtitle?: string;
   headerAccessory?: ReactNode;

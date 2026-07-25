@@ -60,25 +60,29 @@ export function useWorkspaceRouteState({
   const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
   const sectionParam = searchParams.get('section');
   const resolvedPublicSection = forcedPublicSection ?? resolvePublicWorkspaceSection(sectionParam);
+  const normalizedPublicSection = resolvedPublicSection === 'overview' ? null : resolvedPublicSection;
   const requestsScope = resolveWorkspaceRequestsScope(searchParams.get('scope'), isAuthed);
   const isRequestsSection =
-    !forcedWorkspaceTab && !hasExplicitWorkspaceTab && resolvedPublicSection === 'requests';
+    !forcedWorkspaceTab && !hasExplicitWorkspaceTab && normalizedPublicSection === 'requests';
   const isPrivateRequestsScope = isRequestsSection && requestsScope === 'my';
-  const isChatSection = resolvedPublicSection === 'chat';
-  const isSettingsSection = resolvedPublicSection === 'settings';
-  const isHelpSection = resolvedPublicSection === 'help';
+  const isChatSection = normalizedPublicSection === 'chat';
+  const isActionsSection = normalizedPublicSection === 'actions';
+  const isSettingsSection = normalizedPublicSection === 'settings';
+  const isHelpSection = normalizedPublicSection === 'help';
   const isAuthedShellSection =
     isAuthed &&
-    (resolvedPublicSection === 'providers' ||
-      resolvedPublicSection === 'stats' ||
-      resolvedPublicSection === 'profile');
+    (normalizedPublicSection === 'providers' ||
+      normalizedPublicSection === 'stats' ||
+      normalizedPublicSection === 'actions' ||
+      normalizedPublicSection === 'profile');
 
   const activePublicSection =
-    forcedWorkspaceTab || hasExplicitWorkspaceTab ? null : resolvedPublicSection;
+    forcedWorkspaceTab || hasExplicitWorkspaceTab ? null : normalizedPublicSection;
   const isWorkspacePublicSection =
     activePublicSection !== null &&
     !isPrivateRequestsScope &&
     !isChatSection &&
+    !isActionsSection &&
     !isSettingsSection &&
     !isHelpSection &&
     !isAuthedShellSection;

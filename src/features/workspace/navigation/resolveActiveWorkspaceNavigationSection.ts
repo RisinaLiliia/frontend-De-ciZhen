@@ -21,6 +21,7 @@ export function resolveActiveWorkspaceNavigationSection({
   requestsRole,
   requestsState,
 }: ResolveActiveWorkspaceNavigationSectionArgs): WorkspaceNavigationSection {
+  if (activePublicSection === 'overview') return 'overview';
   if (sectionParam === 'overview') return 'overview';
 
   if (activePublicSection === 'requests') {
@@ -39,6 +40,10 @@ export function resolveActiveWorkspaceNavigationSection({
     || activePublicSection === 'help'
   ) {
     return activePublicSection === 'reviews' ? 'stats' : activePublicSection;
+  }
+
+  if (activePublicSection === 'actions') {
+    return 'profile';
   }
 
   if (activePublicSection === 'privacy' || activePublicSection === 'cookies') {

@@ -1,44 +1,42 @@
-export type PublicWorkspaceSection =
-  | 'requests'
-  | 'providers'
-  | 'reviews'
-  | 'stats'
-  | 'profile'
-  | 'chat'
-  | 'settings'
-  | 'help'
-  | 'privacy'
-  | 'cookies';
+export const CANONICAL_WORKSPACE_SECTIONS = [
+  'overview',
+  'requests',
+  'providers',
+  'reviews',
+  'stats',
+  'actions',
+  'profile',
+  'chat',
+  'settings',
+  'help',
+  'privacy',
+  'cookies',
+] as const;
 
-const WORKSPACE_SECTION_ALIASES = {
+export type WorkspaceSection = (typeof CANONICAL_WORKSPACE_SECTIONS)[number];
+
+// Compatibility alias kept for the current workspace surface until the broader type rename is worth the churn.
+export type PublicWorkspaceSection = WorkspaceSection;
+
+export const LEGACY_WORKSPACE_SECTION_ALIASES = {
   statistics: 'stats',
   orders: 'requests',
-  actions: 'profile',
-} as const satisfies Record<string, PublicWorkspaceSection>;
+} as const satisfies Record<string, WorkspaceSection>;
 
-export function resolveCanonicalWorkspaceSection(value: string | null): PublicWorkspaceSection | null {
+const WORKSPACE_SECTION_SET = new Set<string>(CANONICAL_WORKSPACE_SECTIONS);
+
+export function isWorkspaceSection(value: string | null | undefined): value is WorkspaceSection {
+  return Boolean(value && WORKSPACE_SECTION_SET.has(value));
+}
+
+export function resolveCanonicalWorkspaceSection(value: string | null): WorkspaceSection | null {
   if (!value) return null;
 
-  if (value in WORKSPACE_SECTION_ALIASES) {
-    return WORKSPACE_SECTION_ALIASES[value as keyof typeof WORKSPACE_SECTION_ALIASES];
+  if (value in LEGACY_WORKSPACE_SECTION_ALIASES) {
+    return LEGACY_WORKSPACE_SECTION_ALIASES[value as keyof typeof LEGACY_WORKSPACE_SECTION_ALIASES];
   }
 
-  if (value === 'requests') return 'requests';
-  if (
-    value === 'providers'
-    || value === 'reviews'
-    || value === 'stats'
-    || value === 'profile'
-    || value === 'chat'
-    || value === 'settings'
-    || value === 'help'
-    || value === 'privacy'
-    || value === 'cookies'
-  ) {
-    return value;
-  }
-
-  return null;
+  return isWorkspaceSection(value) ? value : null;
 }
 
 export function resolvePublicWorkspaceSection(value: string | null): PublicWorkspaceSection | null {

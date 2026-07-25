@@ -1,6 +1,13 @@
 export { useWorkspaceRouteState } from './orchestration/useWorkspaceRouteState';
 export { WorkspacePageLayout } from './shell/WorkspacePageLayout';
-export type { PublicWorkspaceSection } from './navigation/resolveActiveWorkspaceSection';
+export {
+  CANONICAL_WORKSPACE_SECTIONS,
+  LEGACY_WORKSPACE_SECTION_ALIASES,
+  isWorkspaceSection,
+  resolveCanonicalWorkspaceSection,
+  resolvePublicWorkspaceSection,
+} from './navigation/resolveActiveWorkspaceSection';
+export type { PublicWorkspaceSection, WorkspaceSection } from './navigation/resolveActiveWorkspaceSection';
 export { workspaceNavigationItems } from './navigation/workspaceNavigation.config';
 export type { WorkspaceNavigationItem, WorkspaceNavigationSection } from './navigation/workspaceNavigation.config';
 export {

@@ -223,6 +223,42 @@ Execution must start from the following assumptions:
 - no new UI foundation may be introduced where existing workspace tokens, primitives, and shell helpers already solve the problem;
 - no section-specific business logic may be changed during the shared-foundation audit unless the change is strictly required to restore canonical rendering behavior.
 
+### 10.2.1 Current execution update as of 2026-07-25
+
+The immediate frontend task is not another isolated section rewrite.
+
+The next practical implementation block is:
+
+1. complete a full workspace frontend audit against the canonical docs-pack;
+2. fill a reviewable matrix using `WORKSPACE_FRONTEND_AUDIT_TEMPLATE.md`;
+3. classify each audited area as `already compliant`, `partially compliant`, `missing`, `legacy`, or `conflict`;
+4. derive the first implementation queue from that audit rather than from local preference.
+
+The expected first implementation queue after the audit is:
+
+1. routes and section registry
+2. design tokens
+3. typography
+4. shared UI primitives
+5. workspace shell
+6. unified AI rail
+
+After shared foundations are stabilized, the preferred section migration order is:
+
+1. dashboard
+2. requests
+3. providers
+4. statistics
+5. actions
+6. profile
+7. chat
+8. reviews
+9. settings and service pages
+
+This product-facing execution order supersedes any earlier example sequence in this strategy where they conflict.
+
+The detailed phase roadmap below still matters for preview-branch stabilization, validation, QA, and cleanup gates.
+
 ### 10.3 Recommended execution order
 
 | Order | Phase | Why now |

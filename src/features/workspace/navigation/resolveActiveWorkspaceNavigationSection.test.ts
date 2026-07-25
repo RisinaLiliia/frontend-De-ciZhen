@@ -35,6 +35,14 @@ describe('resolveActiveWorkspaceNavigationSection', () => {
       requestsState: null,
     })).toBe('profile');
     expect(resolveActiveWorkspaceNavigationSection({
+      sectionParam: 'actions',
+      activePublicSection: 'actions',
+      activeWorkspaceTab: 'my-requests',
+      requestsScope: null,
+      requestsRole: null,
+      requestsState: null,
+    })).toBe('profile');
+    expect(resolveActiveWorkspaceNavigationSection({
       sectionParam: 'settings',
       activePublicSection: 'settings',
       activeWorkspaceTab: 'my-requests',

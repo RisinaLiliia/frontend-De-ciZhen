@@ -15,7 +15,11 @@ export function shouldShowWorkspaceProfileViewerModeControl(params: {
   activeWorkspaceTab: WorkspaceTab;
   activePublicSection: PublicWorkspaceSection | null;
 }) {
-  return params.activeWorkspaceTab === 'profile' || params.activePublicSection === 'profile';
+  return (
+    params.activeWorkspaceTab === 'profile'
+    || params.activePublicSection === 'profile'
+    || params.activePublicSection === 'actions'
+  );
 }
 
 export function resolveWorkspaceViewerModeToggleItems(params: {
