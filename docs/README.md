@@ -118,6 +118,14 @@ When documents disagree, use this order:
   - role contexts, management overview, detail editors, shell states, responsive behavior, contracts, and visual references
   - approved image catalogue: [`assets/workspace/profile/README.md`](assets/workspace/profile/README.md)
 
+### Execution and audit aids
+
+- [`WORKSPACE_FRONTEND_AUDIT_TEMPLATE.md`](WORKSPACE_FRONTEND_AUDIT_TEMPLATE.md)
+  - status: `Supporting execution template`
+  - working matrix for the current frontend audit pass
+  - uses the verdicts `already compliant`, `partially compliant`, `missing`, `legacy`, and `conflict`
+  - feeds the next implementation block: routes, tokens, typography, shared primitives, shell, and unified AI rail
+
 ### Decision records
 
 - `adr/2026-03-10-workspace-routing-and-reviews-flow.md`
