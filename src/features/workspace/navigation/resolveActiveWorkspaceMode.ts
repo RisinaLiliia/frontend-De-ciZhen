@@ -22,6 +22,7 @@ export function resolveActiveWorkspaceMode({
   if (activePublicSection === 'providers') return 'providers';
   if (activePublicSection === 'reviews') return 'analysis';
   if (activePublicSection === 'stats') return 'analysis';
+  if (activePublicSection === 'actions') return 'profile';
   if (activePublicSection === 'profile') return 'profile';
   if (activePublicSection === 'chat') return 'chat';
 

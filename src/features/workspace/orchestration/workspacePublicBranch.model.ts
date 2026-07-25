@@ -180,6 +180,7 @@ export function buildWorkspacePublicIntroProps({
   const isExploreSectionWithoutLegacyQuickAction =
     activePublicSection === 'providers'
     || activePublicSection === 'reviews'
+    || activePublicSection === 'actions'
     || activePublicSection === 'profile'
     || activePublicSection === 'stats';
 

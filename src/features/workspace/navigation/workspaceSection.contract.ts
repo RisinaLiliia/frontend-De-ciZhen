@@ -8,7 +8,7 @@ import type {
   WorkspaceSectionRenderModel,
 } from '@/features/workspace/shell/WorkspaceShell.types';
 
-export type WorkspaceSectionKey = PublicWorkspaceSection | 'overview';
+export type WorkspaceSectionKey = PublicWorkspaceSection;
 export type WorkspaceSectionRailPolicy = 'contextual' | 'custom' | 'none';
 export type WorkspaceSectionHeaderPolicy = 'workspace' | 'custom';
 export type WorkspaceSectionFilterPolicy = 'sharedContext' | 'none';
@@ -98,6 +98,17 @@ const WORKSPACE_SECTION_CONTRACTS: Record<WorkspaceSectionKey, WorkspaceSectionC
       hideQuickActionAlways: true,
     },
   },
+  actions: {
+    key: 'actions',
+    defaultLayout: 'withRail',
+    railPolicy: 'none',
+    headerPolicy: 'workspace',
+    filterPolicy: 'none',
+    intro: {
+      hideDemandMapAlways: true,
+      hideQuickActionAlways: true,
+    },
+  },
   profile: {
     key: 'profile',
     defaultLayout: 'withRail',
@@ -171,7 +182,7 @@ export function getWorkspaceSectionContract(section: WorkspaceSectionKey): Works
 }
 
 function sectionClassSuffix(section: WorkspaceSectionKey) {
-  return section === 'overview' ? 'overview' : section;
+  return section;
 }
 
 export function buildWorkspaceSectionRenderModel({

@@ -1,6 +1,8 @@
+import type { WorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
+
 export function buildWorkspaceHref(params: {
   currentSearch: string | URLSearchParams;
-  section?: string | null;
+  section?: WorkspaceSection | null;
   patch?: Record<string, string | null | undefined>;
   removeKeys?: string[];
 }) {
@@ -29,4 +31,11 @@ export function buildWorkspaceHref(params: {
 
   const query = searchParams.toString();
   return query ? `/workspace?${query}` : '/workspace';
+}
+
+export function buildWorkspaceSectionHref(section: WorkspaceSection) {
+  return buildWorkspaceHref({
+    currentSearch: '',
+    section,
+  });
 }

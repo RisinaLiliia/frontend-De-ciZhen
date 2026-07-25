@@ -28,7 +28,7 @@ import type { ProofCase } from '@/types/home';
 
 type ExploreSectionKey = Exclude<
   PublicWorkspaceSection,
-  'requests' | 'chat' | 'settings' | 'help' | 'privacy' | 'cookies'
+  'overview' | 'requests' | 'chat' | 'settings' | 'help' | 'privacy' | 'cookies'
 >;
 type LegalSectionKey = Extract<PublicWorkspaceSection, 'privacy' | 'cookies'>;
 
@@ -81,7 +81,13 @@ type BuildWorkspaceLegalSectionModelArgs = {
 export function resolveWorkspaceExploreSection(
   section: PublicWorkspaceSection | null,
 ): ExploreSectionKey {
-  if (section === 'providers' || section === 'stats' || section === 'reviews' || section === 'profile') {
+  if (
+    section === 'providers'
+    || section === 'stats'
+    || section === 'reviews'
+    || section === 'actions'
+    || section === 'profile'
+  ) {
     return section;
   }
 
@@ -156,6 +162,15 @@ export function buildWorkspaceExploreSectionModel({
   }
 
   if (section === 'profile') {
+    return buildWorkspaceSectionRenderModel({
+      section,
+      content: <WorkspaceProfileSection />,
+      aiRail: <WorkspaceProfileRail t={branch.t} locale={branch.locale} />,
+      filterPolicy: 'none',
+    });
+  }
+
+  if (section === 'actions') {
     return buildWorkspaceSectionRenderModel({
       section,
       content: <WorkspaceProfileSection />,

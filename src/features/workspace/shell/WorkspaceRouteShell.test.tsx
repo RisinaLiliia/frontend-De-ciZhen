@@ -100,28 +100,32 @@ describe('WorkspaceRouteShell', () => {
     );
   });
 
-  it('normalizes legacy orders and actions aliases to canonical sections', () => {
+  it('normalizes the legacy orders alias to the canonical requests section', () => {
     const replace = vi.fn();
     useRouterMock.mockReturnValue({ replace });
     mockSearchParams('section=orders');
     mockAuth('unauthenticated');
 
-    const { rerender } = render(<WorkspaceRouteShell />);
+    render(<WorkspaceRouteShell />);
 
     expect(replace).toHaveBeenCalledWith(
       '/workspace?section=requests',
       { scroll: false },
     );
+  });
 
-    replace.mockClear();
+  it('keeps actions as a canonical section without redirecting it to profile', () => {
+    const replace = vi.fn();
+    useRouterMock.mockReturnValue({ replace });
     mockSearchParams('section=actions&viewerMode=provider');
     mockAuth('authenticated');
-    rerender(<WorkspaceRouteShell />);
 
-    expect(replace).toHaveBeenCalledWith(
-      '/workspace?section=profile&viewerMode=provider',
-      { scroll: false },
-    );
+    render(<WorkspaceRouteShell />);
+
+    const node = screen.getByTestId('workspace-page-client');
+    expect(replace).not.toHaveBeenCalled();
+    expect(node.getAttribute('data-public-section')).toBe('actions');
+    expect(node.getAttribute('data-workspace-tab')).toBe('null');
   });
 
   it('keeps reviews as a canonical section for unauthenticated users', () => {

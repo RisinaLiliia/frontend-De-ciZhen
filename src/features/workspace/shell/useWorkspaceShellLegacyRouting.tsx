@@ -35,7 +35,8 @@ export function useWorkspaceShellLegacyRouting({
   const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
   const canonicalSection = resolveCanonicalWorkspaceSection(sectionParam);
   const resolvedSection = resolvePublicWorkspaceSection(sectionParam);
-  const isGuestChatSection = authStatus === 'unauthenticated' && resolvedSection === 'chat';
+  const normalizedResolvedSection = resolvedSection === 'overview' ? null : resolvedSection;
+  const isGuestChatSection = authStatus === 'unauthenticated' && normalizedResolvedSection === 'chat';
 
   React.useEffect(() => {
     if (!sectionParam) return;
@@ -104,9 +105,9 @@ export function useWorkspaceShellLegacyRouting({
   }, [isGuestChatSection, router, searchParams]);
 
   const activePublicSection = authStatus === 'loading' || authStatus === 'idle'
-    ? (forcedPublicSection ?? resolvedSection ?? (isOverviewRoute ? null : 'requests'))
+    ? (forcedPublicSection ?? normalizedResolvedSection ?? (isOverviewRoute ? null : 'requests'))
     : (forcedPublicSection
-      ?? resolvedSection
+      ?? normalizedResolvedSection
       ?? (isOverviewRoute ? null : (authStatus === 'unauthenticated' ? 'requests' : null)));
 
   return {

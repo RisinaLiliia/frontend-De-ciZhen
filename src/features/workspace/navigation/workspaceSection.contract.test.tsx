@@ -48,6 +48,17 @@ describe('workspaceSection.contract', () => {
     expect(contract.railPolicy).toBe('none');
   });
 
+  it('keeps overview and actions inside the shared canonical section registry', () => {
+    const overview = getWorkspaceSectionContract('overview');
+    const actions = getWorkspaceSectionContract('actions');
+
+    expect(overview.defaultLayout).toBe('withRail');
+    expect(overview.railPolicy).toBe('contextual');
+    expect(actions.defaultLayout).toBe('withRail');
+    expect(actions.headerPolicy).toBe('workspace');
+    expect(actions.filterPolicy).toBe('none');
+  });
+
   it('keeps chat on the shared workspace section contract', () => {
     const contract = getWorkspaceSectionContract('chat');
 

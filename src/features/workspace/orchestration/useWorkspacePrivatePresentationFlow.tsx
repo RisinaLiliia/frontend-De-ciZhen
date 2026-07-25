@@ -177,6 +177,7 @@ export function useWorkspacePrivatePresentationFlow({
   const isExploreSection =
     activePublicSection === 'providers'
     || activePublicSection === 'stats'
+    || activePublicSection === 'actions'
     || activePublicSection === 'profile';
   const {
     requestsPage,

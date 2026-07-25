@@ -3,11 +3,12 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { useWorkspaceRouteState } from '@/features/workspace/orchestration/useWorkspaceRouteState';
 
 type ProbeProps = {
   query: string;
-  forcedPublicSection?: 'requests' | 'providers' | 'reviews' | 'stats' | 'profile' | 'chat' | 'settings' | 'help' | null;
+  forcedPublicSection?: PublicWorkspaceSection | null;
   isAuthed?: boolean;
 };
 
@@ -127,11 +128,21 @@ describe('useWorkspaceRouteState', () => {
 
     expect(node.getAttribute('data-public-section')).toBe('requests');
     expect(node.getAttribute('data-is-public')).toBe('true');
+  });
 
-    rerender(<Probe query="section=actions" isAuthed />);
-    node = screen.getByTestId('state');
+  it('keeps actions as a canonical section instead of remapping it to profile', () => {
+    render(<Probe query="section=actions" isAuthed />);
+    const node = screen.getByTestId('state');
 
-    expect(node.getAttribute('data-public-section')).toBe('profile');
+    expect(node.getAttribute('data-public-section')).toBe('actions');
+    expect(node.getAttribute('data-is-public')).toBe('false');
+  });
+
+  it('keeps explicit overview out of the public section shell state', () => {
+    render(<Probe query="section=overview" isAuthed />);
+    const node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('null');
     expect(node.getAttribute('data-is-public')).toBe('false');
   });
 

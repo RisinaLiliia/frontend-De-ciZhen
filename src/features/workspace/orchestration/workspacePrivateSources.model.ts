@@ -100,6 +100,7 @@ export function shouldLoadWorkspacePrivateCatalog({
   requestsScope = 'market',
 }: BuildWorkspacePrivateCatalogLoadArgs) {
   if (activePublicSection === 'requests' && requestsScope === 'my') return false;
+  if (activePublicSection === 'actions') return false;
   if (activePublicSection === 'profile') return false;
   return true;
 }
