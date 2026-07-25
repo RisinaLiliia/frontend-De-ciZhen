@@ -16,7 +16,6 @@ export type {
 } from './workspaceTabs.model';
 
 export {
-  buildLegacyWorkspaceTabRedirectHref,
   buildWorkspacePrivateRequestsHref,
   buildWorkspaceRequestsScopeHref,
   DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF,

@@ -45,7 +45,7 @@ import {
 } from '@/features/workspace/orchestration/sections/workspaceSectionAdapters';
 import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import { useWorkspacePrivateDataFlow } from '@/features/workspace/orchestration/useWorkspacePrivateDataFlow';
-import { isWorkspaceTab } from '@/features/workspace/state';
+import { resolveWorkspaceRouteCompatibility } from '@/features/workspace/navigation/workspaceRouteCompatibility';
 import {
   buildWorkspaceOverviewMarketCardsState,
   buildWorkspacePublicSummaryView,
@@ -77,13 +77,20 @@ export function useWorkspacePrivatePresentationFlow({
     overviewMarketRequestsState,
     overviewRequestsCount,
   } = data;
+  const routeCompatibility = React.useMemo(
+    () => resolveWorkspaceRouteCompatibility({
+      searchParams,
+      authStatus: isWorkspaceAuthed ? 'authenticated' : 'unauthenticated',
+    }),
+    [isWorkspaceAuthed, searchParams],
+  );
   const { isOverviewMode, isUnifiedPrivateRequests } =
     resolveWorkspacePrivateRenderModes({
       activePublicSection,
       activeWorkspaceTab,
       pathname,
-      sectionParam: searchParams.get('section'),
-      hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
+      routeSection: routeCompatibility.routeSection,
+      hasExplicitWorkspaceTab: routeCompatibility.hasExplicitWorkspaceTab,
       requestsScope: data.requestsScope,
     });
   const primaryAction = React.useMemo(

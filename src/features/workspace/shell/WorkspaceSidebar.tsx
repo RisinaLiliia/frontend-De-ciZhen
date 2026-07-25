@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 import { resolveActiveWorkspaceNavigationSection } from '@/features/workspace/navigation/resolveActiveWorkspaceNavigationSection';
+import { resolveWorkspaceRouteCompatibility } from '@/features/workspace/navigation/workspaceRouteCompatibility';
 import { resolveVisibleWorkspaceNavigationItems } from '@/features/workspace/navigation/workspaceNavigation.config';
 import type { WorkspaceSidebarProps } from '@/features/workspace/shell/WorkspaceShell.types';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -26,13 +27,17 @@ export function WorkspaceSidebar(props: WorkspaceSidebarProps) {
   const authStatus = useAuthStatus();
   const authUser = useAuthUser();
   const authMe = useAuthMe();
+  const routeCompatibility = resolveWorkspaceRouteCompatibility({
+    searchParams,
+    authStatus,
+  });
   const activeSection = activeNavigationSection ?? resolveActiveWorkspaceNavigationSection({
-    sectionParam: searchParams.get('section'),
+    routeSection: routeCompatibility.routeSection,
     activePublicSection,
     activeWorkspaceTab,
-    requestsScope: searchParams.get('scope'),
-    requestsRole: searchParams.get('role'),
-    requestsState: searchParams.get('state'),
+    requestsScope: routeCompatibility.canonicalSearchParams.get('scope'),
+    requestsRole: routeCompatibility.canonicalSearchParams.get('role'),
+    requestsState: routeCompatibility.canonicalSearchParams.get('state'),
   });
   const visibleNavigationItems = resolveVisibleWorkspaceNavigationItems({
     isAuthed: authStatus === 'authenticated',

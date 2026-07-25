@@ -5,7 +5,7 @@ import { resolveActiveWorkspaceNavigationSection } from '@/features/workspace/na
 describe('resolveActiveWorkspaceNavigationSection', () => {
   it('maps private provider requests routes to the offers sidebar item', () => {
     expect(resolveActiveWorkspaceNavigationSection({
-      sectionParam: 'requests',
+      routeSection: 'requests',
       activePublicSection: 'requests',
       activeWorkspaceTab: 'my-requests',
       requestsScope: 'my',
@@ -16,7 +16,7 @@ describe('resolveActiveWorkspaceNavigationSection', () => {
 
   it('maps private execution routes to the contracts sidebar item', () => {
     expect(resolveActiveWorkspaceNavigationSection({
-      sectionParam: 'requests',
+      routeSection: 'requests',
       activePublicSection: 'requests',
       activeWorkspaceTab: 'my-requests',
       requestsScope: 'my',
@@ -27,7 +27,7 @@ describe('resolveActiveWorkspaceNavigationSection', () => {
 
   it('keeps canonical profile/settings/help sections aligned with the sidebar', () => {
     expect(resolveActiveWorkspaceNavigationSection({
-      sectionParam: 'profile',
+      routeSection: 'profile',
       activePublicSection: 'profile',
       activeWorkspaceTab: 'my-requests',
       requestsScope: null,
@@ -35,7 +35,7 @@ describe('resolveActiveWorkspaceNavigationSection', () => {
       requestsState: null,
     })).toBe('profile');
     expect(resolveActiveWorkspaceNavigationSection({
-      sectionParam: 'actions',
+      routeSection: 'actions',
       activePublicSection: 'actions',
       activeWorkspaceTab: 'my-requests',
       requestsScope: null,
@@ -43,7 +43,7 @@ describe('resolveActiveWorkspaceNavigationSection', () => {
       requestsState: null,
     })).toBe('profile');
     expect(resolveActiveWorkspaceNavigationSection({
-      sectionParam: 'settings',
+      routeSection: 'settings',
       activePublicSection: 'settings',
       activeWorkspaceTab: 'my-requests',
       requestsScope: null,
@@ -51,7 +51,7 @@ describe('resolveActiveWorkspaceNavigationSection', () => {
       requestsState: null,
     })).toBe('settings');
     expect(resolveActiveWorkspaceNavigationSection({
-      sectionParam: 'help',
+      routeSection: 'help',
       activePublicSection: 'help',
       activeWorkspaceTab: 'my-requests',
       requestsScope: null,
@@ -62,7 +62,7 @@ describe('resolveActiveWorkspaceNavigationSection', () => {
 
   it('maps workspace legal sections onto the support lane', () => {
     expect(resolveActiveWorkspaceNavigationSection({
-      sectionParam: 'privacy',
+      routeSection: 'privacy',
       activePublicSection: 'privacy',
       activeWorkspaceTab: 'my-requests',
       requestsScope: null,
@@ -70,7 +70,7 @@ describe('resolveActiveWorkspaceNavigationSection', () => {
       requestsState: null,
     })).toBe('help');
     expect(resolveActiveWorkspaceNavigationSection({
-      sectionParam: 'cookies',
+      routeSection: 'cookies',
       activePublicSection: 'cookies',
       activeWorkspaceTab: 'my-requests',
       requestsScope: null,

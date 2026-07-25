@@ -17,6 +17,7 @@ import { WorkspaceHeaderAccountMenu } from '@/features/workspace/shell/Workspace
 import type { WorkspaceMobileNavigationProps } from '@/features/workspace/shell/WorkspaceShell.types';
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
 import { useWorkspaceMobileSectionSheet } from '@/features/workspace/shell/useWorkspaceMobileSectionSheet';
+import { resolveWorkspaceRouteCompatibility } from '@/features/workspace/navigation/workspaceRouteCompatibility';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useT } from '@/lib/i18n/useT';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
@@ -60,13 +61,17 @@ export function WorkspaceMobileNavigation({
   const copy = getMobileDockCopy(locale);
   const routeSignature = `${pathname}?${searchParams.toString()}`;
   const previousRouteRef = React.useRef(routeSignature);
+  const routeCompatibility = resolveWorkspaceRouteCompatibility({
+    searchParams,
+    authStatus,
+  });
   const activeSection = resolveActiveWorkspaceNavigationSection({
-    sectionParam: searchParams.get('section'),
+    routeSection: routeCompatibility.routeSection,
     activePublicSection,
     activeWorkspaceTab,
-    requestsScope: searchParams.get('scope'),
-    requestsRole: searchParams.get('role'),
-    requestsState: searchParams.get('state'),
+    requestsScope: routeCompatibility.canonicalSearchParams.get('scope'),
+    requestsRole: routeCompatibility.canonicalSearchParams.get('role'),
+    requestsState: routeCompatibility.canonicalSearchParams.get('state'),
   });
   const isAuthenticated = authStatus === 'authenticated';
   const chatHref = isAuthenticated ? '/workspace?section=chat' : LOGIN_CHAT_URL;

@@ -2,6 +2,7 @@
 
 import type { ComponentProps } from 'react';
 
+import type { WorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspacePublicIntro } from '@/features/workspace/intro';
 import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import type { useWorkspacePrivateDataFlow } from '@/features/workspace/orchestration/useWorkspacePrivateDataFlow';
@@ -68,7 +69,7 @@ type ResolveWorkspacePrivateRenderModesArgs = {
   activePublicSection: WorkspacePrivateDataFlowResult['activePublicSection'];
   activeWorkspaceTab: WorkspacePrivateDataFlowResult['activeWorkspaceTab'];
   pathname: string;
-  sectionParam: string | null;
+  routeSection: WorkspaceSection | null;
   hasExplicitWorkspaceTab: boolean;
   requestsScope: WorkspacePrivateDataFlowResult['requestsScope'];
 };
@@ -88,7 +89,7 @@ export function resolveWorkspacePrivateRenderModes({
   activePublicSection,
   activeWorkspaceTab,
   pathname,
-  sectionParam,
+  routeSection,
   hasExplicitWorkspaceTab,
   requestsScope,
 }: ResolveWorkspacePrivateRenderModesArgs) {
@@ -96,7 +97,7 @@ export function resolveWorkspacePrivateRenderModes({
     activePublicSection,
     activeWorkspaceTab,
     pathname,
-    sectionParam,
+    routeSection,
     hasExplicitWorkspaceTab,
   });
   const isUnifiedPrivateRequests =

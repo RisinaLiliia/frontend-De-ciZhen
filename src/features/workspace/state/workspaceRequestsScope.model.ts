@@ -49,23 +49,6 @@ export function buildWorkspaceRequestsScopeHref(params: {
   });
 }
 
-function resolveLegacyWorkspaceRole(tab: string | null): WorkspaceRequestsRole | undefined {
-  if (tab === 'my-requests') return 'customer';
-  if (tab === 'my-offers') return 'provider';
-  return undefined;
-}
-
-function resolveLegacyWorkspaceState(
-  tab: string | null,
-  status: string | null,
-): WorkspaceRequestsState | undefined {
-  if (status === 'open') return 'attention';
-  if (status === 'in_progress') return 'execution';
-  if (status === 'completed') return 'completed';
-  if (tab === 'completed-jobs') return 'completed';
-  return undefined;
-}
-
 export function buildWorkspacePrivateRequestsHref(params: {
   currentSearch: string | URLSearchParams;
   role?: WorkspaceRequestsRole | null;
@@ -90,46 +73,5 @@ export function buildWorkspacePrivateRequestsHref(params: {
       state: params.state ?? undefined,
     },
     removeKeys: ['tab', 'status', 'fav', 'reviewRole'],
-  });
-}
-
-export function buildLegacyWorkspaceTabRedirectHref(params: {
-  currentSearch: string | URLSearchParams;
-}) {
-  const searchParams =
-    typeof params.currentSearch === 'string'
-      ? new URLSearchParams(params.currentSearch)
-      : new URLSearchParams(params.currentSearch.toString());
-  const legacyTab = searchParams.get('tab');
-  const legacyStatus = searchParams.get('status');
-
-  if (legacyTab === 'reviews') {
-    return buildWorkspaceHref({
-      currentSearch: searchParams,
-      section: 'reviews',
-      removeKeys: ['tab', 'status', 'fav', 'reviewRole'],
-    });
-  }
-
-  if (legacyTab === 'profile') {
-    return buildWorkspaceHref({
-      currentSearch: searchParams,
-      section: 'profile',
-      removeKeys: ['tab', 'status', 'fav', 'reviewRole'],
-    });
-  }
-
-  if (legacyTab === 'favorites') {
-    return buildWorkspaceHref({
-      currentSearch: searchParams,
-      section: 'providers',
-      removeKeys: ['tab', 'status', 'fav', 'reviewRole'],
-    });
-  }
-
-  return buildWorkspacePrivateRequestsHref({
-    currentSearch: searchParams,
-    role: resolveLegacyWorkspaceRole(legacyTab),
-    state: resolveLegacyWorkspaceState(legacyTab, legacyStatus),
   });
 }

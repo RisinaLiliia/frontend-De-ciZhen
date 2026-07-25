@@ -17,7 +17,6 @@ import {
 } from '@/features/workspace/navigation/workspaceSection.model';
 import {
   buildWorkspaceRequestsScopeHref,
-  isWorkspaceTab,
   resolveWorkspaceViewerMode,
   resolveWorkspaceRequestsRole,
   resolveWorkspaceRequestsScope,
@@ -43,6 +42,7 @@ import {
   resolveActiveWorkspaceMode,
   type WorkspaceModeKey,
 } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
+import { resolveWorkspaceRouteCompatibility } from '@/features/workspace/navigation/workspaceRouteCompatibility';
 import {
   resolveWorkspaceViewerModeToggleItems,
   shouldShowWorkspaceProfileViewerModeControl,
@@ -372,16 +372,22 @@ export function useWorkspaceContext({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const copy = React.useMemo(() => getWorkspaceModeCopy(locale), [locale]);
-  const sectionParam = searchParams.get('section');
-  const hasExplicitWorkspaceTab = isWorkspaceTab(searchParams.get('tab'));
+  const routeCompatibility = React.useMemo(
+    () => resolveWorkspaceRouteCompatibility({
+      searchParams,
+      authStatus: auth.status,
+    }),
+    [auth.status, searchParams],
+  );
+  const canonicalSearchParams = routeCompatibility.canonicalSearchParams;
   const requestsScope = resolveWorkspaceRequestsScope(
-    searchParams.get('scope'),
+    canonicalSearchParams.get('scope'),
     auth.status === 'authenticated',
   );
-  const requestRole = resolveWorkspaceRequestsRole(searchParams.get('role'));
-  const requestState = resolveWorkspaceRequestsState(searchParams.get('state'));
-  const viewerMode = resolveWorkspaceViewerMode(searchParams.get('viewerMode'));
-  const range = searchParams.get('period') ?? searchParams.get('range');
+  const requestRole = resolveWorkspaceRequestsRole(canonicalSearchParams.get('role'));
+  const requestState = resolveWorkspaceRequestsState(canonicalSearchParams.get('state'));
+  const viewerMode = resolveWorkspaceViewerMode(canonicalSearchParams.get('viewerMode'));
+  const range = canonicalSearchParams.get('period') ?? canonicalSearchParams.get('range');
   const [, startTransition] = React.useTransition();
   const {
     categoryKey,
@@ -418,10 +424,16 @@ export function useWorkspaceContext({
         activePublicSection,
         activeWorkspaceTab,
         pathname,
-        sectionParam,
-        hasExplicitWorkspaceTab,
+        routeSection: routeCompatibility.routeSection,
+        hasExplicitWorkspaceTab: routeCompatibility.hasExplicitWorkspaceTab,
       }),
-    [activePublicSection, activeWorkspaceTab, hasExplicitWorkspaceTab, pathname, sectionParam],
+    [
+      activePublicSection,
+      activeWorkspaceTab,
+      pathname,
+      routeCompatibility.hasExplicitWorkspaceTab,
+      routeCompatibility.routeSection,
+    ],
   );
   const effectiveRequestRole =
     requestRole === 'all' ? (preferredRequestsRole ?? 'all') : requestRole;
