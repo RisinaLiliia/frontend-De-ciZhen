@@ -21,13 +21,8 @@ describe('workspacePublicBranch.model', () => {
 
     expect(reviewsQuery.queryKey).toEqual(['platform-reviews-overview', 'summary']);
     expect(snapshotQuery.queryKey).toEqual([
-      'workspace-public-overview',
-      undefined,
-      undefined,
-      undefined,
+      'workspace-public-snapshot',
       'date_desc',
-      undefined,
-      undefined,
       1,
       REQUESTS_PAGE_SIZE,
       '30d',

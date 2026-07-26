@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
 import {
   resolveWorkspacePublicIntroDecorations,
   type WorkspaceSectionKey,
@@ -13,20 +12,10 @@ import {
   useWorkspaceWideShell,
 } from '@/features/workspace/shared';
 import { WorkspaceTopProvidersAside } from '@/features/workspace/providers';
-import {
-  buildWorkspaceExploreSectionModel,
-  buildWorkspaceOverviewSectionModel,
-  buildWorkspacePublicRequestsSectionModel,
-  buildWorkspaceStandardSectionModel,
-  resolveWorkspaceExploreSection,
-  resolveWorkspaceStandardSection,
-} from '@/features/workspace/orchestration/sections/workspaceSectionAdapters';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
-import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import { WorkspaceMobileNavigation } from '@/features/workspace/shell/WorkspaceMobileNavigation';
 import { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
 import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
@@ -34,8 +23,6 @@ import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
 import { WorkspaceTopBar } from '@/features/workspace/shell/WorkspaceTopBar';
 import { ConsentManageFooter } from '@/components/legal/ConsentManageFooter';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
-import { isWorkspaceOverviewMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
-import { resolveWorkspaceRouteCompatibility } from '@/features/workspace/navigation/workspaceRouteCompatibility';
 
 type Translator = (key: I18nKey) => string;
 
@@ -43,20 +30,6 @@ type WorkspaceAsideBaseProps = Omit<
   React.ComponentProps<typeof WorkspaceTopProvidersAside>,
   'ctaHref' | 'pendingFavoriteProviderIds' | 'onToggleFavorite'
 >;
-
-type ExploreProps = {
-  exploreListDensity: 'single' | 'double';
-  setExploreListDensity: (value: 'single' | 'double') => void;
-  sidebarNearbyLimit: number;
-  sidebarTopProvidersLimit: number;
-  sidebarProofCases: ProofCase[];
-  proofIndex: number;
-  trustPanelClassName?: string;
-  initialPublicRequests?: PublicRequestsResponseDto;
-  preferInitialPublicRequests?: boolean;
-  initialPublicRequestsLoading?: boolean;
-  initialPublicRequestsError?: boolean;
-};
 
 type Props = {
   isWorkspacePublicSection: boolean;
@@ -68,11 +41,6 @@ type Props = {
   locale: Locale;
   intro: React.ReactNode;
   sectionModel?: WorkspaceSectionRenderModel | null;
-  explore?: ExploreProps | null;
-  privateMain?: React.ReactNode;
-  publicMain?: React.ReactNode;
-  privateAside?: React.ReactNode;
-  publicAside?: React.ReactNode;
   asideTopSlot?: React.ReactNode;
   overviewDecisionPanelRef?: React.Ref<HTMLElement>;
   workspaceAsideBaseProps: WorkspaceAsideBaseProps;
@@ -117,44 +85,21 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   locale,
   intro,
   sectionModel,
-  explore,
-  privateMain = null,
-  publicMain = null,
-  privateAside,
-  publicAside,
   asideTopSlot,
   overviewDecisionPanelRef,
   workspaceAsideBaseProps,
   pendingFavoriteProviderIds,
   onToggleProviderFavorite,
 }: Props) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const isDesktop = useIsDesktop();
   const isWideShell = useWorkspaceWideShell();
   const hasCompactSidebar = useMediaMatch('(min-width: 768px)');
   const isMobile = useMediaMatch('(max-width: 767px)');
-  const routeCompatibility = React.useMemo(
-    () => resolveWorkspaceRouteCompatibility({
-      searchParams,
-      authStatus: isWorkspaceAuthed ? 'authenticated' : 'unauthenticated',
-    }),
-    [isWorkspaceAuthed, searchParams],
-  );
-  const isOverviewPrivateMode =
-    !isWorkspacePublicSection &&
-    isWorkspaceOverviewMode({
-      activePublicSection,
-      activeWorkspaceTab,
-      pathname,
-      routeSection: routeCompatibility.routeSection,
-      hasExplicitWorkspaceTab: routeCompatibility.hasExplicitWorkspaceTab,
-    });
   const publicShellIntro = React.useMemo(
     () =>
       decorateWorkspacePublicIntro({
         intro,
-        activeSection: resolveWorkspaceStandardSection(activePublicSection),
+        activeSection: activePublicSection ?? 'requests',
         isDesktop,
       }),
     [activePublicSection, intro, isDesktop],
@@ -184,77 +129,13 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     />
   );
 
-  const resolvedSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(() => {
-    if (sectionModel) {
-      return sectionModel;
-    }
-
-    if (isWorkspacePublicSection && publicMain == null) {
-      if (!explore) {
-        return null;
-      }
-
-      return buildWorkspaceExploreSectionModel({
-        branch: {
-          isWorkspaceAuthed,
-          t,
-          locale,
-        },
-        section: resolveWorkspaceExploreSection(activePublicSection),
-        explore,
-      });
-    }
-
-    if (isWorkspacePublicSection) {
-      if (resolveWorkspaceStandardSection(activePublicSection) === 'requests') {
-        return buildWorkspacePublicRequestsSectionModel({
-          content: publicMain,
-          aiRail: publicAside,
-        });
-      }
-
-      return buildWorkspaceStandardSectionModel({
-        section: resolveWorkspaceStandardSection(activePublicSection),
-        content: publicMain,
-        aiRail: publicAside,
-      });
-    }
-
-    if (isWorkspaceAuthed) {
-      return isOverviewPrivateMode
-        ? buildWorkspaceOverviewSectionModel({
-          content: privateMain,
-          aiRail: privateAside,
-        })
-        : buildWorkspaceStandardSectionModel({
-          section: resolveWorkspaceStandardSection(activePublicSection),
-          content: privateMain,
-          aiRail: privateAside,
-        });
-    }
-
-    return buildWorkspaceStandardSectionModel({
-      section: resolveWorkspaceStandardSection(activePublicSection),
-      content: publicMain,
-    });
-  }, [
-    activePublicSection,
-    explore,
-    isOverviewPrivateMode,
-    isWorkspaceAuthed,
-    isWorkspacePublicSection,
-    locale,
-    privateAside,
-    privateMain,
-    publicAside,
-    publicMain,
-    sectionModel,
-    t,
-  ]);
+  const resolvedSectionModel = sectionModel ?? null;
 
   if (!resolvedSectionModel) {
     return null;
   }
+
+  const isOverviewSection = resolvedSectionModel.section === 'overview';
 
   const contextualRail = (
     <WorkspaceContextRail
@@ -266,9 +147,9 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       className={resolvedSectionModel.contextualAiRailClassName}
       useStatisticsLayout={resolvedSectionModel.contextualAiRailUsesStatisticsLayout ?? true}
       topSlot={asideTopSlot}
-      panelRef={isOverviewPrivateMode ? overviewDecisionPanelRef : undefined}
+      panelRef={isOverviewSection ? overviewDecisionPanelRef : undefined}
     >
-      {!isOverviewPrivateMode ? (
+      {!isOverviewSection ? (
         <WorkspaceTopProvidersAside
           {...workspaceAsideBaseProps}
           ctaHref={
