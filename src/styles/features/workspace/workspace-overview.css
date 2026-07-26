@@ -2,17 +2,9 @@
 
 @layer components {
   .workspace-overview {
-    --workspace-statistics-chip-height: var(--space-5);
-    --workspace-statistics-chip-pad-inline: var(--space-1-5);
-    --workspace-statistics-chip-radius: 999px;
-    --workspace-statistics-chip-font-size: calc(var(--fs-small) - var(--space-0-75));
-    --workspace-statistics-chip-font-weight: 700;
     --workspace-statistics-label-size: var(--fs-small);
     --workspace-statistics-copy-size-tight: var(--fs-small);
     --workspace-statistics-section-header-min-h: calc((var(--space-6) * 2) + var(--space-1));
-    --workspace-statistics-icon-md: var(--space-6);
-    --workspace-statistics-radius-md: var(--radius-md);
-    --workspace-statistics-track-height: var(--space-2);
     --workspace-overview-section-gap: clamp(16px, 1.9vw, 22px);
     --workspace-overview-cluster-gap: clamp(14px, 1.6vw, 18px);
     --workspace-overview-panel-gap: clamp(12px, 1.4vw, 16px);

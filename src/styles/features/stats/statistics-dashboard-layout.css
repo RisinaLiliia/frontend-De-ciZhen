@@ -2,12 +2,6 @@
 
 @layer components {
   .workspace-statistics-layout {
-    --workspace-statistics-chip-height: var(--space-5);
-    --workspace-statistics-chip-height-lg: calc(var(--space-5) + var(--space-0-5));
-    --workspace-statistics-chip-pad-inline: var(--space-1-5);
-    --workspace-statistics-chip-radius: 999px;
-    --workspace-statistics-chip-font-size: calc(var(--fs-small) - var(--space-0-75));
-    --workspace-statistics-chip-font-weight: 700;
     --workspace-statistics-title-size: var(--app-title-md-size);
     --workspace-statistics-title-line-height: var(--app-title-md-line-height);
     --workspace-statistics-summary-title-size: var(--workspace-statistics-title-size);
@@ -19,9 +13,6 @@
     --workspace-statistics-micro-size: calc(var(--fs-small) - var(--space-1));
     --workspace-statistics-display-size: var(--fs-h2);
     --workspace-statistics-display-size-lg: var(--fs-h1);
-    --workspace-statistics-radius-sm: var(--radius-sm);
-    --workspace-statistics-radius-md: var(--radius-md);
-    --workspace-statistics-radius-lg: var(--radius-lg);
     --workspace-statistics-radius-soft: calc(var(--radius-md) + var(--space-0-5));
     --workspace-statistics-section-header-min-h: calc((var(--space-6) * 2) + var(--space-1));
     --workspace-statistics-section-gap: var(--layout-section-gap);
@@ -37,9 +28,6 @@
     --workspace-statistics-activity-card-min-height: calc((var(--space-8) * 3) + var(--space-3));
     --workspace-statistics-chart-height: calc((var(--space-8) * 5) + var(--space-3));
     --workspace-statistics-focus-ring-size: var(--space-0-5);
-    --workspace-statistics-icon-md: var(--space-6);
-    --workspace-statistics-icon-sm: var(--space-5);
-    --workspace-statistics-track-height: var(--space-2);
   }
 
   .workspace-statistics {
@@ -261,9 +249,9 @@
   }
 
   .workspace-statistics-chart {
-    --workspace-activity-requests-color: var(--workspace-rail-chart-tone-2, var(--c-info));
-    --workspace-activity-providers-color: var(--workspace-rail-chart-tone-1, var(--c-danger));
-    --workspace-activity-offers-color: var(--c-warning);
+    --workspace-activity-requests-color: var(--workspace-rail-chart-tone-2, var(--color-info));
+    --workspace-activity-providers-color: var(--workspace-rail-chart-tone-1, var(--color-danger));
+    --workspace-activity-offers-color: var(--color-warning);
     --workspace-activity-client-color: var(--workspace-activity-requests-color);
     display: grid;
     gap: var(--space-0-5);

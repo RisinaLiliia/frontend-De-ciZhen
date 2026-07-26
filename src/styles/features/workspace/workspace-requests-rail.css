@@ -2,13 +2,6 @@
 
 @layer components {
   .my-requests-rail {
-    --workspace-statistics-icon-md: var(--space-6);
-    --workspace-statistics-chip-height: var(--space-5);
-    --workspace-statistics-chip-pad-inline: var(--space-1-5);
-    --workspace-statistics-chip-radius: 999px;
-    --workspace-statistics-chip-font-size: calc(var(--fs-small) - var(--space-0-75));
-    --workspace-statistics-chip-font-weight: 700;
-    --workspace-statistics-radius-md: var(--radius-md);
     display: grid;
     gap: var(--my-work-content-gap);
     position: sticky;
