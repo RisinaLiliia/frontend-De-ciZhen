@@ -5,6 +5,7 @@ import type { ComponentProps } from 'react';
 
 import type { ReviewOverviewDto } from '@/lib/api/dto/reviews';
 import type { WorkspacePublicOverviewDto } from '@/lib/api/dto/workspace';
+import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import { getPlatformReviewsOverview } from '@/lib/api/reviews';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
@@ -12,13 +13,13 @@ import { workspaceQK } from '@/features/workspace/data';
 import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import {
   WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
-  WorkspacePageLayout,
   WorkspacePublicIntro,
 } from '@/features/workspace';
 import {
   PUBLIC_REQUESTS_SEED_LIMIT,
 } from '@/features/workspace/orchestration/workspacePage.constants';
 import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
+import type { ProofCase } from '@/types/home';
 
 type PublicIntroProps = ComponentProps<typeof WorkspacePublicIntro>;
 
@@ -42,7 +43,19 @@ export const EMPTY_PLATFORM_REVIEWS_OVERVIEW = {
 
 type PlatformReviewsOverview = ReviewOverviewDto;
 type PlatformSnapshot = WorkspacePublicOverviewDto | undefined;
-type ExploreProps = NonNullable<ComponentProps<typeof WorkspacePageLayout>['explore']>;
+type ExploreProps = {
+  exploreListDensity: 'single' | 'double';
+  setExploreListDensity: (value: 'single' | 'double') => void;
+  sidebarNearbyLimit: number;
+  sidebarTopProvidersLimit: number;
+  sidebarProofCases: ProofCase[];
+  proofIndex: number;
+  trustPanelClassName?: string;
+  initialPublicRequests?: PublicRequestsResponseDto;
+  preferInitialPublicRequests?: boolean;
+  initialPublicRequestsLoading?: boolean;
+  initialPublicRequestsError?: boolean;
+};
 
 type ResolvePublicBranchSnapshotArgs = {
   platformSnapshot: PlatformSnapshot;

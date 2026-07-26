@@ -97,12 +97,13 @@ function WorkspacePageShellContent({
   const activeLayoutProps = isWorkspacePublicSection
     ? publicModel.workspaceLayoutProps
     : privateLayoutProps;
+  const privateSection = privateModel.sectionModel?.section ?? null;
 
   const shouldRenderPrivatePrimaryAction =
     !isWorkspacePublicSection &&
-    privateModel.activePublicSection !== 'chat' &&
-    privateModel.activePublicSection !== 'settings' &&
-    privateModel.activePublicSection !== 'help';
+    privateSection !== 'chat' &&
+    privateSection !== 'settings' &&
+    privateSection !== 'help';
 
   return (
     <>

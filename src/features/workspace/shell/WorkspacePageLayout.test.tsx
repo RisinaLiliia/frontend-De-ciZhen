@@ -5,6 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { WorkspacePageLayout } from '@/features/workspace/shell/WorkspacePageLayout';
+import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 
 let isDesktopMock = true;
 let isWideShellMock = true;
@@ -84,6 +85,16 @@ vi.mock('@/components/legal/ConsentManageFooter', () => ({
   ConsentManageFooter: () => <div data-testid="workspace-consent-footer" />,
 }));
 
+function buildSectionModel(
+  overrides: Partial<WorkspaceSectionRenderModel> = {},
+): WorkspaceSectionRenderModel {
+  return {
+    section: 'providers',
+    content: <div data-testid="workspace-providers-section" />,
+    ...overrides,
+  };
+}
+
 describe('WorkspacePageLayout', () => {
   it('renders public explore sections through WorkspaceShell', () => {
     isDesktopMock = true;
@@ -100,16 +111,7 @@ describe('WorkspacePageLayout', () => {
         t={(key) => key}
         locale="de"
         intro={<div>intro</div>}
-        explore={{
-          exploreListDensity: 'double',
-          setExploreListDensity: vi.fn(),
-          sidebarNearbyLimit: 3,
-          sidebarTopProvidersLimit: 3,
-          sidebarProofCases: [],
-          proofIndex: 0,
-        }}
-        privateMain={null}
-        publicMain={null}
+        sectionModel={buildSectionModel()}
         workspaceAsideBaseProps={{
           isLoading: false,
           isError: false,
@@ -148,16 +150,7 @@ describe('WorkspacePageLayout', () => {
         t={(key) => key}
         locale="de"
         intro={<div>intro</div>}
-        explore={{
-          exploreListDensity: 'double',
-          setExploreListDensity: vi.fn(),
-          sidebarNearbyLimit: 3,
-          sidebarTopProvidersLimit: 3,
-          sidebarProofCases: [],
-          proofIndex: 0,
-        }}
-        privateMain={null}
-        publicMain={null}
+        sectionModel={buildSectionModel()}
         workspaceAsideBaseProps={{
           isLoading: false,
           isError: false,
@@ -195,16 +188,7 @@ describe('WorkspacePageLayout', () => {
         t={(key) => key}
         locale="de"
         intro={<div>intro</div>}
-        explore={{
-          exploreListDensity: 'double',
-          setExploreListDensity: vi.fn(),
-          sidebarNearbyLimit: 3,
-          sidebarTopProvidersLimit: 3,
-          sidebarProofCases: [],
-          proofIndex: 0,
-        }}
-        privateMain={null}
-        publicMain={null}
+        sectionModel={buildSectionModel()}
         workspaceAsideBaseProps={{
           isLoading: false,
           isError: false,
@@ -242,16 +226,7 @@ describe('WorkspacePageLayout', () => {
         t={(key) => key}
         locale="de"
         intro={<div>intro</div>}
-        explore={{
-          exploreListDensity: 'double',
-          setExploreListDensity: vi.fn(),
-          sidebarNearbyLimit: 3,
-          sidebarTopProvidersLimit: 3,
-          sidebarProofCases: [],
-          proofIndex: 0,
-        }}
-        privateMain={null}
-        publicMain={null}
+        sectionModel={buildSectionModel()}
         workspaceAsideBaseProps={{
           isLoading: false,
           isError: false,
