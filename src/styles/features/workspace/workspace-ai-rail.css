@@ -2,17 +2,6 @@
   .workspace-unified-rail {
     display: grid;
     gap: var(--space-3);
-    --workspace-rail-tone-demand: var(--c-info);
-    --workspace-rail-tone-supply: var(--c-warning);
-    --workspace-rail-tone-opportunity: var(--c-success);
-    --workspace-rail-tone-risk: var(--c-danger);
-    --workspace-rail-tone-action: color-mix(in oklab, var(--c-warning) 82%, var(--c-danger) 18%);
-    --workspace-rail-tone-ai: var(--color-primary);
-    --workspace-rail-tone-neutral: color-mix(in oklab, var(--c-border) 72%, var(--c-panel) 28%);
-    --workspace-rail-chart-tone-1: var(--workspace-rail-tone-risk);
-    --workspace-rail-chart-tone-2: var(--workspace-rail-tone-demand);
-    --workspace-rail-chart-tone-3: var(--workspace-rail-tone-opportunity);
-    --workspace-rail-chart-tone-4: var(--workspace-rail-tone-neutral);
     --workspace-rail-eyebrow-size: var(--provider-card-eyebrow-size, var(--fs-10));
     --workspace-rail-eyebrow-line-height: var(--provider-card-eyebrow-line-height, 1.2);
     --workspace-rail-eyebrow-tracking: var(--provider-card-eyebrow-tracking, 0.06em);
@@ -591,15 +580,15 @@
   }
 
   .workspace-unified-rail__recommendation.is-attention {
-    border-color: color-mix(in oklab, var(--c-danger) 18%, var(--color-border-soft) 82%);
+    border-color: color-mix(in oklab, var(--color-danger) 18%, var(--color-border-soft) 82%);
   }
 
   .workspace-unified-rail__recommendation.is-opportunity {
-    border-color: color-mix(in oklab, var(--c-info) 18%, var(--color-border-soft) 82%);
+    border-color: color-mix(in oklab, var(--color-info) 18%, var(--color-border-soft) 82%);
   }
 
   .workspace-unified-rail__recommendation.is-positive {
-    border-color: color-mix(in oklab, var(--c-success) 18%, var(--color-border-soft) 82%);
+    border-color: color-mix(in oklab, var(--color-success) 18%, var(--color-border-soft) 82%);
   }
 
   @media (min-width: 1024px) and (max-width: 1179px) {
