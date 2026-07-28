@@ -2,16 +2,6 @@
   .workspace-unified-rail {
     display: grid;
     gap: var(--space-3);
-    --workspace-rail-eyebrow-size: var(--provider-card-eyebrow-size, var(--fs-10));
-    --workspace-rail-eyebrow-line-height: var(--provider-card-eyebrow-line-height, 1.2);
-    --workspace-rail-eyebrow-tracking: var(--provider-card-eyebrow-tracking, 0.06em);
-    --workspace-rail-title-size: var(--provider-card-title-size, 16px);
-    --workspace-rail-title-line-height: var(--provider-card-title-line-height, 1.28);
-    --workspace-rail-copy-size: var(--provider-card-body-size, var(--fs-12));
-    --workspace-rail-copy-line-height: var(--provider-card-body-line-height, 1.4);
-    --workspace-rail-meta-size: var(--provider-card-meta-size, var(--fs-12));
-    --workspace-rail-meta-line-height: var(--provider-card-meta-line-height, 1.3);
-    --workspace-rail-meta-icon-size: var(--provider-card-meta-icon-size, 15px);
   }
 
   .workspace-unified-rail__panel {
@@ -47,9 +37,9 @@
   }
 
   .workspace-unified-rail__value {
-    font-size: clamp(30px, 3vw, 38px);
-    line-height: 0.96;
-    letter-spacing: -0.03em;
+    font-size: var(--type-kpi-size);
+    line-height: var(--type-kpi-line-height);
+    letter-spacing: var(--type-kpi-tracking);
   }
 
   .workspace-unified-rail__decision-head {

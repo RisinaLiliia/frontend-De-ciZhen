@@ -30,10 +30,6 @@
     margin: 0 0 clamp(2rem, 3.4vh, 2.75rem);
   }
   .product-entry {
-  --workspace-rail-eyebrow-size: var(--provider-card-eyebrow-size, var(--fs-10));
-  --workspace-rail-eyebrow-line-height: var(--provider-card-eyebrow-line-height, 1.2);
-  --workspace-rail-eyebrow-tracking: var(--provider-card-eyebrow-tracking, 0.06em);
-
   min-height: 100dvh;
   background: var(--color-background);
 }

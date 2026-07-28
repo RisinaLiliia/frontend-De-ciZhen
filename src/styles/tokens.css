@@ -181,22 +181,77 @@
   --shadow-panel: 0 12px 32px rgba(18, 20, 24, 0.06);
   --shadow-floating: 0 18px 48px rgba(18, 20, 24, 0.08);
 
-  /* Semantic typography scale */
-  --app-title-xl-size: clamp(28px, 3vw, 36px);
-  --app-title-xl-line-height: 1.05;
-  --app-title-lg-size: 22px;
-  --app-title-lg-line-height: 1.18;
-  --app-title-md-size: 17px;
-  --app-title-md-line-height: 1.3;
-  --app-text-size: 15px;
-  --app-text-line-height: 1.5;
-  --app-text-muted-size: 14px;
-  --app-text-muted-line-height: 1.45;
-  --app-caption-size: 12px;
-  --app-caption-line-height: 1.35;
-  --app-price-size: 17px;
-  --app-price-line-height: 1.1;
-  --app-price-weight: 700;
+  /* Canonical typography scale */
+  --type-eyebrow-size: var(--fs-10);
+  --type-eyebrow-line-height: 1.2;
+  --type-eyebrow-tracking: 0.06em;
+  --type-page-title-size: clamp(28px, 3vw, 36px);
+  --type-page-title-line-height: 1.05;
+  --type-section-title-size: 22px;
+  --type-section-title-line-height: 1.18;
+  --type-card-title-size: 17px;
+  --type-card-title-line-height: 1.3;
+  --type-panel-title-size: 16px;
+  --type-panel-title-line-height: 1.28;
+  --type-kpi-size: clamp(30px, 3vw, 38px);
+  --type-kpi-line-height: 0.96;
+  --type-kpi-tracking: -0.03em;
+  --type-body-size: 15px;
+  --type-body-line-height: 1.5;
+  --type-body-sm-size: var(--fs-12);
+  --type-body-sm-line-height: 1.4;
+  --type-body-muted-size: 14px;
+  --type-body-muted-line-height: 1.45;
+  --type-meta-size: var(--fs-12);
+  --type-meta-line-height: 1.3;
+  --type-caption-size: 12px;
+  --type-caption-line-height: 1.35;
+  --type-label-size: var(--type-caption-size);
+  --type-label-line-height: var(--type-caption-line-height);
+  --type-label-weight: 700;
+  --type-price-size: 17px;
+  --type-price-line-height: 1.1;
+  --type-price-weight: 700;
+
+  /* Compatibility semantic aliases */
+  --app-title-xl-size: var(--type-page-title-size);
+  --app-title-xl-line-height: var(--type-page-title-line-height);
+  --app-title-lg-size: var(--type-section-title-size);
+  --app-title-lg-line-height: var(--type-section-title-line-height);
+  --app-title-md-size: var(--type-card-title-size);
+  --app-title-md-line-height: var(--type-card-title-line-height);
+  --app-text-size: var(--type-body-size);
+  --app-text-line-height: var(--type-body-line-height);
+  --app-text-muted-size: var(--type-body-muted-size);
+  --app-text-muted-line-height: var(--type-body-muted-line-height);
+  --app-caption-size: var(--type-caption-size);
+  --app-caption-line-height: var(--type-caption-line-height);
+  --app-price-size: var(--type-price-size);
+  --app-price-line-height: var(--type-price-line-height);
+  --app-price-weight: var(--type-price-weight);
+
+  /* Shared context typography */
+  --provider-card-eyebrow-size: var(--type-eyebrow-size);
+  --provider-card-eyebrow-line-height: var(--type-eyebrow-line-height);
+  --provider-card-eyebrow-tracking: var(--type-eyebrow-tracking);
+  --provider-card-title-size: var(--type-panel-title-size);
+  --provider-card-title-line-height: var(--type-panel-title-line-height);
+  --provider-card-body-size: var(--type-body-sm-size);
+  --provider-card-body-line-height: var(--type-body-sm-line-height);
+  --provider-card-meta-size: var(--type-meta-size);
+  --provider-card-meta-line-height: var(--type-meta-line-height);
+  --provider-card-meta-icon-size: 15px;
+
+  --workspace-rail-eyebrow-size: var(--type-eyebrow-size);
+  --workspace-rail-eyebrow-line-height: var(--type-eyebrow-line-height);
+  --workspace-rail-eyebrow-tracking: var(--type-eyebrow-tracking);
+  --workspace-rail-title-size: var(--type-panel-title-size);
+  --workspace-rail-title-line-height: var(--type-panel-title-line-height);
+  --workspace-rail-copy-size: var(--type-body-sm-size);
+  --workspace-rail-copy-line-height: var(--type-body-sm-line-height);
+  --workspace-rail-meta-size: var(--type-meta-size);
+  --workspace-rail-meta-line-height: var(--type-meta-line-height);
+  --workspace-rail-meta-icon-size: 15px;
 
   --dc-radius-sm: var(--radius-sm);
   --dc-radius-md: var(--radius-md);
@@ -316,11 +371,12 @@
     --workspace-grid-gap: var(--layout-gap-md);
     --density-comfortable-pad: var(--space-4);
     --density-comfortable-pad-lg: var(--space-4-5);
-    --app-title-xl-size: clamp(24px, 6vw, 30px);
-    --app-title-lg-size: 20px;
-    --app-title-md-size: 16px;
-    --app-text-size: 14px;
-    --app-text-muted-size: 13px;
-    --app-caption-size: 11px;
+    --type-page-title-size: clamp(24px, 6vw, 30px);
+    --type-section-title-size: 20px;
+    --type-card-title-size: 16px;
+    --type-panel-title-size: 16px;
+    --type-body-size: 14px;
+    --type-body-muted-size: 13px;
+    --type-caption-size: 11px;
   }
 }
